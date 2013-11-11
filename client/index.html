@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>FortNotes Desktop Web Client</title>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="keywords" content="security online password manager AES RSA encryption"/>
+	<meta name="description" content="Web application to work with the FortNotes system"/>
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans"/>
+	<link rel="icon" type="image/png" href="img/favicon.png"/>
+
+	<script type="text/javascript">
+		/**
+		 * main global entry
+		 * @namespace
+		 */
+		var app = {
+			version : '0.1.0',
+			debug   : Boolean(localStorage.getItem('debug')),
+			class   : {},
+			vars    : {},
+			urls    : {
+				api : '/api/v1/'
+			},
+			user    : {
+				id  : '52757791919134ffc7eec0e8'
+			}
+		};
+
+		// loader
+		(function(){
+			// page dependencies
+			var cssFiles = ['app.css'],
+				jsFiles  = ['app.js'];
+
+			// full file set for debug
+			if ( app.debug ) {
+				cssFiles = [
+					'css/main.css'
+				];
+				jsFiles = [
+					'js/main.js',
+					'js/dom.js',
+					'js/io.js',
+					'js/emitter.js',
+					'js/model.js',
+					'js/model.note.js',
+					'js/collection.js',
+					'js/collection.notes.js',
+					'js/sjcl.js',
+					'js/aes.js'
+				];
+			}
+
+			// dynamic loading
+			cssFiles.forEach(function(file){
+				document.write('<link rel="stylesheet" href="' + file + '">');
+			});
+			jsFiles.forEach(function(file){
+				// async but maintain the order of execution
+				document.write('<script ' + (app.debug ? '' : 'async') + ' type="text/javascript" src="' + file + '"/><\/script>');
+			});
+		})();
+
+		// start hook
+		document.addEventListener('DOMContentLoaded', function(){
+			app.init();
+
+			// test data
+			app.aes.salt = '0fb449e1ae2dc62c11f64a415e66610fa7945ce62033866788db5cc0e2ffb0da';
+			app.aes.setPass('qwerty');
+
+			var notes = new app.class.Notes();
+			notes.addListener('fetch', function(status){
+				console.log('notes fetch', status);
+			});
+			notes.fetch();
+			console.log(notes);
+
+			/*var note = new app.class.Note();
+			note.set('user', app.user.id);
+			note.set('data', app.aes.encrypt(String(+new Date())));
+			note.set('hash', sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(note.get('data'))));
+			note.save();*/
+
+
+			//console.time('a');
+			//console.timeEnd('a');
+		});
+
+		// finish hook
+		window.addEventListener('unload', function() {
+			console.log('good-bye');
+		});
+	</script>
+</head>
+<body>
+
+</body>
+</html>
