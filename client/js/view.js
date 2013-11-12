@@ -1,22 +1,43 @@
-/**
- * Base view implementation
- * @author DarkPark
- * @license GNU GENERAL PUBLIC LICENSE Version 3
- */
-app.class.View = (function(app){
-	'use strict';
+'use strict';
+
+define(['emitter'], function ( Emitter ) {
 
 	/**
 	 * @constructor
 	 */
-	var View = function () {
-		app.class.Emitter.call(this);
-	};
+	function View () {
+		Emitter.call(this);
+	}
 
 	// inheritance
-	View.prototype = Object.create(app.class.Emitter.prototype);
+	View.prototype = Object.create(Emitter.prototype);
 	View.prototype.constructor = View;
 
 	// export
 	return View;
-})(app);
+
+});
+
+
+///**
+// * Base view implementation
+// * @author DarkPark
+// * @license GNU GENERAL PUBLIC LICENSE Version 3
+// */
+//app.class.View = (function(app){
+//	'use strict';
+//
+//	/**
+//	 * @constructor
+//	 */
+//	var View = function () {
+//		app.class.Emitter.call(this);
+//	};
+//
+//	// inheritance
+//	View.prototype = Object.create(app.class.Emitter.prototype);
+//	View.prototype.constructor = View;
+//
+//	// export
+//	return View;
+//})(app);
