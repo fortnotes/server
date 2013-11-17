@@ -5,12 +5,16 @@
 	<meta charset="utf-8">
 	<meta name="keywords" content="security online password manager AES RSA encryption"/>
 	<meta name="description" content="Web application to work with the FortNotes system"/>
-	<!--<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans"/>-->
+
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans"/>
+	<link rel="stylesheet" type="text/css" href="css/build.css">
 	<link rel="icon" type="image/png" href="img/favicon.png"/>
 
-	<!--<script data-main="js/main" src="js/require.js"></script>-->
-
 	<script type="text/javascript">
+		if ( localStorage.getItem('debug') ) {
+			document.write('<script type="text/javascript" src="http://' + document.location.hostname + ':35729/livereload.js"/><\/script>');
+		}
+
 		/**
 		 * main global entry
 		 * @namespace
@@ -97,6 +101,46 @@
 </head>
 <body>
 
-	<script type="text/javascript" src="app.js" async></script>
+	<div class="page auth active">
+		<table class="main">
+			<tr>
+				<td class="header"><img src="http://fortnotes.com/img/logo.png"></td>
+			</tr>
+			<tr>
+				<td class="center">
+					<table class="auth">
+						<tr>
+							<td><input type="email" placeholder="Name"></td>
+						</tr>
+						<tr>
+							<td><input type="password" placeholder="Password"></td>
+						</tr>
+						<tr>
+							<td><button type="button">Sing in</button></td>
+						</tr>
+						<tr>
+							<td>or</td>
+						</tr>
+						<tr>
+							<td><button type="button">Sing up</button></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td class="footer">
+					<a href="#">About</a>           <span class="line">|</span>
+					<a href="#">Privacy Policy</a>  <span class="line">|</span>
+					<a href="#">Full version</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="page list">
+
+	</div>
+
+	<script async type="text/javascript" src="build.js"></script>
 </body>
 </html>

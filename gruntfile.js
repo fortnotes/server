@@ -13,7 +13,7 @@ module.exports = function ( grunt ) {
 		browserify: {
 			build: {
 				src : ['client/js/*.js', 'client/js/lib/*.js'],
-				dest: 'client/app.js'
+				dest: 'client/build.js'
 			}
 		},
 
@@ -34,17 +34,31 @@ module.exports = function ( grunt ) {
 
 		less: {
 			options: {
-				//paths: ['client/css'],
-				cleancss: true
+				cleancss: false
 			},
 			build: {
-				src : 'client/less/*.less',
-				dest: 'client/app.css'
+				src : 'client/css/*.less',
+				dest: 'client/css/build.css'
+			}
+		},
+
+		watch: {
+			options: {
+				livereload: true
+			},
+			js: {
+				files: ['<%= browserify.build.src %>'],
+				tasks: ['browserify']
+			},
+			css: {
+				files: ['<%= less.build.src %>'],
+				tasks: ['less']
 			}
 		}
 	});
 
 	// load plugins
+	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-less');
