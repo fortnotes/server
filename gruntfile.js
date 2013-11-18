@@ -22,8 +22,8 @@ module.exports = function ( grunt ) {
 				banner: '/*! <%= project.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
 			},
 			build: {
-				src : 'client/app.js',
-				dest: 'client/app.js'
+				src : 'client/build.js',
+				dest: 'client/build.js'
 			}
 		},
 
@@ -44,6 +44,8 @@ module.exports = function ( grunt ) {
 
 		watch: {
 			options: {
+				spawn: false,
+				atBegin: true,
 				livereload: true
 			},
 			js: {
