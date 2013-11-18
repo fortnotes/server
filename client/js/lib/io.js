@@ -10,7 +10,7 @@
 // declarations
 var io = {},
 	defaults = {
-		method    : 'POST', // HTTP method to use, such as "GET", "POST", "PUT", "DELETE", etc.
+		method    : 'GET',  // HTTP method to use, such as "GET", "POST", "PUT", "DELETE", etc.
 		async     : true,   // whether or not to perform the operation asynchronously
 		headers   : {},     // list of HTTP request headers
 		type      : 'text', // "", "arraybuffer", "blob", "document", "json", "text"

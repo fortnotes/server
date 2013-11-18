@@ -9,18 +9,22 @@
 'use strict';
 
 // global modules and config
-var mongodb     = require('mongodb'),
-	dbLink      = null,
-	mongoNotes  = null,
-	crypto      = require('crypto'),
-	config      = require('./config/loader.js');
+var mongodb       = require('mongodb'),
+	dbLink        = null,
+	mongoNotes    = null,
+	mongoUsers    = null,
+	mongoSessions = null,
+	crypto        = require('crypto'),
+	config        = require('./config/loader.js');
 
 
 // db connect
 mongodb.MongoClient.connect('mongodb://' + config.database.host + ':' + config.database.port + '/' + config.database.base, {}, function ( error, db ) {
 	if ( error ) { throw error; }
-	dbLink     = db;
-	mongoNotes = db.collection('notes');
+	dbLink        = db;
+	mongoNotes    = db.collection('notes');
+	mongoUsers    = db.collection('users');
+	mongoSessions = db.collection('sessions');
 	console.log('FortNotes mongo database is ready');
 });
 
@@ -125,7 +129,31 @@ module.exports.tags = {
  */
 module.exports.auth = {
 	'get': function ( path, query, callback ) {
-		//console.log(crypto);
+		var name = path[0],
+			pass = path[1];
+
+		if ( name && pass ) {
+			// full data
+			mongoUsers.findOne({name:name, pass:pass}, function(err, doc) {
+				if ( doc ) {
+					var key = new Buffer(String.fromCharCode.apply(null, crypto.randomBytes(38))).toString('base64').slice(0, 64);
+					mongoSessions.insert({_id:key, uid:doc._id}, {}, function(err) {
+						callback({code:1, step:2, key:key});
+					});
+				} else {
+					callback({code:5, step:2});
+				}
+			});
+		} else if ( name ) {
+			// only name so return salt for pass hash generation
+			mongoUsers.findOne({name:name}, function(err, doc) {
+				callback({code:1, step:1, salt:doc.salt});
+			});
+		} else {
+			callback({code:5});
+		}
+
+
 		//query.skip  = parseInt(query.skip,  10) || 0;
 		//query.limit = parseInt(query.limit, 10) || 20;
 		//console.log(mongoDb);
@@ -133,7 +161,8 @@ module.exports.auth = {
 		//mongoNotes.find({}, {sort:{mtime:-1}, skip:query.skip, limit:query.limit}).toArray(function(err, docs) {
 			//callback({code: 1, key: btoa(String.fromCharCode.apply(null, crypto.randomBytes(128)))});
 
-		callback({code: 1, key: new Buffer(String.fromCharCode.apply(null, crypto.randomBytes(32))).toString('base64')});
+		//var key = new Buffer(String.fromCharCode.apply(null, crypto.randomBytes(32))).toString('base64');
+		//callback({code: 1, key: key, len: key.length});
 		//});
 	}
 };
