@@ -3,26 +3,56 @@
 var io           = require('./lib/io'),
 	sjcl         = require('./lib/sjcl'),
 	config       = require('./config'),
-	page         = document.querySelector('body > div.page.auth'),
-	inputName    = page.querySelector('input.name'),
-	inputPass    = page.querySelector('input.pass'),
-	buttonLogin  = page.querySelector('button.login'),
-	buttonSignup = page.querySelector('button.signup');
+	pageAuth     = document.querySelector('body > div.page.auth'),
+	pageMain     = document.querySelector('body > div.page.main'),
+	inputName    = pageAuth.querySelector('input.name'),
+	inputPass    = pageAuth.querySelector('input.pass'),
+	buttonLogin  = pageAuth.querySelector('button.login'),
+	buttonSignup = pageAuth.querySelector('button.signup'),
+	apiKey       = localStorage.getItem('config.auth.key');
+
+
+// authenticated?
+if ( apiKey ) {
+	//TODO: session revoke
+	pageMain.classList.add('active');
+} else {
+	pageAuth.classList.add('active');
+}
+
+
+inputName.addEventListener('keydown', function(event){
+	if ( event.keyCode === 13 ) { inputPass.focus(); }
+});
+
+inputPass.addEventListener('keydown', function(event){
+	if ( event.keyCode === 13 ) { buttonLogin.click(); }
+});
+
 
 buttonLogin.addEventListener('click', function(){
 	var hashName = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(inputName.value)),
 		hashPass = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(inputPass.value));
-	//console.log(this);
-	//console.log(inputName.value);
-	//console.log(inputPass.value);
+	// get a salt for the given login
 	io.ajax(config.urls.api + 'auth/' + hashName, {
 		onload: function(response){
 			response = JSON.parse(response);
-			//console.log(response);
+			// generate a hash and receive an api key
 			io.ajax(config.urls.api + 'auth/' + hashName + '/' + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(hashPass + response.salt)), {
 				onload: function(response){
 					response = JSON.parse(response);
-					console.log(response);
+					// access is granted
+					if ( response.code === 1 && response.key ) {
+						// save authentication
+						localStorage.setItem('config.auth.key', response.key);
+						localStorage.setItem('config.auth.time', +new Date());
+						// go the the client section
+						pageMain.classList.toggle('active');
+						pageAuth.classList.toggle('active');
+					} else {
+						//TODO: wrong auth data
+						console.log(response);
+					}
 				}
 			});
 		}
@@ -30,5 +60,6 @@ buttonLogin.addEventListener('click', function(){
 });
 
 buttonSignup.addEventListener('click', function(){
+	//TODO: registration
 	console.log(this);
 });
