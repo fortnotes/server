@@ -124,6 +124,7 @@ module.exports.tags = {
 
 };
 
+
 /**
  * @namespace
  */
@@ -137,7 +138,7 @@ module.exports.auth = {
 			mongoUsers.findOne({name:name, pass:pass}, function(err, doc) {
 				if ( doc ) {
 					var key = new Buffer(String.fromCharCode.apply(null, crypto.randomBytes(38))).toString('base64').slice(0, 64);
-					mongoSessions.insert({_id:key, uid:doc._id}, {}, function(err) {
+					mongoSessions.insert({_id:key, uid:doc._id, ctime:+new Date(), atime:0}, {}, function(err) {
 						callback({code:1, step:2, key:key});
 					});
 				} else {
@@ -164,5 +165,29 @@ module.exports.auth = {
 		//var key = new Buffer(String.fromCharCode.apply(null, crypto.randomBytes(32))).toString('base64');
 		//callback({code: 1, key: key, len: key.length});
 		//});
+	}
+};
+
+
+/**
+ * @namespace
+ */
+module.exports.keys = {
+	'get': function ( path, query, callback ) {
+		var key = path[0];
+		if ( key ) {
+			// single key info
+			// only name so return salt for pass hash generation
+			mongoSessions.findOne({_id:key}, {_id:0, ctime:1, atime:1}, function(err, doc) {
+				if ( doc ) {
+					callback({code:1, data:doc});
+				} else {
+					callback({code:5});
+				}
+			});
+		} else {
+			// all keys
+
+		}
 	}
 };

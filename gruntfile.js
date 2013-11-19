@@ -48,6 +48,10 @@ module.exports = function ( grunt ) {
 				atBegin: true,
 				livereload: true
 			},
+			html: {
+				files: ['client/index.html'],
+				tasks: []
+			},
 			js: {
 				files: ['<%= browserify.build.src %>'],
 				tasks: ['browserify']
