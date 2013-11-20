@@ -8,6 +8,7 @@
 
 module.exports = {
 	debug   : Boolean(localStorage.getItem('debug')),
+	//TODO: api:{key:'', url:''}
 	urls    : {
 		api : '/api/v1/'
 	},

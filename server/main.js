@@ -12,6 +12,7 @@ var http         = require('http'),
 	url          = require('url'),
 	staticModule = require('node-static'),
 	staticServer = new staticModule.Server({cache:0}),
+	//browserify   = require('browserify')(),
 	config       = require('./config/loader.js'),
 	api          = {
 		v1 : require('./api.v1.js')
@@ -27,6 +28,7 @@ http.createServer(function (request, response) {
 		apiVersion, apiContext, apiMethod, apiResponse = function(result){
 			response.end(JSON.stringify(result));
 		};
+	//console.log(request);
 
 	/* jshint indent:false */
 	switch ( pathRoot ) {
@@ -52,11 +54,11 @@ http.createServer(function (request, response) {
 							// all data is collected
 							request.on('end', function(){
 								// CRUD call with all left params + post data
-								apiMethod(pathParts, urlParts.query, JSON.parse(postData), apiResponse);
+								apiMethod(pathParts, urlParts.query, JSON.parse(postData), request, apiResponse);
 							});
 						} else {
 							// CRUD call with all left params
-							apiMethod(pathParts, urlParts.query, apiResponse);
+							apiMethod(pathParts, urlParts.query, request, apiResponse);
 						}
 					} else {
 						// wrong API method
@@ -74,10 +76,16 @@ http.createServer(function (request, response) {
 
 		// serve static files
 		case 'client':
-			staticServer.serve(request, response, function(error){
+			/*if ( config.debug ) {
+				if ( request.url === '/client/app.js' ) {
+
+				}
+			}*/
+			// send file content
+			staticServer.serve(request, response, function ( error ) {
 				if ( error && error.status === 404 ) {
 					// If the file wasn't found
-					response.writeHead(302, {'Location':'/client/index.html'});
+					response.writeHead(302, {'Location': '/client/index.html'});
 					response.end();
 				}
 			});

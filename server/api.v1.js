@@ -74,7 +74,7 @@ module.exports.notes = {
 	/**
 	 * read
 	 */
-	'get': function ( path, query, callback ) {
+	'get': function ( path, query, request, callback ) {
 		//console.log(query);
 		query.skip  = parseInt(query.skip,  10) || 0;
 		query.limit = parseInt(query.limit, 10) || 20;
@@ -89,14 +89,14 @@ module.exports.notes = {
 	 * update
 	 * @return {Object} operation status and data
 	 */
-	'put': function ( path, query, callback ) {
+	'put': function ( path, query, request, callback ) {
 		return {code: 1};
 	},
 
 	/**
 	 * create
 	 */
-	'post': function ( path, query, postData, callback ) {
+	'post': function ( path, query, postData, request, callback ) {
 		//postData._id = new mongodb.ObjectID();
 		delete postData._id;
 		//postData._id = 123;
@@ -129,7 +129,7 @@ module.exports.tags = {
  * @namespace
  */
 module.exports.auth = {
-	'get': function ( path, query, callback ) {
+	'get': function ( path, query, request, callback ) {
 		var name = path[0],
 			pass = path[1];
 
@@ -137,8 +137,10 @@ module.exports.auth = {
 			// full data
 			mongoUsers.findOne({name:name, pass:pass}, function(err, doc) {
 				if ( doc ) {
-					var key = new Buffer(String.fromCharCode.apply(null, crypto.randomBytes(38))).toString('base64').slice(0, 64);
-					mongoSessions.insert({_id:key, uid:doc._id, ctime:+new Date(), atime:0}, {}, function(err) {
+					var key = new Buffer(String.fromCharCode.apply(null, crypto.randomBytes(38))).toString('base64').slice(0, 64),
+						ip  = request.headers['X-Forwarded-For'] || request.connection.remoteAddress,
+						ua  = request.headers['user-agent'] || request.headers['User-Agent'];
+					mongoSessions.insert({_id:key, uid:doc._id, ctime:+new Date(), atime:0, ip:ip, ua:ua}, {}, function(err) {
 						callback({code:1, step:2, key:key});
 					});
 				} else {
@@ -169,25 +171,52 @@ module.exports.auth = {
 };
 
 
+function getSession ( key ) {
+
+}
+
 /**
  * @namespace
  */
-module.exports.keys = {
-	'get': function ( path, query, callback ) {
-		var key = path[0];
-		if ( key ) {
-			// single key info
-			// only name so return salt for pass hash generation
-			mongoSessions.findOne({_id:key}, {_id:0, ctime:1, atime:1}, function(err, doc) {
-				if ( doc ) {
-					callback({code:1, data:doc});
-				} else {
-					callback({code:5});
-				}
-			});
-		} else {
-			// all keys
+module.exports.sessions = {
+	'get': function ( path, query, request, callback ) {
+		var key = request.headers.key;
+		mongoSessions.findOne({_id:key}, {_id:0, ctime:1, atime:1}, function(err, doc) {
+			if ( doc ) {
 
-		}
+				if ( query.type === 'current' ) {
+
+				} else {
+
+				}
+
+				query.skip  = parseInt(query.skip,  10) || 0;
+				query.limit = parseInt(query.limit, 10) || 20;
+				//console.log(mongoDb);
+				//console.log(response);
+//				mongoNotes.find({}, {sort:{mtime:-1}, skip:query.skip, limit:query.limit}).toArray(function(err, docs) {
+//					callback({code: 1, data: docs || []});
+//				});
+
+				if ( path[0] ) {
+					// single key info
+					// only name so return salt for pass hash generation
+					mongoSessions.findOne({_id:path[0]}, {_id:0, ctime:1, atime:1}, function(err, doc) {
+						if ( doc ) {
+							callback({code:1, data:doc});
+						} else {
+							callback({code:5});
+						}
+					});
+				} else {
+					// all keys
+					mongoSessions.find({_id:path[0]}, {sort:{ctime:-1}}).toArray(function(err, docs) {
+						callback({code: 1, data: docs || []});
+					});
+				}
+			} else {
+				callback({code:5});
+			}
+		});
 	}
 };
