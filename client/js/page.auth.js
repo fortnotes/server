@@ -4,7 +4,7 @@ var io           = require('./lib/io'),
 	sjcl         = require('./lib/sjcl'),
 	config       = require('./config'),
 	pageAuth     = document.querySelector('body > div.page.auth'),
-	pageMain     = document.querySelector('body > div.page.main'),
+	pageList     = document.querySelector('body > div.page.list'),
 	inputName    = pageAuth.querySelector('input.name'),
 	inputPass    = pageAuth.querySelector('input.pass'),
 	buttonLogin  = pageAuth.querySelector('button.login'),
@@ -15,7 +15,7 @@ var io           = require('./lib/io'),
 // authenticated?
 if ( apiKey ) {
 	//TODO: session revoke
-	pageMain.classList.add('active');
+	pageList.classList.add('active');
 } else {
 	pageAuth.classList.add('active');
 }
@@ -47,7 +47,7 @@ buttonLogin.addEventListener('click', function(){
 						localStorage.setItem('config.auth.key', response.key);
 						localStorage.setItem('config.auth.time', +new Date());
 						// go the the client section
-						pageMain.classList.toggle('active');
+						pageList.classList.toggle('active');
 						pageAuth.classList.toggle('active');
 					} else {
 						//TODO: wrong auth data
