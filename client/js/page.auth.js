@@ -2,6 +2,7 @@
 
 var io           = require('./lib/io'),
 	sjcl         = require('./lib/sjcl'),
+	aes          = require('./aes'),
 	config       = require('./config'),
 	pageAuth     = document.querySelector('body > div.page.auth'),
 	pageList     = document.querySelector('body > div.page.list'),
@@ -39,6 +40,11 @@ buttonLogin.addEventListener('click', function(){
 			response = JSON.parse(response);
 			// generate a hash and receive an api key
 			io.ajax(config.urls.api + 'auth/' + hashName + '/' + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(hashPass + response.salt)), {
+				method: 'post',
+				data  : aes.encrypt(JSON.stringify({
+					ip: response.ip,
+					ua: window.navigator.userAgent
+				})),
 				onload: function(response){
 					response = JSON.parse(response);
 					// access is granted
