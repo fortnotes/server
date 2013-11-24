@@ -38,7 +38,7 @@ Requests:
 
  Method | Url                              | Description
 :------:|:---------------------------------|:----------------------------------------------------------------------
- GET    | /api/v1/auth/**name**            | return user pass salt for hash generation
+ GET    | /api/v1/auth/**name**            | return user ip and pass salt for hash generation
  POST   | /api/v1/auth/**name**/**pass**   | return api key (base64 encoded 64 bytes string) of the created session
  GET    | /api/v1/sessions?limit=20&skip=0 | return a list of user's sessions
  GET    | /api/v1/sessions/**key**         | return a session info by the given api key
@@ -76,4 +76,4 @@ There are some stored parameters in the browser localStorage:
  Name             | Description
 :-----------------|:-----------------------------------------------------------
  config.auth.key  | api key for authentication (base64 encoded 64 bytes string)
- config.auth.time | api key generation time
+ config.sjcl      | encrypt/decrypt user-specific parameters

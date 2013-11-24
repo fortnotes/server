@@ -162,12 +162,15 @@ module.exports.auth = {
 			// full data
 			mongoUsers.findOne({name:name, pass:pass}, function(err, doc) {
 				if ( doc ) {
-					var key = new Buffer(String.fromCharCode.apply(null, crypto.randomBytes(40))).toString('base64').replace('/', '').slice(0, 64)/*,
-						ip  = request.headers['X-Forwarded-For'] || request.connection.remoteAddress,
-						ua  = request.headers['user-agent'] || request.headers['User-Agent']*/;
-					mongoSessions.insert({_id:key, uid:doc._id, ctime:+new Date(), atime:0, data:postData}, {}, function(err) {
+					// valid user
+					var time = +new Date(),
+						key  = new Buffer(String.fromCharCode.apply(null, crypto.randomBytes(40))).toString('base64').replace('/', '').slice(0, 64);
+					// create a session and store user ip, user agent, geo data and so on
+					mongoSessions.insert({_id:key, uid:doc._id, ctime:time, atime:0, data:postData}, {}, function(err) {
 						if ( !err ) {
-							callback({code:1, key:key});
+							// user atime save
+							mongoUsers.update({_id:doc._id}, {$set:{atime:time}}, function(){});
+							callback({code:1, sjcl:doc.sjcl, key:key});
 						} else {
 							callback({code:5});
 						}

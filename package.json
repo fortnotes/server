@@ -1,16 +1,17 @@
 {
 	"name"        : "fortnotes",
-	"version"     : "0.1.0",
+	"version"     : "0.1.1",
 	"description" : "client-server app to communicate with desktop/mobile clients and sync data to the sync server",
-	"main"        : "index.js",
+	"main"        : "server/main.js",
 	"author"      : "DarkPark",
 	"license"     : "GPLv3",
 	"homepage"    : "http://fortnotes.com/",
-	"keywords"    : ["aes", "encryption"],
+	"keywords"    : ["aes", "encryption", "private", "notes", "storage"],
 	"repository"  : {
 		"type": "git",
-		"url" : "http://github.com/darkpark/fortnotes.git"
+		"url" : "https://github.com/DarkPark/FortNotes.git"
 	},
+	"bugs"        : "https://github.com/DarkPark/FortNotes/issues",
 	"scripts"     : {
 		"install" : "node server/install.js",
 		"start"   : "node server/main.js",

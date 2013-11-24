@@ -19,7 +19,7 @@ function Notes ( models ) {
 	// parent init
 	Collection.call(this, models);
 	this.model  = Note;
-	this.url    = config.urls.api + 'notes';
+	this.url    = config.apiUrl + 'notes';
 }
 
 

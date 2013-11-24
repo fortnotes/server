@@ -9,6 +9,7 @@
 
 var Emitter = require('./lib/emitter'),
 	sjcl    = require('./lib/sjcl'),
+	config  = require('./config'),
 	aes     = new Emitter(),
 	pass    = null;  // private primary password (accessed only indirectly)
 
@@ -19,8 +20,6 @@ aes.hash   = null;
 aes.salt   = null;
 // time in seconds for pass caching (default - 5 minutes)
 aes.time   = 300;
-// encode/decode default configuration
-aes.config = {ks:256,ts:128,mode:'ccm',cipher:'aes'};
 
 
 /**
@@ -72,14 +71,15 @@ aes.checkPass = function ( value ) {
  * @return {Object|Boolean} encrypted line or false on failure
  */
 aes.encrypt = function ( data ) {
-	//var result = {};
+	var enc = {};
 	// password is present and not empty input
 	if ( pass && data ) {
 		// protected block
 		try {
-			return sjcl.json._encrypt(pass, data, this.config);
-			/*sjcl.encrypt(pass, data, this.config, result);
-			return result;*/
+			enc = sjcl.json._encrypt(pass, data, config.sjcl);
+			// get only significant fields
+			return {iv:enc.iv, salt:enc.salt, ct:enc.ct};
+			//return sjcl.encrypt(pass, data, this.config);
 		} catch ( e ) {
 			console.trace();
 			console.log('encrypt failure', e);
@@ -95,11 +95,14 @@ aes.encrypt = function ( data ) {
  * @return {String|Boolean} decrypted line or false on failure
  */
 aes.decrypt = function ( data ) {
+	//var name;
 	// password is present and not empty input
 	if ( pass && data ) {
 		// protected block
 		try {
-			return sjcl.json._decrypt(pass, data);
+			// apply user-specific decoding params to the data
+			//for ( name in config.sjcl ) { if ( config.sjcl.hasOwnProperty(name) ) { data[name] = config.sjcl[name]; } }
+			return sjcl.json._decrypt(pass, config.sjcl, data);
 		} catch ( e ) {
 			console.trace();
 			console.log('decrypt failure', e);

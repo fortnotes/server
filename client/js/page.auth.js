@@ -9,12 +9,11 @@ var io           = require('./lib/io'),
 	inputName    = pageAuth.querySelector('input.name'),
 	inputPass    = pageAuth.querySelector('input.pass'),
 	buttonLogin  = pageAuth.querySelector('button.login'),
-	buttonSignup = pageAuth.querySelector('button.signup'),
-	apiKey       = localStorage.getItem('config.auth.key');
+	buttonSignup = pageAuth.querySelector('button.signup');
 
 
 // authenticated?
-if ( apiKey ) {
+if ( config.apiKey ) {
 	//TODO: session revoke
 	pageList.classList.add('active');
 } else {
@@ -35,11 +34,11 @@ buttonLogin.addEventListener('click', function(){
 	var hashName = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(inputName.value)),
 		hashPass = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(inputPass.value));
 	// get a salt for the given login
-	io.ajax(config.urls.api + 'auth/' + hashName, {
+	io.ajax(config.apiUrl + 'auth/' + hashName, {
 		onload: function(response){
 			response = JSON.parse(response);
 			// generate a hash and receive an api key
-			io.ajax(config.urls.api + 'auth/' + hashName + '/' + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(hashPass + response.salt)), {
+			io.ajax(config.apiUrl + 'auth/' + hashName + '/' + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(hashPass + response.salt)), {
 				method: 'post',
 				data  : aes.encrypt(JSON.stringify({
 					ip: response.ip,
@@ -50,8 +49,9 @@ buttonLogin.addEventListener('click', function(){
 					// access is granted
 					if ( response.code === 1 && response.key ) {
 						// save authentication
-						localStorage.setItem('config.auth.key', response.key);
-						localStorage.setItem('config.auth.time', +new Date());
+						localStorage.setItem('config.auth.key', config.apiKey = response.key);
+						// encrypt/decrypt parameters
+						localStorage.setItem('config.sjcl', JSON.stringify(config.sjcl = response.sjcl));
 						// go the the client section
 						pageList.classList.toggle('active');
 						pageAuth.classList.toggle('active');

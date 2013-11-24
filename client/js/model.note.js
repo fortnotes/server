@@ -29,7 +29,7 @@ function Note ( attributes ) {
 	//this.entries = [];  // plain data of the note entries
 	//this.tags    = [];  // plain data of the note tags
 	// sync link
-	this.url = config.urls.api + 'notes';
+	this.url = config.apiUrl + 'notes';
 	// extend
 	this.attributes(attributes);
 }
