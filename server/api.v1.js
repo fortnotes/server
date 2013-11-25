@@ -168,7 +168,7 @@ module.exports.auth = {
 					// create a session and store user ip, user agent, geo data and so on
 					mongoSessions.insert({_id:key, uid:doc._id, ctime:time, atime:0, data:postData}, {}, function(err) {
 						if ( !err ) {
-							// user atime save
+							// update user atime
 							mongoUsers.update({_id:doc._id}, {$set:{atime:time}}, function(){});
 							callback({code:1, sjcl:doc.sjcl, key:key});
 						} else {
@@ -202,15 +202,16 @@ module.exports.sessions = {
 	'get': function ( path, query, request, callback ) {
 		var key = request.headers.key;
 		if ( key ) {
+			// authorized
 			mongoSessions.findOne({_id:key}, {_id:0, uid:1, ctime:1, atime:1}, function(err, session) {
 				if ( session ) {
-					console.log(session);
+					//console.log(session);
 					// authorized
 					if ( path[0] ) {
 						// single current key info
 						mongoSessions.findOne({_id:path[0]}, {_id:0, ctime:1, atime:1, data:1}, function(err, doc) {
-							console.log(err);
-							console.log(doc);
+							//console.log(err);
+							//console.log(doc);
 							if ( doc ) {
 								callback({code:1, data:doc});
 							} else {
@@ -228,6 +229,30 @@ module.exports.sessions = {
 							{sort:{mtime:-1}, skip:query.skip, limit:query.limit}
 						).toArray(function(err, docs) { callback({code: 1, data: docs || []}); });
 					}
+				} else {
+					callback({code:5});
+				}
+			});
+		} else {
+			callback({code:5});
+		}
+	},
+
+	'put': function ( path, query, request, callback ) {
+		var key = path[0];
+
+		var crypt = require('crypto');
+		console.log(crypt.randomBytes(1024/8));
+		console.log(Object.prototype.toString.call(crypt.randomBytes(1024/8)));
+
+		if ( key ) {
+			// get the session
+			mongoSessions.findOne({_id:key}, {_id:1, atime:1}, function(err, session) {
+				if ( session ) {
+					// update session atime
+					mongoSessions.update({_id:key}, {$set:{atime:+new Date()}}, function(){});
+					// send the last access time to the client
+					callback({code:1, atime:session.atime});
 				} else {
 					callback({code:5});
 				}

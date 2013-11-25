@@ -51,8 +51,8 @@ module.exports.post = function ( url, data, callback ) {
 	return api('post', url, data, callback);
 };
 
-module.exports.put = function ( url, data, callback ) {
-	return api('put', url, data, callback);
+module.exports.put = function ( url, callback ) {
+	return api('put', url, null, callback);
 };
 
 module.exports.delete = function ( url, callback ) {

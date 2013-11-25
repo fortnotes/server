@@ -15,16 +15,17 @@ var io           = require('./lib/io'),
 
 // authenticated?
 if ( config.apiKey ) {
-	// logged in but validation is required
-	api.get('sessions/' + config.apiKey, function(err, response){
-		console.log(err);
-		console.log(response);
+	// it appears the user is logged in but validation is required
+	api.put('sessions/' + config.apiKey, function(err, response){
 		// session is valid
 		if ( response.code === 1 ) {
 			pageList.classList.add('active');
+			console.log('%c%s %o', 'color:green', 'session is valid, last access time:', new Date(response.atime));
 		} else {
 			// authentication has expired
 			pageAuth.classList.add('active');
+			console.log('%c%s', 'color:red', 'session is invalid, need to login');
+			localStorage.clear();
 		}
 	});
 } else {
