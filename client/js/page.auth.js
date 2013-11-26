@@ -49,7 +49,8 @@ buttonLogin.addEventListener('click', function(){
 
 	// get a salt for the given login
 	api.get('auth/' + hashName, function(err, response){
-		var hash = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(hashPass + response.salt)),
+		var salt = response.salt,
+			hash = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(hashPass + salt)),
 			// user session data to store
 			post = aes.encrypt(JSON.stringify({
 				ip: response.ip,
@@ -60,8 +61,10 @@ buttonLogin.addEventListener('click', function(){
 		api.post('auth/' + hashName + '/' + hash, post, function(err, response){
 			// access is granted
 			if ( response.code === 1 && response.key ) {
-				// save authentication
+				// save authentication data
 				localStorage.setItem('config.auth.key', config.apiKey = response.key);
+				localStorage.setItem('config.auth.salt', salt);
+				localStorage.setItem('config.auth.hash', hash);
 				// encrypt/decrypt parameters
 				localStorage.setItem('config.sjcl', JSON.stringify(config.sjcl = response.sjcl));
 				// go the the client section

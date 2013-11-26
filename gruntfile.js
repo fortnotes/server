@@ -11,6 +11,10 @@ module.exports = function ( grunt ) {
 		project: grunt.file.readJSON('package.json'),
 
 		browserify: {
+			options: {
+				ignore: ['crypto'],
+				debug: true
+			},
 			build: {
 				src : ['client/js/*.js', 'client/js/lib/*.js'],
 				dest: 'client/build.js'

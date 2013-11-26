@@ -166,7 +166,7 @@ module.exports.auth = {
 					var time = +new Date(),
 						key  = new Buffer(String.fromCharCode.apply(null, crypto.randomBytes(40))).toString('base64').replace('/', '').slice(0, 64);
 					// create a session and store user ip, user agent, geo data and so on
-					mongoSessions.insert({_id:key, uid:doc._id, ctime:time, atime:0, data:postData}, {}, function(err) {
+					mongoSessions.insert({_id:key, uid:doc._id, ctime:time, atime:time, data:postData}, {}, function(err) {
 						if ( !err ) {
 							// update user atime
 							mongoUsers.update({_id:doc._id}, {$set:{atime:time}}, function(){});
@@ -226,7 +226,7 @@ module.exports.sessions = {
 						mongoSessions.find(
 							{uid:session.uid},
 							{uid:0},
-							{sort:{mtime:-1}, skip:query.skip, limit:query.limit}
+							{sort:{atime:-1}, skip:query.skip, limit:query.limit}
 						).toArray(function(err, docs) { callback({code: 1, data: docs || []}); });
 					}
 				} else {

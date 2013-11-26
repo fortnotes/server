@@ -42,6 +42,7 @@ Requests:
  POST   | /api/v1/auth/**name**/**pass**   | return api key (base64 encoded 64 bytes string) of the created session
  GET    | /api/v1/sessions?limit=20&skip=0 | return a list of user's sessions
  GET    | /api/v1/sessions/**key**         | return a session info by the given api key
+ PUT    | /api/v1/sessions/**key**         | session refresh and check that it is still valid (should be done on each SPA reload), on success returns the previous access time
  HEAD   | /api/v1/notes                    | return all notes general info
  GET    | /api/v1/notes                    | return a list of last 20 records
  GET    | /api/v1/notes?limit=20&skip=0    | return a custom list of records
@@ -76,4 +77,6 @@ There are some stored parameters in the browser localStorage:
  Name             | Description
 :-----------------|:-----------------------------------------------------------
  config.auth.key  | api key for authentication (base64 encoded 64 bytes string)
+ config.auth.salt | random salt data for user password hashing
+ config.auth.hash | user password hashed with salt
  config.sjcl      | encrypt/decrypt user-specific parameters
