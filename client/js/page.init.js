@@ -1,8 +1,8 @@
 'use strict';
 
 var //io           = require('./lib/io'),
-	aes          = require('./aes'),
-	api          = require('./api'),
+	//aes          = require('./aes'),
+	//api          = require('./api'),
 	config       = require('./config');
 
 
@@ -17,18 +17,15 @@ if ( config.apiKey ) {
 //		}
 //	});
 
-	api.get('sessions', function(err, response){
-		if ( response.code === 1 ) {
-			response.data.forEach(function ( session ) {
-				console.log('session', new Date(session.atime), session._id, JSON.parse(aes.decrypt(session.data)));
-			});
-		}
-	});
+//	api.get('sessions', function(err, response){
+//		if ( response.code === 1 ) {
+//			response.data.forEach(function ( session ) {
+//				console.log('session', new Date(session.atime), session._id, JSON.parse(aes.decrypt(session.data)));
+//			});
+//		}
+//	});
 
-	/*api.get('sessions/' + config.apiKey, function(err, response){
-		console.log('current session', response);
-		console.log('current session data', JSON.parse(aes.decrypt(response.data.data)));
-	});*/
+
 
 	// test call
 //	io.ajax(config.apiUrl + 'sessions/' + config.apiKey, {

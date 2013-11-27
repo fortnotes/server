@@ -241,10 +241,6 @@ module.exports.sessions = {
 	'put': function ( path, query, request, callback ) {
 		var key = path[0];
 
-		var crypt = require('crypto');
-		console.log(crypt.randomBytes(1024/8));
-		console.log(Object.prototype.toString.call(crypt.randomBytes(1024/8)));
-
 		if ( key ) {
 			// get the session
 			mongoSessions.findOne({_id:key}, {_id:1, atime:1}, function(err, session) {

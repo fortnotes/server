@@ -1,36 +1,17 @@
 'use strict';
 
-var io           = require('./lib/io'),
+var //io           = require('./lib/io'),
 	sjcl         = require('./lib/sjcl'),
 	api          = require('./api'),
 	aes          = require('./aes'),
 	config       = require('./config'),
-	pageAuth     = document.querySelector('body > div.page.auth'),
-	pageList     = document.querySelector('body > div.page.list'),
-	inputName    = pageAuth.querySelector('input.name'),
-	inputPass    = pageAuth.querySelector('input.pass'),
-	buttonLogin  = pageAuth.querySelector('button.login'),
-	buttonSignup = pageAuth.querySelector('button.signup');
-
-
-// authenticated?
-if ( config.apiKey ) {
-	// it appears the user is logged in but validation is required
-	api.put('sessions/' + config.apiKey, function(err, response){
-		// session is valid
-		if ( response.code === 1 ) {
-			pageList.classList.add('active');
-			console.log('%c%s %o', 'color:green', 'session is valid, last access time:', new Date(response.atime));
-		} else {
-			// authentication has expired
-			pageAuth.classList.add('active');
-			console.log('%c%s', 'color:red', 'session is invalid, need to login');
-			localStorage.clear();
-		}
-	});
-} else {
-	pageAuth.classList.add('active');
-}
+	pages        = require('./pages'),
+	//pageAuth     = document.querySelector('body > div.page.auth'),
+	//pageList     = document.querySelector('body > div.page.list'),
+	inputName    = pages.auth.$node.querySelector('input.name'),
+	inputPass    = pages.auth.$node.querySelector('input.pass'),
+	buttonLogin  = pages.auth.$node.querySelector('button.login'),
+	buttonSignup = pages.auth.$node.querySelector('button.signup');
 
 
 inputName.addEventListener('keydown', function(event){
@@ -68,44 +49,14 @@ buttonLogin.addEventListener('click', function(){
 				// encrypt/decrypt parameters
 				localStorage.setItem('config.sjcl', JSON.stringify(config.sjcl = response.sjcl));
 				// go the the client section
-				pageList.classList.toggle('active');
-				pageAuth.classList.toggle('active');
+				pages.list.show();
+				pages.auth.hide();
 			} else {
 				//TODO: wrong auth data
 				console.log(response);
 			}
 		});
 	});
-
-//	io.ajax(config.apiUrl + 'auth/' + hashName, {
-//		onload: function(response){
-//			response = JSON.parse(response);
-//			// generate a hash and receive an api key
-//			io.ajax(config.apiUrl + 'auth/' + hashName + '/' + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(hashPass + response.salt)), {
-//				method: 'post',
-//				data  : aes.encrypt(JSON.stringify({
-//					ip: response.ip,
-//					ua: window.navigator.userAgent
-//				})),
-//				onload: function(response){
-//					response = JSON.parse(response);
-//					// access is granted
-//					if ( response.code === 1 && response.key ) {
-//						// save authentication
-//						localStorage.setItem('config.auth.key', config.apiKey = response.key);
-//						// encrypt/decrypt parameters
-//						localStorage.setItem('config.sjcl', JSON.stringify(config.sjcl = response.sjcl));
-//						// go the the client section
-//						pageList.classList.toggle('active');
-//						pageAuth.classList.toggle('active');
-//					} else {
-//						//TODO: wrong auth data
-//						console.log(response);
-//					}
-//				}
-//			});
-//		}
-//	});
 });
 
 buttonSignup.addEventListener('click', function(){

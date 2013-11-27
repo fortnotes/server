@@ -6,8 +6,46 @@
 
 'use strict';
 
-var aes   = require('./aes'),
-	Notes = require('./collection.notes');
+var aes    = require('./aes'),
+	api    = require('./api'),
+	config = require('./config'),
+	pages  = require('./pages'),
+	Notes  = require('./collection.notes');
+
+
+// authenticated?
+if ( config.apiKey ) {
+	// it appears the user is logged in but validation is required
+	api.put('sessions/' + config.apiKey, function(err, response){
+		// session is valid
+		if ( response.code === 1 ) {
+			pages.list.show();
+			console.log('%c%s %o', 'color:green', 'session is valid, last access time:', new Date(response.atime));
+		} else {
+			// authentication has expired
+			pages.auth.show();
+			console.log('%c%s', 'color:red', 'session is invalid, need to login');
+			localStorage.clear();
+		}
+	});
+
+	// collect all sessions info
+	api.get('sessions', function ( err, response ) {
+		if ( response.code === 1 ) {
+			response.data.forEach(function ( session ) {
+				console.log('session', new Date(session.atime), session._id, JSON.parse(aes.decrypt(session.data)));
+			});
+		}
+	});
+
+	/*
+	api.get('sessions/' + config.apiKey, function(err, response){
+	console.log('current session', response);
+	console.log('current session data', JSON.parse(aes.decrypt(response.data.data)));
+	});/**/
+} else {
+	pages.auth.show();
+}
 
 
 //app.init();
