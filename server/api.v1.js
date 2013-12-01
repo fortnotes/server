@@ -135,7 +135,11 @@ module.exports.auth = {
 		if ( name ) {
 			// only name so return salt for pass hash generation
 			mongoUsers.findOne({name:name}, function(err, doc) {
-				callback({code:1, salt:doc.salt, ip:request.headers['X-Forwarded-For'] || request.connection.remoteAddress});
+				if ( doc ) {
+					callback({code:1, salt:doc.salt, ip:request.headers['X-Forwarded-For'] || request.connection.remoteAddress});
+				} else {
+					callback({code:5});
+				}
 			});
 		} else {
 			callback({code:5});
