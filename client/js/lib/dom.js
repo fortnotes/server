@@ -11,6 +11,9 @@
 var dom = {};
 
 
+//TODO: should accept not only {Node}
+
+
 /**
  * Removes all child elements from the given HTML element
  * @param {Node} tag element to be cleared

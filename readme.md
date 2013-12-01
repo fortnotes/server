@@ -66,8 +66,13 @@ Response codes:
 
 Two-steps algorithm:
 
-- /api/v1/auth/name
-- /api/v1/auth/name/pass
+`GET /api/v1/auth/name`
+> Where `name` is a sha256 hash value of user name.  
+> Returns operation status code, random salt string used for password hashing and a client call IP address (on success).
+
+`POST /api/v1/auth/name/pass`
+> Where `name` is a sha256 hash value of user name, `pass` is a salted sha256 hash value of user pass.  
+> Returns SJCL user encryption options and a generated API key for future access.
 
 
 ###Client-side data###
@@ -77,6 +82,7 @@ There are some stored parameters in the browser localStorage:
  Name             | Description
 :-----------------|:-----------------------------------------------------------
  config.auth.key  | api key for authentication (base64 encoded 64 bytes string)
- config.auth.salt | random salt data for user password hashing
- config.auth.hash | user password hashed with salt
- config.sjcl      | encrypt/decrypt user-specific parameters
+ config.auth.name | last authenticated user name
+ config.pass.salt | random salt data for user password hashing (set on login)
+ config.pass.hash | user password hashed with salt (set on login)
+ config.sjcl      | encrypt/decrypt user-specific parameters (set on login)
