@@ -86,3 +86,6 @@ There are some stored parameters in the browser localStorage:
  config.pass.salt | random salt data for user password hashing (set on login)
  config.pass.hash | user password hashed with salt (set on login)
  config.sjcl      | encrypt/decrypt user-specific parameters (set on login)
+
+
+The [code style](https://github.com/DarkPark/jscs) used for development.
