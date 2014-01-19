@@ -11,8 +11,10 @@
 var mongoClient = require('mongodb').MongoClient,
 	config      = require('./config/loader.js');
 
+//TODO: implement
+
 // db connect
-mongoClient.connect('mongodb://' + config.database.host + ':' + config.database.port + '/' + config.database.base, {}, function ( error, db ) {
+/*mongoClient.connect('mongodb://' + config.database.host + ':' + config.database.port + '/' + config.database.base, {}, function ( error, db ) {
 	if ( error ) { throw error; }
 
 	db.collection('users').createIndex({a:1}, {unique:true, w:1}, function ( e ) { if ( e ) throw e; });
@@ -22,7 +24,7 @@ mongoClient.connect('mongodb://' + config.database.host + ':' + config.database.
 	console.log('MongoDB init is completed.');
 
 	db.close();
-});
+});/**/
 
 //process.on('uncaughtException', function(err) {
 //	console.log(err);
