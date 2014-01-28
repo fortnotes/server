@@ -1,10 +1,10 @@
-#FortNotes#
+# FortNotes #
 
 FortNotes is a highly secure online private information manager based on the AES encryption in the browser.
 The current stable version - <https://bitbucket.org/DarkPark/fortnotes>
 
 
-##Deployment##
+## Deployment ##
 
 Dependencies:
 
@@ -19,9 +19,19 @@ Download and install the project files: `npm install fortnotes`.
 Run the server with `npm start` or `node server/main.js`.
 Now the web client is accessible in a web browser <http://localhost:8080/client/>.
 
-##Development##
+## Migration ##
+
+
+## Development ##
 
 `sudo npm install -g grunt-cli`
+
+`npm install`
+
+`grunt`
+
+
+
 
 
 fortnotes.com/client/
@@ -32,7 +42,7 @@ app.fortnotes.com
 api.fortnotes.com
 
 
-##API##
+## API ##
 
 Requests:
 
@@ -62,7 +72,7 @@ Response codes:
   4   | wrong API method  | the corresponding entity doesn't have this method (GET/POST...)
   5   | wrong auth data   | invalid user name, password or api key
 
-###Authentication###
+### Authentication ###
 
 Two-steps algorithm:
 
@@ -75,7 +85,7 @@ Two-steps algorithm:
 > Returns SJCL user encryption options and a generated API key for future access.
 
 
-###Client-side data###
+### Client-side data ###
 
 There are some stored parameters in the browser localStorage:
 
