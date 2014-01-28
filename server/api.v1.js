@@ -15,7 +15,7 @@ var mongodb       = require('mongodb'),
 	mongoUsers    = null,
 	mongoSessions = null,
 	crypto        = require('crypto'),
-	config        = require('./config/loader.js');
+	config        = require('./config');
 
 
 // db connect
@@ -32,7 +32,7 @@ mongodb.MongoClient.connect('mongodb://' + config.database.host + ':' + config.d
 /**
  * @namespace
  */
-module.exports.users = {
+exports.users = {
 	/**
 	 * read
 	 * @return {Object} operation status and data
@@ -70,7 +70,7 @@ module.exports.users = {
 /**
  * @namespace
  */
-module.exports.notes = {
+exports.notes = {
 	/**
 	 * read
 	 */
@@ -120,7 +120,7 @@ module.exports.notes = {
 /**
  * @namespace
  */
-module.exports.tags = {
+exports.tags = {
 
 };
 
@@ -128,7 +128,7 @@ module.exports.tags = {
 /**
  * @namespace
  */
-module.exports.auth = {
+exports.auth = {
 	'get': function ( path, query, request, callback ) {
 		var name = path[0];
 
@@ -202,7 +202,7 @@ function authCheck ( key, onSuccess ) {
 /**
  * @namespace
  */
-module.exports.sessions = {
+exports.sessions = {
 	'get': function ( path, query, request, callback ) {
 		var key = request.headers.key;
 		if ( key ) {

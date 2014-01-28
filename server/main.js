@@ -13,7 +13,7 @@ var http         = require('http'),
 	staticModule = require('node-static'),
 	staticServer = new staticModule.Server({cache:0}),
 	//browserify   = require('browserify')(),
-	config       = require('./config/loader.js'),
+	config       = require('./config'),
 	api          = {
 		v1 : require('./api.v1.js')
 	};
@@ -99,6 +99,10 @@ http.createServer(function (request, response) {
 	}
 	console.log('%s\t%s', request.method, request.url);
 
+	// connection abort handling
+	response.on('close', function () {
+		//TODO: clear resources
+	});
 }).listen(config.server.port).on('listening', function() {
 	console.log('FortNotes server is running at http://localhost:%s/', config.server.port);
 });
