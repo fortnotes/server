@@ -8,29 +8,26 @@
 'use strict';
 
 // global modules and config
-var http         = require('http'),
-	url          = require('url'),
-	staticModule = require('node-static'),
-	staticServer = new staticModule.Server({cache:0}),
-	//browserify   = require('browserify')(),
-	config       = require('./config'),
-	api          = {
+var http   = require('http'),
+	url    = require('url'),
+	files  = new (require('node-static')).Server(),
+	config = require('./config'),
+	api    = {
 		v1 : require('./api.v1.js')
 	};
 
 http.createServer(function (request, response) {
-	// prepare request query
+	// prepare
 	var urlParts  = url.parse(request.url, true),           // all url params
 		pathParts = urlParts.pathname.slice(1).split('/'),  // ["api", "v1", "notes"]
 		pathRoot  = pathParts.shift(),                      // "api" or "client"
 		method    = request.method.toLowerCase(),
 		postData  = '',
-		apiVersion, apiContext, apiMethod, apiResponse = function(result){
+		apiResponse = function(result){
 			response.end(JSON.stringify(result));
-		};
-	//console.log(request);
+		},
+		apiVersion, apiContext, apiMethod;
 
-	/* jshint indent:false */
 	switch ( pathRoot ) {
 		// REST interface
 		case 'api':
@@ -76,13 +73,8 @@ http.createServer(function (request, response) {
 
 		// serve static files
 		case 'client':
-			/*if ( config.debug ) {
-				if ( request.url === '/client/app.js' ) {
-
-				}
-			}*/
 			// send file content
-			staticServer.serve(request, response, function ( error ) {
+			files.serve(request, response, function ( error ) {
 				if ( error && error.status === 404 ) {
 					// If the file wasn't found
 					response.writeHead(302, {'Location': '/client/index.html'});
