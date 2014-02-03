@@ -13,7 +13,8 @@ var http   = require('http'),
 	files  = new (require('node-static')).Server(),
 	config = require('./config'),
 	api    = {
-		v1 : require('./api.v1.js')
+		v1 : require('./api.v1')
+		//v1 : require('../api/v1/main')
 	};
 
 http.createServer(function (request, response) {
