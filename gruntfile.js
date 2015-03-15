@@ -47,7 +47,7 @@ module.exports = function ( grunt ) {
 					//src : ['client/js/*.js', 'client/js/lib/*.js'],
 					//src : ['client/js/main.js'],
 					//src : ['client/js/tst/*.js'],
-					//dest: 'client/pub/app.js'
+					//dest: 'client/build/app.js'
 				}
 			}
 		},
@@ -57,8 +57,8 @@ module.exports = function ( grunt ) {
 				banner: '/*! <%= project.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
 			},
 			build: {
-				src : 'client/pub/app.js',
-				dest: 'client/pub/app.js'
+				src : 'client/build/app.js',
+				dest: 'client/build/app.js'
 			}
 		},
 

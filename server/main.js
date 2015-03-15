@@ -11,7 +11,7 @@
 var http   = require('http'),
 	url    = require('url'),
 	files  = new (require('node-static')).Server(),
-	config = require('./config'),
+	config = require('./config/main'),
 	api    = {
 		v1 : require('./api.v1')
 		//v1 : require('../api/v1/main')
@@ -96,6 +96,6 @@ http.createServer(function (request, response) {
 	response.on('close', function () {
 		//TODO: clear resources
 	});
-}).listen(config.server.port).on('listening', function() {
-	console.log('FortNotes server is running at http://localhost:%s/', config.server.port);
+}).listen(main.server.port).on('listening', function() {
+	console.log('FortNotes server is running at http://localhost:%s/', main.server.port);
 });

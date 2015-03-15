@@ -15,11 +15,11 @@ var mongodb       = require('mongodb'),
 	mongoUsers    = null,
 	mongoSessions = null,
 	crypto        = require('crypto'),
-	config        = require('./config');
+	config        = require('./config/main');
 
 
 // db connect
-mongodb.MongoClient.connect('mongodb://' + config.database.host + ':' + config.database.port + '/' + config.database.base, {}, function ( error, db ) {
+mongodb.MongoClient.connect('mongodb://' + main.database.host + ':' + main.database.port + '/' + main.database.base, {}, function ( error, db ) {
 	if ( error ) { throw error; }
 	dbLink        = db;
 	mongoNotes    = db.collection('notes');

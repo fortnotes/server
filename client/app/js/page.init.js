@@ -3,8 +3,12 @@
 var //io           = require('./lib/io'),
 	//aes          = require('./aes'),
 	//api          = require('./api'),
-	config       = require('./config');
+	config       = require('./config'),
+	qq = require('./page.auth.js');
 
+console.log(qq);
+
+module.exports = ['init'];
 
 if ( config.apiKey ) {
 

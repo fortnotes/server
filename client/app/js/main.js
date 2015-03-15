@@ -10,7 +10,7 @@ var aes    = require('./aes'),
 	api    = require('./api'),
 	config = require('./config'),
 	pages  = require('./pages'),
-	Notes  = require('./collection.notes');
+	Notes  = require('./collection.notes.js');
 
 
 // authenticated?

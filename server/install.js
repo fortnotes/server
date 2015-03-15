@@ -9,7 +9,7 @@
 
 // global modules and config
 var mongoClient = require('mongodb').MongoClient,
-	config      = require('./config');
+	config      = require('./config/main');
 
 //TODO: implement
 

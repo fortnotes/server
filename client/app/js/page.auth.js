@@ -2,6 +2,7 @@
 
 var //io           = require('./lib/io'),
 	sjcl         = require('./lib/sjcl'),
+	Page         = require('./lib/page'),
 	api          = require('./api'),
 	aes          = require('./aes'),
 	config       = require('./config'),
@@ -11,8 +12,10 @@ var //io           = require('./lib/io'),
 	inputName    = pages.auth.$node.querySelector('input.name'),
 	inputPass    = pages.auth.$node.querySelector('input.pass'),
 	buttonLogin  = pages.auth.$node.querySelector('button.login'),
-	buttonSignup = pages.auth.$node.querySelector('button.signup');
+	buttonSignup = pages.auth.$node.querySelector('button.signup'),
+	qq = require('./page.init.js');
 
+console.log(qq);
 
 // restore the last authenticated user name
 inputName.value = localStorage.getItem('config.auth.name') || '';
@@ -30,6 +33,12 @@ inputPass.addEventListener('keydown', function(event){
 
 
 buttonLogin.addEventListener('click', function(){
+	if ( !inputName.value || !inputPass.value ) {
+		//TODO: wrong auth data
+		console.log('invalid user name or password');
+		return;
+	}
+
 	// prepare hashes
 	var hashName = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(inputName.value)),
 		hashPass = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(inputPass.value));
@@ -83,3 +92,5 @@ buttonSignup.addEventListener('click', function(){
 	//TODO: registration
 	console.log(this);
 });
+
+module.exports = ['auth'];

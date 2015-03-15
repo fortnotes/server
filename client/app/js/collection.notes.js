@@ -8,7 +8,7 @@
 
 var Collection = require('./lib/collection'),
 	config     = require('./config'),
-	Note       = require('./model.note');
+	Note       = require('./model.note.js');
 
 
 /**
