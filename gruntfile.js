@@ -5,6 +5,8 @@
 'use strict';
 
 module.exports = function ( grunt ) {
+	// load all grunt tasks matching the `grunt-*` pattern
+	require('load-grunt-tasks')(grunt);
 
 	// prepare configuration
 	grunt.initConfig({
@@ -91,11 +93,11 @@ module.exports = function ( grunt ) {
 				tasks: []
 			},
 			js: {
-				files: ['<%= browserify.build.src %>'],
+				files: ['<%= browserify.dev.files %>'],
 				tasks: ['browserify']
 			},
 			css: {
-				files: ['<%= less.build.src %>'],
+				files: ['<%= less.dev.files %>'],
 				tasks: ['less']
 			}
 		},
@@ -109,14 +111,14 @@ module.exports = function ( grunt ) {
 	});
 
 	// load plugins
-	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.loadNpmTasks('grunt-contrib-less');
-	grunt.loadNpmTasks('grunt-contrib-jade');
-	grunt.loadNpmTasks('grunt-browserify');
-	grunt.loadNpmTasks('grunt-concurrent');
-	grunt.loadNpmTasks('grunt-nodemon');
+//	grunt.loadNpmTasks('grunt-contrib-watch');
+//	grunt.loadNpmTasks('grunt-contrib-uglify');
+//	grunt.loadNpmTasks('grunt-contrib-jshint');
+//	grunt.loadNpmTasks('grunt-contrib-less');
+//	grunt.loadNpmTasks('grunt-contrib-jade');
+//	grunt.loadNpmTasks('grunt-browserify');
+//	grunt.loadNpmTasks('grunt-concurrent');
+//	grunt.loadNpmTasks('grunt-nodemon');
 
 	// default task(s)
 	//grunt.registerTask('default', ['browserify', 'uglify', 'less']);
