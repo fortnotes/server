@@ -21,7 +21,7 @@ drop table if exists "notes_tags";
 create table "users" (
 	"id"		integer primary key autoincrement not null,
 	"email"		varchar(512) not null,
-	"active"	tinyint(1) default 0,	/* inactive till at least one session is confirmed */
+	"active"	tinyint(1) default 0	/* inactive till at least one session is confirmed */
 );
 
 create table "sessions" (
@@ -52,7 +52,7 @@ create table "notes_data" (
 	"note_id"	integer not null,		/* link to the table notes */
 	"data"		text not null,			/* encrypted note content */
 	"hash"		varchar(256) not null,	/* for data integrity validation */
-	"ctime"		integer default 0,		/* creation time (0 - tip version) */
+	"ctime"		integer default 0		/* creation time (0 - tip version) */
 );
 
 /* has tag declaration */
@@ -67,7 +67,7 @@ create table "tags_data" (
 	"user_id"	integer primary key not null,	/* link to the table users - owner of the tags data */
 	"data"		text not null,					/* encrypted tags content */
 	"hash"		varchar(256) not null,			/* for data integrity validation */
-	"mtime"		integer default 0,				/* last time tags data was saved */
+	"mtime"		integer default 0				/* last time tags data was saved */
 );
 
 /* has links between notes and tags */
@@ -87,7 +87,7 @@ create index "idx_notes_user_id"      on "notes"      ("user_id");	/* to get all
 create index "idx_notes_data_user_id" on "notes_data" ("note_id");	/* to get all note version for any note */
 create index "idx_tags_user_id"       on "tags"       ("user_id");	/* to get all tags for any user */
 create index "idx_tags_data_user_id"  on "tags_data"  ("user_id");	/* to get tags data for any user */
-create index "idx_note_tags_note_id"  on "note_tags"  ("note_id");	/* to get all tags for any note */
-create index "idx_note_tags_tag_id"   on "note_tags"  ("tag_id");	/* to get all notes for any tag */
+create index "idx_notes_tags_note_id" on "notes_tags" ("note_id");	/* to get all tags for any note */
+create index "idx_notes_tags_tag_id"  on "notes_tags" ("tag_id");	/* to get all notes for any tag */
 
 /* default data insertion */
