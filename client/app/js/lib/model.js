@@ -1,5 +1,6 @@
 /**
- * Base model implementation
+ * Base model implementation.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

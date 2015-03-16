@@ -1,5 +1,6 @@
 /**
- * Main server configuration
+ * Main server configuration.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

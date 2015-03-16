@@ -1,5 +1,6 @@
 /**
- * Main application html blocks
+ * Main application html blocks.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

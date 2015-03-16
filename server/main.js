@@ -1,6 +1,7 @@
 /**
- * Central Web Server
- * main entry point
+ * Central Web Server.
+ * Main entry point.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

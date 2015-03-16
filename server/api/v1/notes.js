@@ -1,6 +1,7 @@
 /**
- * RESTful web API module
- * Notes
+ * RESTful web API module.
+ * Notes.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

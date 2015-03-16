@@ -1,5 +1,6 @@
 /**
- * Main application entry point
+ * Main application entry point.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

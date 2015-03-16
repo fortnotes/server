@@ -1,5 +1,6 @@
 /**
- * Page manager implementation
+ * Page manager implementation.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

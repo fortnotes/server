@@ -1,6 +1,7 @@
 /**
- * RESTful web API module
- * Root constants
+ * RESTful web API module.
+ * Root constants.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

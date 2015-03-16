@@ -1,8 +1,9 @@
 /**
-* Base collection implementation
-* @author DarkPark
-* @license GNU GENERAL PUBLIC LICENSE Version 3
-*/
+ * Base collection implementation.
+ *
+ * @author DarkPark
+ * @license GNU GENERAL PUBLIC LICENSE Version 3
+ */
 
 'use strict';
 

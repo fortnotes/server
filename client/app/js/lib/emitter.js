@@ -1,5 +1,6 @@
 /**
- * Events Emitter base implementation
+ * Events Emitter base implementation.
+ *
  * @see http://nodejs.org/api/events.html
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3

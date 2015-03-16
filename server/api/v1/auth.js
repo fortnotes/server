@@ -1,6 +1,7 @@
 /**
- * RESTful web API module
- * Authentication
+ * RESTful web API module.
+ * Authentication.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

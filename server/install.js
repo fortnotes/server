@@ -1,6 +1,7 @@
 /**
- * Central Web Server
- * module to setup the environment before use
+ * Central Web Server.
+ * module to setup the environment before use.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

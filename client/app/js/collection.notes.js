@@ -1,5 +1,6 @@
 /**
- * List of notes
+ * List of notes.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

@@ -1,5 +1,6 @@
 /**
- * IO helpers
+ * IO helpers.
+ *
  * @namespace
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3

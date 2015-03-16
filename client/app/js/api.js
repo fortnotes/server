@@ -1,5 +1,6 @@
 /**
- * Application API wrapper
+ * Application API wrapper.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

@@ -1,5 +1,6 @@
 /**
- * Base view implementation
+ * Base view implementation.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

@@ -1,5 +1,6 @@
 /**
- * Real-time application parameters
+ * Real-time application parameters.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

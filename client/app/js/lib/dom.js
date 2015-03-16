@@ -1,5 +1,6 @@
 /**
- * DOM manipulation module
+ * DOM manipulation module.
+ *
  * @namespace
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3

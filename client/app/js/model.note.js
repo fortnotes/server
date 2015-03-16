@@ -1,5 +1,6 @@
 /**
- * Single note model implementation
+ * Single note model implementation.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */

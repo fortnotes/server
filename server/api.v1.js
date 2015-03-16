@@ -1,6 +1,7 @@
 /**
- * Central Web Server
- * RESTful web API module
+ * Central Web Server.
+ * RESTful web API module.
+ *
  * @module api
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3

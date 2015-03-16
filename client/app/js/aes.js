@@ -1,5 +1,6 @@
 /**
- * AES encryption/decryption wrapper
+ * AES encryption/decryption wrapper.
+ *
  * @namespace
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3

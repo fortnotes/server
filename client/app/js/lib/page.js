@@ -1,5 +1,6 @@
 /**
- * Base page implementation
+ * Base page implementation.
+ *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  */
