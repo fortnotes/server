@@ -10,7 +10,7 @@
 'use strict';
 
 // global modules and config
-var mongodb       = require('mongodb'),
+var //mongodb       = require('mongodb'),
 	dbLink        = null,
 	mongoNotes    = null,
 	mongoUsers    = null,
@@ -20,14 +20,14 @@ var mongodb       = require('mongodb'),
 
 
 // db connect
-mongodb.MongoClient.connect('mongodb://' + main.database.host + ':' + main.database.port + '/' + main.database.base, {}, function ( error, db ) {
-	if ( error ) { throw error; }
-	dbLink        = db;
-	mongoNotes    = db.collection('notes');
-	mongoUsers    = db.collection('users');
-	mongoSessions = db.collection('sessions');
-	console.log('FortNotes mongo database is ready');
-});
+//mongodb.MongoClient.connect('mongodb://' + main.database.host + ':' + main.database.port + '/' + main.database.base, {}, function ( error, db ) {
+//	if ( error ) { throw error; }
+//	dbLink        = db;
+//	mongoNotes    = db.collection('notes');
+//	mongoUsers    = db.collection('users');
+//	mongoSessions = db.collection('sessions');
+//	console.log('FortNotes mongo database is ready');
+//});
 
 
 /**
