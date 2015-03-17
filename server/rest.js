@@ -1,6 +1,5 @@
 /**
- * Central Web Server.
- * Main entry point.
+ * REST server.
  *
  * @author DarkPark
  * @license GNU GENERAL PUBLIC LICENSE Version 3
@@ -8,39 +7,86 @@
 
 'use strict';
 
-var util = require('util'),
-	rest = require('./rest').init({
-		port: 8080
-	});
+var http = require('http'),
+	url  = require('url'),
+	events  = require('events'),
+	emitter = new events.EventEmitter(),
+	httpServer;
+
+function requestListener ( request, response ) {
+	var path     = url.parse(request.url, true).pathname.slice(1).split('/'),
+		resource = path[0],
+		method   = request.method.toLowerCase(),
+		event    = {
+			request:  request,
+			response: response,
+			method:   method,
+			path:     path
+		},
+		postData = '';
+
+	// split by request method
+	if ( method === 'post' ) {
+		// reset
+		postData = '';
+		// join all chunks
+		request.on('data', function ( data ) {
+			postData += data;
+		});
+		// all data is collected
+		request.on('end', function () {
+			// CRUD call with all left params + post data
+			//apiMethod(pathParts, urlParts.query, JSON.parse(postData), request, apiResponse);
+			event.data = postData;
+			emitter.emit(method + ':' + resource, event);
+		});
+	} else {
+		// CRUD call with all left params
+		//apiMethod(pathParts, urlParts.query, request, apiResponse);
+		emitter.emit(method + ':' + resource, event);
+	}
+}
+
+// public export
+module.exports = {
+	init: function ( config ) {
+		// prevent double init
+		/*if ( httpServer ) {
+			return false;
+		}*/
+
+		// defaults
+		config = config || {};
+		config.port = config.port || 8080;
 
 
-rest.on('get:users', function ( event ) {
-	console.log(util.inspect(event, {depth: 1, colors: true}));
-	event.response.end('qwe');
-});
+		// init
+		httpServer = http.createServer(requestListener).listen(config.port);
+		httpServer.on('listening', function () {
+			console.log('REST server is running at http://localhost:%s/', config.port);
+		});
 
-rest.on('post:users', function ( event ) {
-	console.log(util.inspect(event, {depth: 1, colors: true}));
-	event.response.end('qwe');
-});
+		return emitter;
+	}
+};
 
-// global modules and config
-//var http   = require('http'),
-//	url    = require('url'),
-//	//files  = new (require('node-static')).Server(),
+
+
+
+//files  = new (require('node-static')).Server(),
 //	config = require('./config/main'),
-//	//api    = require('./api/main');
+//api    = require('./api/main');
 //	api    = require('./api.v1');
-//	/*api    = {
-//		v1 : require('./api.v1')
-//		//v1 : require('../api/v1/main')
-//	};*/
-//
+/*api    = {
+ v1 : require('./api.v1')
+ //v1 : require('../api/v1/main')
+ };*/
+
 //http.createServer(function (request, response) {
 //	// prepare
 //	var urlParts  = url.parse(request.url, true),           // all url params
 //		pathParts = urlParts.pathname.slice(1).split('/'),  // ["api", "v1", "notes"]
-//		//pathRoot  = pathParts.shift(),                      // "api" or "client"
+//	//pathRoot  = pathParts.shift(),                      // "api" or "client"
 //		method    = request.method.toLowerCase(),
 //		postData  = '',
 //		apiResponse = function(result){
