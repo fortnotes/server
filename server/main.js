@@ -8,20 +8,26 @@
 
 'use strict';
 
-var util = require('util'),
-	rest = require('./rest').init({
+var util   = require('util'),
+	cookie = require('cookie'),
+	rest   = require('./rest').init({
 		port: 8080
 	});
 
 
 rest.on('get:users', function ( event ) {
-	console.log(util.inspect(event, {depth: 1, colors: true}));
-	event.response.end('qwe');
+	var cookieData = event.request.headers.cookie;
+	//console.log(util.inspect(event, {depth: 1, colors: true}));
+	//console.log(event.request.headers.cookie);
+
+	//event.response.end('get:users');
+	return {method: event.method, path: event.path, cookie: cookieData ? cookie.parse(cookieData) : {}};
 });
 
 rest.on('post:users', function ( event ) {
-	console.log(util.inspect(event, {depth: 1, colors: true}));
-	event.response.end('qwe');
+	//console.log(util.inspect(event, {depth: 1, colors: true}));
+	//event.response.end('post:users');
+	return {method: event.method, path: event.path, data: event.data};
 });
 
 // global modules and config
