@@ -66,7 +66,21 @@ module.exports = {
 			console.log('REST server is running at http://localhost:%s/', config.port);
 		});
 
-		return emitter;
+		return this;
+	},
+
+	on: function ( name, callback ) {
+		emitter.on(name, function ( event ) {
+			var body = JSON.stringify(callback(event));
+
+			// start building the response
+			event.response.writeHead(200, {
+				'Content-Type': 'application/json; charset=utf-8',
+				'Content-Length': body.length
+			});
+
+			event.response.end(body);
+		});
 	}
 };
 
