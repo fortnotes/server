@@ -14,7 +14,7 @@ var http = require('http'),
 	httpServer;
 
 function requestListener ( request, response ) {
-	var path     = url.parse(request.url, true).pathname.slice(1).split('/'),
+	var path     = request.url.slice(1).split('/'),
 		resource = path[0],
 		method   = request.method.toLowerCase(),
 		event    = {
@@ -24,6 +24,8 @@ function requestListener ( request, response ) {
 			path:     path
 		},
 		postData = '';
+
+	console.log('%s\t%s', method, request.url);
 
 	// split by request method
 	if ( method === 'post' ) {
@@ -71,7 +73,7 @@ module.exports = {
 
 	on: function ( name, callback ) {
 		emitter.on(name, function ( event ) {
-			var body = JSON.stringify(callback(event));
+			var body = JSON.stringify(callback(event) || '');
 
 			// start building the response
 			event.response.writeHead(200, {
