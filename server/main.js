@@ -9,10 +9,29 @@
 'use strict';
 
 var util   = require('util'),
+	querystring = require('querystring'),
 	cookie = require('cookie'),
 	rest   = require('./rest').init({
 		port: 8080
 	});
+
+
+// curl -v http://localhost:8080/sessions
+rest.on('get:sessions', function ( event ) {
+
+});
+
+
+// curl -v --data "email=test@gmail.com" http://localhost:8080/sessions
+rest.on('post:sessions', function ( event ) {
+	var email = querystring.parse(event.data).email;
+
+	//console.log(event.response);
+	event.response.setHeader('Set-Cookie', ['token=qwe; expires=Fri, 31 Dec 2016 23:59:59 GMT']);
+
+	//return {method: event.method, path: event.path, data: querystring.parse(event.data)};
+	return email;
+});
 
 
 rest.on('get:users', function ( event ) {
