@@ -10,31 +10,73 @@
 
 var util   = require('util'),
 	querystring = require('querystring'),
+	crypto = require('crypto'),
 	cookie = require('cookie'),
 	rest   = require('./rest').init({
-		port: 8080
+		port: 9090
 	});
 
 
-// curl -v http://localhost:8080/sessions
+// curl -v http://localhost:9090/sessions
 rest.on('get:sessions', function ( event ) {
 
 });
 
+/**
+ * @apiDefine UserNotFoundError
+ *
+ * @apiError UserNotFound The id of the User was not found.
+ *
+ * @apiErrorExample Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *     "error": "UserNotFound"
+ * }
+ */
 
-// curl -v --data "email=test@gmail.com" http://localhost:8080/sessions
+/**
+ * @api {post} /sessions Initialize a new session for the given email address.
+ *
+ * @apiVersion 1.0.0
+ * @apiName PostSessions
+ * @apiGroup Sessions
+ *
+ * @apiParam {string} email Users email address.
+ *
+ * @apiExample {curl} Example usage:
+ *     curl --include --data "email=test@gmail.com" http://localhost:9090/sessions
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     Set-Cookie: token=I3k5E18oV...dGjfHe6ciyyY; expires=Sun, 20 Mar 2016 10:46:19 GMT
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Bad Request
+ */
+
 rest.on('post:sessions', function ( event ) {
 	var email = querystring.parse(event.data).email,
 		tDate = new Date();
 
-	tDate.setFullYear(tDate.getFullYear() + 1);
+	if ( email ) {
+		// generate session token
+		crypto.randomBytes(96, function ( error, data ) {
+			if ( error ) { throw error; }
 
-	//console.log(event.response);
-	//event.response.setHeader('Set-Cookie', ['token=qwe; expires=Fri, 31 Dec 2016 23:59:59 GMT']);
-	event.response.setHeader('Set-Cookie', ['token=qwe; expires=' + tDate.toUTCString()]);
+			// set token lifetime 1 year
+			tDate.setFullYear(tDate.getFullYear() + 1);
 
-	//return {method: event.method, path: event.path, data: querystring.parse(event.data)};
-	return email;
+			// building a response
+			event.response.writeHead(200, {
+				'Set-Cookie': ['token=' + data.toString('base64') + '; expires=' + tDate.toUTCString()]
+			});
+			event.response.end();
+		});
+	} else {
+		// building a response
+		event.response.writeHead(400);
+		event.response.end();
+	}
 });
 
 

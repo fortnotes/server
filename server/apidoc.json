@@ -1,0 +1,18 @@
+{
+	"name": "FortNotes REST API",
+	"version": "1.0.0",
+	"description": "FortNotes server-side communication protocol.",
+	"header": {
+		"title": "Intro",
+		"filename": "header.md"
+	},
+	"url" : "https://api.fortnotes.com",
+	"sampleUrl": "http://localhost:9090",
+	"order": [
+		"Sessions"
+	],
+	"template": {
+		"withCompare": true,
+		"withGenerator": true
+	}
+}
