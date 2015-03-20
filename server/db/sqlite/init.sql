@@ -28,7 +28,7 @@ create table "sessions" (
 	"id"		integer primary key autoincrement not null,
 	"user_id"	integer not null,		/* link to the table users - owner of the session */
 	"active"	tinyint(1) default 0,	/* a session was confirmed by user or not */
-	"token"		varchar(256) not null,	/* generated session id */
+	"token"		varchar(128) not null,	/* generated session id */
 	"ccode"		varchar(64) not null,	/* generated confirmation code to confirm the session */
 	"ctime"		integer default 0,		/* creation time */
 	"vtime"		integer default 0,		/* validation time */
