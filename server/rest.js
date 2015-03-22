@@ -13,10 +13,11 @@ var http = require('http'),
 	emitter = new events.EventEmitter(),
 	httpServer;
 
+
 function requestListener ( request, response ) {
 	var path     = request.url.slice(1).split('/'),
 		resource = path[0],
-		method   = request.method.toLowerCase(),
+		method   = request.method.toUpperCase(),
 		event    = {
 			request:  request,
 			response: response,
@@ -28,63 +29,82 @@ function requestListener ( request, response ) {
 	console.log('%s\t%s', method, request.url);
 
 	// split by request method
-	if ( method === 'post' ) {
-		// reset
-		postData = '';
-		// join all chunks
-		request.on('data', function ( data ) {
-			postData += data;
-		});
-		// all data is collected
-		request.on('end', function () {
-			// CRUD call with all left params + post data
-			//apiMethod(pathParts, urlParts.query, JSON.parse(postData), request, apiResponse);
-			event.data = postData;
-			emitter.emit(method + ':' + resource, event);
-		});
-	} else {
-		// CRUD call with all left params
-		//apiMethod(pathParts, urlParts.query, request, apiResponse);
-		emitter.emit(method + ':' + resource, event);
+	switch ( method ) {
+		case 'OPTIONS':
+			// building a response
+			event.response.writeHead(200, {
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Credentials': true,
+				'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+				//'Access-Control-Max-Age': 1728000,
+				'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+			});
+			event.response.end();
+			break;
+		case 'POST':
+			// reset
+			postData = '';
+			// join all chunks
+			request.on('data', function ( data ) {
+				postData += data;
+			});
+			// all data is collected
+			request.on('end', function () {
+				// CRUD call with all left params + post data
+				//apiMethod(pathParts, urlParts.query, JSON.parse(postData), request, apiResponse);
+				event.data = postData;
+				emitter.emit(method + ' /' + resource, event);
+			});
+			break;
+		default:
+			// CRUD call with all left params
+			//apiMethod(pathParts, urlParts.query, request, apiResponse);
+			emitter.emit(method + ' /' + resource, event);
 	}
 }
 
-// public export
-module.exports = {
-	init: function ( config ) {
-		// prevent double init
-		/*if ( httpServer ) {
-			return false;
-		}*/
 
-		// defaults
-		config = config || {};
-		config.port = config.port || 8080;
-
-
-		// init
-		httpServer = http.createServer(requestListener).listen(config.port);
-		httpServer.on('listening', function () {
-			console.log('REST server is running at http://localhost:%s/', config.port);
-		});
-
-		return emitter;
-	},
-
-	/*on: function ( name, callback ) {
-		emitter.on(name, function ( event ) {
-			*//*var body = JSON.stringify(callback(event) || '');
-
-			// start building the response
-			event.response.writeHead(200, {
-				'Content-Type': 'application/json; charset=utf-8',
-				'Content-Length': body.length
-			});
-
-			event.response.end(body);*//*
-		});
+emitter.listen = function ( config ) {
+	// prevent double init
+	/*if ( httpServer ) {
+	return false;
 	}*/
+
+	// defaults
+	config = config || {};
+	config.port = config.port || 8080;
+
+	// init
+	httpServer = http.createServer(requestListener).listen(config.port);
+	httpServer.on('listening', function () {
+		console.log('REST server is running at http://localhost:%s/', config.port);
+	});
+
+	//return emitter;
 };
+
+// public export
+module.exports = emitter;
+
+
+	//emitter: emitter,
+	//
+	//init: ,
+	//
+	///*on: function ( name, callback ) {
+	//	emitter.on(name, function ( event ) {
+	//		*//*var body = JSON.stringify(callback(event) || '');
+	//
+	//		// start building the response
+	//		event.response.writeHead(200, {
+	//			'Content-Type': 'application/json; charset=utf-8',
+	//			'Content-Length': body.length
+	//		});
+	//
+	//		event.response.end(body);*//*
+	//	});
+	//}*/
+//};
 
 
 
