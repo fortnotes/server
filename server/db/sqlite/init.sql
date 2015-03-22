@@ -27,12 +27,12 @@ create table "users" (
 create table "sessions" (
 	"id"		integer primary key autoincrement not null,
 	"user_id"	integer not null,		/* link to the table users - owner of the session */
-	"active"	tinyint(1) default 0,	/* a session was confirmed by user or not */
+	"state"		tinyint(1) default 0,	/* active state: 0 - not active, 1 - active, 2 - terminated */
 	"token"		varchar(128) not null,	/* generated session id */
-	"ccode"		varchar(64) not null,	/* generated confirmation code to confirm the session */
+	"code"		varchar(32) not null,	/* generated confirmation code to activate the session */
 	"ctime"		integer default 0,		/* creation time */
-	"vtime"		integer default 0,		/* validation time */
-	"atime"		integer default 0		/* last access time */
+	"atime"		integer default 0,		/* activation time */
+	"ttime"		integer default 0		/* termination time */
 );
 
 /* has note declaration */
