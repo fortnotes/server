@@ -8,62 +8,258 @@
 
 'use strict';
 
-module.get = function ( path, query, request, callback ) {
-	var key = request.headers.key;
-	if ( key ) {
-		// authorized
-		mongoSessions.findOne({_id:key}, {_id:0, uid:1, ctime:1, atime:1}, function(err, session) {
-			if ( session ) {
-				//console.log(session);
-				// authorized
-				if ( path[0] ) {
-					// single current key info
-					mongoSessions.findOne({_id:path[0]}, {_id:0, ctime:1, atime:1, data:1}, function(err, doc) {
-						//console.log(err);
-						//console.log(doc);
-						if ( doc ) {
-							callback({code:1, data:doc});
-						} else {
-							callback({code:5});
-						}
+var restify = require('../restify'),
+	querystring = require('querystring'),
+	crypto = require('crypto'),
+	cookie = require('cookie'),
+	isEmail = require('isemail');
+
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database('./server/db/sqlite/db.sqlite');
+var stmtUserCreate = db.prepare('insert into users (email) values (?)');
+var stmtSessionCreate = db.prepare('insert into sessions (user_id, token, code, ctime) values (?, ?, ?, ?)');
+
+
+/**
+ * @apiDefine UserNotFoundError
+ *
+ * @apiError UserNotFound The ID of the User was not found.
+ *
+ * @apiErrorExample Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *     "error": "UserNotFound"
+ * }
+ */
+
+/**
+ * @apiDefine authUser Authorized user access only.
+ *
+ * Requests are valid only in case the user is authorized and have a valid active session.
+ */
+
+
+function getUserId ( email, callback ) {
+	db.get('select id from users where email = ?', email, function ( error, row ) {
+		//console.log(error);
+		//console.log(row);
+
+		if ( error ) {
+			return callback(error, null);
+		}
+
+		if ( row ) {
+			callback(null, row.id);
+		} else {
+			stmtUserCreate.run(email, function ( error, row ) {
+				db.get('select id from users where email = ?', email, function ( error, row ) {
+					if ( error ) {
+						return callback(error, null);
+					}
+
+					callback(null, row.id);
+				});
+			});
+		}
+	});
+}
+
+
+/**
+ * @api {get} /sessions Receive a list of all authorized user sessions.
+ *
+ * @apiVersion 1.0.0
+ * @apiName getSessions
+ * @apiGroup Sessions
+ * @apiPermission authUser
+ *
+ * @apiExample {curl} Example usage:
+ *     curl --include http://localhost:9090/sessions
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Bad Request
+ */
+restify.get('/sessions',
+	function ( request, response, next ) {
+
+	}
+);
+
+
+/**
+ * @api {post} /sessions Initialize a new session for the given email address.
+ *
+ * @apiVersion 1.0.0
+ * @apiName postSessions
+ * @apiGroup Sessions
+ * @apiPermission none
+ *
+ * @apiParam {string} email Users email address.
+ *
+ * @apiExample {curl} Example usage:
+ *     curl --include --data "email=test@gmail.com" http://localhost:9090/sessions
+ *
+ * @apiSuccess {string} token Generated user session ID.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     Content-Type: application/json
+ *     Content-Length: 148
+ *     Set-Cookie:token=5nNOF+dNQaHvq/klxbRtQ2BwvxbnQ/FuhqIQ7UcbdlSNWZRf/S9MRHQ0/4BYMBQMYizh0DScOTqUlVYg7fyCdiw7JowGM3Q7HrdTCqqEO9Q1LVEBPXtF1ry+XLVKB+xi; expires=Tue, 22 Mar 2016 17:54:03 GMT
+ *
+ *     {"id": 128}
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Bad Request
+ *
+ *     {"error": "empty or invalid email address"}
+ */
+restify.post('/sessions',
+	function ( request, response ) {
+		var email = request.params.email,
+			tDate = new Date();
+
+		if ( email && isEmail(email) ) {
+			// generate session token
+			crypto.randomBytes(110, function ( error, data ) {
+				var token, ccode;
+
+				if ( error ) { throw error; }
+
+				// set token lifetime 1 year
+				tDate.setFullYear(tDate.getFullYear() + 1);
+
+				token = data.slice(0, 96).toString('base64');
+				ccode = data.slice(96).toString('hex');
+
+				// building a response
+				//event.response.writeHead(200, {
+				//	'Access-Control-Allow-Origin': '*',
+				//	'Access-Control-Allow-Credentials': 'true',
+				//	'Set-Cookie': ['token=' + data.toString('base64') + '; expires=' + tDate.toUTCString()]
+				//});
+				//event.response.end();
+
+				getUserId(email, function ( error, id ) {
+					if ( error ) {
+						return response.send(400, {error: 'was not able to find or create user'});
+					}
+
+					stmtSessionCreate.run([id, token, ccode, +new Date()], function ( error, row ) {
+						db.get('select id from sessions where token = ?', token, function ( error, row ) {
+							response.setHeader('Set-Cookie', 'token=' + 'token' + '; domain=localhost; expires=' + tDate.toUTCString());
+							response.send(200, {id: row.id, token: token});
+						});
+					});
+				});
+
+			});
+		} else {
+			// building a response
+			response.send(400, {error: 'empty or invalid email address'});
+			//event.response.writeHead(200, {
+			//	'Access-Control-Allow-Origin': '*',
+			//	'Access-Control-Allow-Credentials': true,
+			//	'Content-Length': 3
+			//});
+			//event.response.end('!!!');
+		}
+	}
+);
+
+
+/**
+ * @api {put} /sessions/:id Activate a new session with the code sent to the user email address.
+ *
+ * @apiVersion 1.0.0
+ * @apiName putSessions
+ * @apiGroup Session Item
+ * @apiPermission none
+ *
+ * @apiParam {string} id User session ID.
+ * @apiParam {string} code Session activation code.
+ *
+ * @apiExample {curl} Example usage:
+ *     curl --include --data "code=fd28f002ea673d316e" --request PUT http://localhost:9090/sessions/128
+ *
+ * @apiSuccess {string} token Generated user session ID???.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     Content-Type: application/json
+ *
+ *     {"ok": true}
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Bad Request
+ *
+ *     {"error": "invalid session"}
+ */
+restify.put('/sessions/:id',
+	function ( request, response, next ) {
+		var id   = Number(request.params.id),
+			code = request.params.code;
+
+		if ( id && code ) {
+			db.get('select state, code from sessions where id = ?', id, function ( error, row ) {
+				console.log(row);
+				if ( row && row.state === 0 && row.code === code ) {
+					db.run('update sessions set state = 1, atime = ? where id = ?', +new Date(), id, function ( error, row ) {
+						response.send(200, {ok: true});
 					});
 				} else {
-					// all keys
-					// filter options
-					query.skip  = parseInt(query.skip,  10) || 0;
-					query.limit = parseInt(query.limit, 10) || 20;
-					mongoSessions.find(
-						{uid:session.uid},
-						{uid:0},
-						{sort:{atime:-1}, skip:query.skip, limit:query.limit}
-					).toArray(function(err, docs) { callback({code: 1, data: docs || []}); });
+					response.send(400, {error: 'invalid session'});
 				}
+			});
+		} else {
+			response.send(400, {error: 'invalid session id or confirmation code'});
+		}
+	}
+);
+
+
+/**
+ * @api {delete} /sessions/:id Terminate the given user session.
+ *
+ * @apiVersion 1.0.0
+ * @apiName deleteSessions
+ * @apiGroup Session Item
+ * @apiPermission authUser
+ *
+ * @apiParam {string} id User session ID.
+ *
+ * @apiExample {curl} Example usage:
+ *     curl --include --header "Cookie: token=5nNOF+dNQaHvq..." --request DELETE http://localhost:9090/sessions/128
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Bad Request
+ *
+ *     {"error":"invalid session"}
+ */
+restify.del('/sessions/:id',
+	function ( request, response, next ) {
+		var id    = Number(request.params.id),
+			token = request.headers.cookie ? cookie.parse(request.headers.cookie).token : null;
+
+		db.get('select user_id, state from sessions where token = ?', token, function ( error, session ) {
+			if ( error ) { throw error; }
+
+			// exists and valid
+			if ( session && session.state === 1 ) {
+				db.run('update sessions set state = 2, ttime = ? where id = ? and user_id = ?', +new Date(), id, session.user_id, function ( error ) {
+					if ( error ) { throw error; }
+
+					response.send(200, {ok: true});
+				});
 			} else {
-				callback({code:5});
+				response.send(400, {error: 'invalid session'});
 			}
 		});
-	} else {
-		callback({code:5});
 	}
-};
-
-
-module.put = function ( path, query, request, callback ) {
-	var key = path[0];
-
-	if ( key ) {
-		// get the session
-		mongoSessions.findOne({_id:key}, {_id:1, atime:1}, function(err, session) {
-			if ( session ) {
-				// update session atime
-				mongoSessions.update({_id:key}, {$set:{atime:+new Date()}}, function(){});
-				// send the last access time to the client
-				callback({code:1, atime:session.atime});
-			} else {
-				callback({code:5});
-			}
-		});
-	} else {
-		callback({code:5});
-	}
-};
+);
