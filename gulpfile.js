@@ -7,11 +7,11 @@
 
 'use strict';
 
-var path       = require('path'),
-	gulp       = require('gulp'),
-	apidoc     = require('gulp-apidoc'),
-	plumber    = require('gulp-plumber'),
-	eslint     = require('gulp-eslint');
+var gulp    = require('gulp'),
+	apidoc  = require('gulp-apidoc'),
+	plumber = require('gulp-plumber'),
+	eslint  = require('gulp-eslint'),
+	nodemon = require('gulp-nodemon');
 
 
 gulp.task('lint', function () {
@@ -37,7 +37,17 @@ gulp.task('apidoc', function () {
 });
 
 
+// serve API requests
+gulp.task('serve', function () {
+	nodemon({
+		script: './server/main.js',
+		watch: ['./server/'],
+		ext: 'js'
+	});
+});
+
+
 // entry point
-gulp.task('default', [], function () {
+gulp.task('default', ['serve'], function () {
 	gulp.watch(['./server/**/*.js'], ['apidoc']);
 });

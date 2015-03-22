@@ -31,9 +31,10 @@
 		"gulp-eslint": "^0.7.0",
 		"gulp-jade": "^1.0.0",
 		"gulp-livereload": "^3.8.0",
+		"gulp-nodemon": "^2.0.2",
 		"gulp-plumber": "^1.0.0",
 		"gulp-webpack": "^1.2.0",
 		"node-static": "^0.7.6",
-		"open": "^0.0.5"
+		"sqlite3": "^3.0.5"
 	}
 }
