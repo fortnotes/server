@@ -103,11 +103,13 @@ function authUser ( request, response, callback ) {
  *     HTTP/1.1 400 Bad Request
  */
 restify.get('/sessions',
-	function ( request, response, next ) {
-		db.get('select user_id, state from sessions where token = ?', token, function ( error, session ) {
-			if ( error ) { throw error; }
+	function ( request, response ) {
+		authUser(request, response, function ( userId ) {
+			db.all('select id, state, ctime, atime, ttime from sessions where user_id = ?', userId, function ( error, sessions ) {
+				if ( error ) { throw error; }
 
-
+				response.send(200, sessions);
+			});
 		});
 	}
 );
@@ -145,6 +147,8 @@ restify.post('/sessions',
 	function ( request, response ) {
 		var email = request.params.email,
 			tDate = new Date();
+
+		// todo: add limitation for total amount of user sessions
 
 		if ( email && isEmail(email) ) {
 			// generate session token
@@ -273,6 +277,8 @@ restify.del('/sessions/:id',
 		authUser(request, response, function ( userId ) {
 			db.run('update sessions set state = 2, ttime = ? where id = ? and user_id = ?', +new Date(), id, userId, function ( error ) {
 				if ( error ) { throw error; }
+
+				// todo: check update result
 
 				response.send(200, {ok: true});
 			});
