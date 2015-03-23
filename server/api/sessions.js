@@ -65,6 +65,26 @@ function getUserId ( email, callback ) {
 }
 
 
+function authUser ( request, response, callback ) {
+	var token = request.headers.cookie ? cookie.parse(request.headers.cookie).token : null;
+
+	if ( token ) {
+		db.get('select user_id, state from sessions where token = ?', token, function ( error, session ) {
+			if ( error ) { throw error; }
+
+			// exists and valid
+			if ( session && session.state === 1 ) {
+				callback(session.user_id);
+			} else {
+				response.send(401, {error: 'invalid session'});
+			}
+		});
+	} else {
+		response.send(401, {error: 'no session token'});
+	}
+}
+
+
 /**
  * @api {get} /sessions Receive a list of all authorized user sessions.
  *
@@ -84,7 +104,11 @@ function getUserId ( email, callback ) {
  */
 restify.get('/sessions',
 	function ( request, response, next ) {
+		db.get('select user_id, state from sessions where token = ?', token, function ( error, session ) {
+			if ( error ) { throw error; }
 
+
+		});
 	}
 );
 
@@ -243,23 +267,15 @@ restify.put('/sessions/:id',
  *     {"error":"invalid session"}
  */
 restify.del('/sessions/:id',
-	function ( request, response, next ) {
-		var id    = Number(request.params.id),
-			token = request.headers.cookie ? cookie.parse(request.headers.cookie).token : null;
+	function ( request, response ) {
+		var id = Number(request.params.id);
 
-		db.get('select user_id, state from sessions where token = ?', token, function ( error, session ) {
-			if ( error ) { throw error; }
+		authUser(request, response, function ( userId ) {
+			db.run('update sessions set state = 2, ttime = ? where id = ? and user_id = ?', +new Date(), id, userId, function ( error ) {
+				if ( error ) { throw error; }
 
-			// exists and valid
-			if ( session && session.state === 1 ) {
-				db.run('update sessions set state = 2, ttime = ? where id = ? and user_id = ?', +new Date(), id, session.user_id, function ( error ) {
-					if ( error ) { throw error; }
-
-					response.send(200, {ok: true});
-				});
-			} else {
-				response.send(400, {error: 'invalid session'});
-			}
+				response.send(200, {ok: true});
+			});
 		});
 	}
 );
