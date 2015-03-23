@@ -23,7 +23,9 @@
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"dependencies": {
-		"cookie": "^0.1.2"
+		"cookie": "^0.1.2",
+		"isemail": "^1.1.1",
+		"restify": "^3.0.1"
 	},
 	"devDependencies": {
 		"gulp": "^3.8.0",
