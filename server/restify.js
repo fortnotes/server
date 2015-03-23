@@ -16,6 +16,7 @@ var restify = require('restify'),
 // plugins
 server.use(restify.CORS());
 server.use(restify.bodyParser());
+server.use(restify.queryParser());
 
 
 // public export
