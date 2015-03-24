@@ -12,6 +12,12 @@ module.exports = {
 
 	httpPort: 9090,
 
+	session: {
+		tokenSize:       60,
+		confirmCodeSize: 12,
+		confirmAttempts: 3
+	},
+
 	database: {
 		host: '127.0.0.1',
 		port: 27017,
