@@ -30,6 +30,7 @@ create table "sessions" (
 	"state"		tinyint(1) default 0,	/* active state: 0 - not active, 1 - active, 2 - terminated */
 	"token"		varchar(128) not null,	/* generated session id */
 	"code"		varchar(32) not null,	/* generated confirmation code to activate the session */
+	"attempts"	integer default 0,		/* amount of attempts to activate the session */
 	"ctime"		integer default 0,		/* creation time */
 	"atime"		integer default 0,		/* activation time */
 	"ttime"		integer default 0		/* termination time */
