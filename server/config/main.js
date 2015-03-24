@@ -13,7 +13,7 @@ module.exports = {
 	httpPort: 9090,
 
 	session: {
-		tokenSize:       60,
+		tokenSize:       96,
 		confirmCodeSize: 12,
 		confirmAttempts: 3
 	},
