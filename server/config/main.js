@@ -9,9 +9,9 @@
 
 module.exports = {
 	debug: true,
-	server: {
-		port: 9090
-	},
+
+	httpPort: 9090,
+
 	database: {
 		host: '127.0.0.1',
 		port: 27017,

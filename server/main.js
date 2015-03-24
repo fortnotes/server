@@ -16,6 +16,6 @@ var restify = require('./restify'),
 require('./api/sessions');
 
 
-restify.listen(config.server.port, function () {
+restify.listen(config.httpPort, function () {
 	console.log('%s listening at %s', restify.name, restify.url);
 });
