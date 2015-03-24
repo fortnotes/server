@@ -12,7 +12,8 @@ var restify = require('../restify'),
 	querystring = require('querystring'),
 	crypto = require('crypto'),
 	cookie = require('cookie'),
-	isEmail = require('isemail');
+	isEmail = require('isemail'),
+	config  = require('../config/main');
 
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./server/db/sqlite/db.sqlite');
@@ -152,7 +153,7 @@ restify.post('/sessions',
 
 		if ( email && isEmail(email) ) {
 			// generate session token
-			crypto.randomBytes(110, function ( error, data ) {
+			crypto.randomBytes(config.session.tokenSize + config.session.confirmCodeSize, function ( error, data ) {
 				var token, ccode;
 
 				if ( error ) { throw error; }
@@ -160,8 +161,8 @@ restify.post('/sessions',
 				// set token lifetime 1 year
 				tDate.setFullYear(tDate.getFullYear() + 1);
 
-				token = data.slice(0, 96).toString('base64');
-				ccode = data.slice(96).toString('hex');
+				token = data.slice(0, config.session.tokenSize).toString('base64');
+				ccode = data.slice(config.session.tokenSize).toString('base64');
 
 				// building a response
 				//event.response.writeHead(200, {
@@ -227,20 +228,23 @@ restify.post('/sessions',
  *     {"error": "invalid session"}
  */
 restify.put('/sessions/:id',
-	function ( request, response, next ) {
+	function ( request, response ) {
 		var id   = Number(request.params.id),
 			code = request.params.code;
 
 		if ( id && code ) {
-			db.get('select state, code from sessions where id = ?', id, function ( error, row ) {
-				console.log(row);
-				if ( row && row.state === 0 && row.code === code ) {
+			db.get('select state, code, attempts from sessions where id = ?', id, function ( error, row ) {
+				//console.log(row);
+				if ( row && row.state === 0 && row.code === code && row.attempts < config.session.confirmAttempts ) {
 					db.run('update sessions set state = 1, atime = ? where id = ?', +new Date(), id, function ( error, row ) {
 						response.send(200, {ok: true});
 					});
 				} else {
 					response.send(400, {error: 'invalid session'});
 				}
+
+				// increase attempts amount
+				db.run('update sessions set attempts = attempts + 1 where id = ?', id);
 			});
 		} else {
 			response.send(400, {error: 'invalid session id or confirmation code'});
@@ -250,7 +254,7 @@ restify.put('/sessions/:id',
 
 
 /**
- * @api {delete} /sessions/:id Terminate the given user session.
+ * @api {delete} /sessions/:id/?token=:token Terminate the given user session.
  *
  * @apiVersion 1.0.0
  * @apiName deleteSessions
@@ -258,6 +262,7 @@ restify.put('/sessions/:id',
  * @apiPermission authUser
  *
  * @apiParam {string} id User session ID.
+ * @apiParam {string} token User session token.
  *
  * @apiExample {curl} Example usage:
  *     curl --include --header "Cookie: token=5nNOF+dNQaHvq..." --request DELETE http://localhost:9090/sessions/128
