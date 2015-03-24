@@ -9,9 +9,9 @@
 'use strict';
 
 var restify = require('../restify'),
-	querystring = require('querystring'),
+	//querystring = require('querystring'),
 	crypto = require('crypto'),
-	cookie = require('cookie'),
+	//cookie = require('cookie'),
 	isEmail = require('isemail'),
 	config  = require('../config/main');
 
@@ -67,7 +67,7 @@ function getUserId ( email, callback ) {
 
 
 function authUser ( request, response, callback ) {
-	var token = request.headers.cookie ? cookie.parse(request.headers.cookie).token : null;
+	var token = request.headers.authorization ? request.headers.authorization.slice(7) : null;
 
 	if ( token ) {
 		db.get('select user_id, state from sessions where token = ?', token, function ( error, session ) {
@@ -87,26 +87,39 @@ function authUser ( request, response, callback ) {
 
 
 /**
- * @api {get} /sessions Receive a list of all authorized user sessions.
+ * @api {get} /sessions Receive a list of a user sessions.
  *
  * @apiVersion 1.0.0
  * @apiName getSessions
  * @apiGroup Sessions
  * @apiPermission authUser
  *
+ * @apiHeader {string} Authorization Bearer token for the user session.
+ *
  * @apiExample {curl} Example usage:
- *     curl --include http://localhost:9090/sessions
+ *     curl --include --header "Authorization: Bearer 5nNOF+dNQaHvq..." http://localhost:9090/sessions
+ *
+ * @apiSuccess {number} id User session ID.
+ * @apiSuccess {number} state Session active state: 0 - not active, 1 - active, 2 - terminated.
+ * @apiSuccess {number} attempts Amount of attempts to activate the session (default maximum is 3).
+ * @apiSuccess {number} ctime Session creation time.
+ * @apiSuccess {number} atime Session activation time.
+ * @apiSuccess {number} ttime Session termination time.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
+ *     [
+ *         {"id":128, "state":0, "attempts":0, "ctime":1427190024722, "atime":0, "ttime":0},
+ *         {"id":129, "state":1, "attempts":1, "ctime":1427190838740, "atime":1427201953944, "ttime":0}
+ *     ]
  *
  * @apiErrorExample Error-Response:
- *     HTTP/1.1 400 Bad Request
+ *     HTTP/1.1 401 Unauthorized
  */
 restify.get('/sessions',
 	function ( request, response ) {
 		authUser(request, response, function ( userId ) {
-			db.all('select id, state, ctime, atime, ttime from sessions where user_id = ?', userId, function ( error, sessions ) {
+			db.all('select id, state, attempts, ctime, atime, ttime from sessions where user_id = ?', userId, function ( error, sessions ) {
 				if ( error ) { throw error; }
 
 				response.send(200, sessions);
@@ -129,15 +142,15 @@ restify.get('/sessions',
  * @apiExample {curl} Example usage:
  *     curl --include --data "email=test@gmail.com" http://localhost:9090/sessions
  *
- * @apiSuccess {string} token Generated user session ID.
+ * @apiSuccess {string} id Generated user session ID.
+ * @apiSuccess {string} token Generated user session bearer token.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *     Content-Type: application/json
- *     Content-Length: 148
- *     Set-Cookie:token=5nNOF+dNQaHvq/klxbRtQ2BwvxbnQ/FuhqIQ7UcbdlSNWZRf/S9MRHQ0/4BYMBQMYizh0DScOTqUlVYg7fyCdiw7JowGM3Q7HrdTCqqEO9Q1LVEBPXtF1ry+XLVKB+xi; expires=Tue, 22 Mar 2016 17:54:03 GMT
- *
- *     {"id": 128}
+ *     {
+ *         "id": 128,
+ *         "token": "2r1W5ItJN4GlqK2teD77JLZGddf0unnvAlKv+SAl7VCViStq5VcLgkmFZ85iyBS4Wmp1omOnXNlKeQkoM+UmBt/oMda91ovjNlUR8Kl2oG8Hec+Hrijy8xp3+qQwg1qs"
+ *     }
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Bad Request
@@ -204,8 +217,8 @@ restify.post('/sessions',
  * @api {put} /sessions/:id Activate a new session with the code sent to the user email address.
  *
  * @apiVersion 1.0.0
- * @apiName putSessions
- * @apiGroup Session Item
+ * @apiName putSessionItem
+ * @apiGroup Session
  * @apiPermission none
  *
  * @apiParam {string} id User session ID.
@@ -214,13 +227,10 @@ restify.post('/sessions',
  * @apiExample {curl} Example usage:
  *     curl --include --data "code=fd28f002ea673d316e" --request PUT http://localhost:9090/sessions/128
  *
- * @apiSuccess {string} token Generated user session ID???.
- *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *     Content-Type: application/json
  *
- *     {"ok": true}
+ *     true
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Bad Request
@@ -233,11 +243,11 @@ restify.put('/sessions/:id',
 			code = request.params.code;
 
 		if ( id && code ) {
-			db.get('select state, code, attempts from sessions where id = ?', id, function ( error, row ) {
-				//console.log(row);
-				if ( row && row.state === 0 && row.code === code && row.attempts < config.session.confirmAttempts ) {
+			db.get('select state, code, attempts from sessions where id = ?', id, function ( error, session ) {
+				//console.log(session);
+				if ( session && session.state === 0 && session.code === code && session.attempts < config.session.confirmAttempts ) {
 					db.run('update sessions set state = 1, atime = ? where id = ?', +new Date(), id, function ( error, row ) {
-						response.send(200, {ok: true});
+						response.send(200, true);
 					});
 				} else {
 					response.send(400, {error: 'invalid session'});
@@ -254,21 +264,24 @@ restify.put('/sessions/:id',
 
 
 /**
- * @api {delete} /sessions/:id/?token=:token Terminate the given user session.
+ * @api {delete} /sessions/:id Terminate the given user session.
  *
  * @apiVersion 1.0.0
- * @apiName deleteSessions
- * @apiGroup Session Item
+ * @apiName deleteSessionItem
+ * @apiGroup Session
  * @apiPermission authUser
  *
+ * @apiHeader {string} Authorization Bearer token for the user session.
+ *
  * @apiParam {string} id User session ID.
- * @apiParam {string} token User session token.
  *
  * @apiExample {curl} Example usage:
- *     curl --include --header "Cookie: token=5nNOF+dNQaHvq..." --request DELETE http://localhost:9090/sessions/128
+ *     curl --include --header "Authorization: Bearer 5nNOF+dNQaHvq..." --request DELETE http://localhost:9090/sessions/128
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
+ *
+ *     true
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Bad Request
@@ -285,7 +298,7 @@ restify.del('/sessions/:id',
 
 				// todo: check update result
 
-				response.send(200, {ok: true});
+				response.send(200, true);
 			});
 		});
 	}
