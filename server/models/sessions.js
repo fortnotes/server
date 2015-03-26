@@ -92,13 +92,16 @@ module.exports = function ( db ) {
 					// wrong id
 					callback(error);
 				} else {
+					session.attempts++;
 					// allow to confirm
 					if ( session && session.active && session.code === code && session.attempts < config.session.confirmAttempts ) {
 						session.confirmed = true;
 						session.atime     = +new Date();
+						session.save(callback);
+					} else {
+						session.save();
+						callback({error: 'invalid session id or confirmation code'});
 					}
-					session.attempts++;
-					session.save(callback);
 				}
 			});
 		} else {
@@ -131,5 +134,43 @@ module.exports = function ( db ) {
 		} else {
 			callback({error: 'no session token'});
 		}
+	};
+
+
+	/**
+	 * Terminate the given user session by id.
+	 *
+	 * @param {string} token user session token
+	 * @param {number} id user session id
+	 * @param {Function} callback error/success handler
+	 */
+	sessions.terminate = function ( token, id, callback ) {
+		// authenticate
+		sessions.check(token, function ( error, currentSession ) {
+			var data = {active: false, ttime: +new Date()};
+
+			if ( error ) {
+				callback(error);
+			} else {
+				if ( currentSession.id === id ) {
+					// kill the current session
+					currentSession.save(data, callback);
+				} else {
+					// find by id
+					sessions.get(id, function ( error, session ) {
+						if ( error ) {
+							callback(error);
+						} else {
+							// does the user own the given session?
+							if ( currentSession.userId === session.userId ) {
+								session.save(data, callback);
+							} else {
+								callback({error: 'invalid session'});
+							}
+						}
+					});
+				}
+			}
+		});
 	};
 };
