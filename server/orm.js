@@ -43,6 +43,10 @@ db.on('connect', function ( error ) {
 			console.log(session.id);
 		});/**/
 
+		/*db.models.sessions.check('Rf+PvDzP2nyHS1m0GgLh7u5R3jYe34X7nJE5ClhEe7L6mdC0aOvWtKYG2rHm8fzF8GsHIMmctFOVWyJuioTUUm0kyblxl5ct/R9Re9b+lB1+w5YstCfISDae6NA9mVDU', function ( error, session ) {
+			console.log(error);
+			console.log(session.id);
+		});/**/
 	});
 });
 

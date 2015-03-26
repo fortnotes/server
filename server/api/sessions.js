@@ -20,6 +20,7 @@ var db = new sqlite3.Database('./server/db/sqlite/db.sqlite');
 var stmtUserCreate = db.prepare('insert into users (email) values (?)');
 var stmtSessionCreate = db.prepare('insert into sessions (user_id, token, code, ctime) values (?, ?, ?, ?)');
 
+var db = require('../orm');
 
 /**
  * @apiDefine UserNotFoundError
@@ -118,13 +119,41 @@ function authUser ( request, response, callback ) {
  */
 restify.get('/sessions',
 	function ( request, response ) {
-		authUser(request, response, function ( userId ) {
-			db.all('select id, state, attempts, ctime, atime, ttime from sessions where user_id = ?', userId, function ( error, sessions ) {
-				if ( error ) { throw error; }
+		var token = request.headers.authorization.slice(7);
 
-				response.send(200, sessions);
-			});
+		db.models.sessions.check(token, function ( error, session ) {
+			if ( error ) {
+				response.send(400, error);
+			} else {
+				db.models.sessions.find({userId: session.userId}).only('id', 'active', 'confirmed', 'attempts', 'ctime', 'atime', 'ttime').run(function ( error, sessions ) {
+					var data = [];
+
+					if ( error ) {
+						response.send(400, error);
+					} else {
+						sessions.forEach(function ( item ) {
+							data.push({
+								id: item.id,
+								active: item.active,
+								confirmed: item.confirmed,
+								attempts: item.attempts,
+								ctime: item.ctime,
+								atime: item.atime,
+								ttime: item.ttime
+							});
+						});
+						response.send(200, data);
+					}
+				});
+			}
 		});
+		//authUser(request, response, function ( userId ) {
+		//	db.all('select id, state, attempts, ctime, atime, ttime from sessions where user_id = ?', userId, function ( error, sessions ) {
+		//		if ( error ) { throw error; }
+		//
+		//		response.send(200, sessions);
+		//	});
+		//});
 	}
 );
 
@@ -159,56 +188,65 @@ restify.get('/sessions',
  */
 restify.post('/sessions',
 	function ( request, response ) {
-		var email = request.params.email,
-			tDate = new Date();
+		//var email = request.params.email,
+		//	tDate = new Date();
 
 		// todo: add limitation for total amount of user sessions
 
-		if ( email && isEmail(email) ) {
-			// generate session token
-			crypto.randomBytes(config.session.tokenSize + config.session.confirmCodeSize, function ( error, data ) {
-				var token, ccode;
-
-				if ( error ) { throw error; }
-
-				// set token lifetime 1 year
-				tDate.setFullYear(tDate.getFullYear() + 1);
-
-				token = data.slice(0, config.session.tokenSize).toString('base64');
-				ccode = data.slice(config.session.tokenSize).toString('base64');
-
+		db.models.sessions.request(request.params.email, function ( error, session ) {
+			if ( error ) {
 				// building a response
-				//event.response.writeHead(200, {
-				//	'Access-Control-Allow-Origin': '*',
-				//	'Access-Control-Allow-Credentials': 'true',
-				//	'Set-Cookie': ['token=' + data.toString('base64') + '; expires=' + tDate.toUTCString()]
-				//});
-				//event.response.end();
+				response.send(400, error);
+			} else {
+				response.send(200, {id: session.id, token: session.token});
+			}
+		});
 
-				getUserId(email, function ( error, id ) {
-					if ( error ) {
-						return response.send(400, {error: 'was not able to find or create user'});
-					}
-
-					stmtSessionCreate.run([id, token, ccode, +new Date()], function ( error, row ) {
-						db.get('select id from sessions where token = ?', token, function ( error, row ) {
-							response.setHeader('Set-Cookie', 'token=' + 'token' + '; domain=localhost; expires=' + tDate.toUTCString());
-							response.send(200, {id: row.id, token: token});
-						});
-					});
-				});
-
-			});
-		} else {
-			// building a response
-			response.send(400, {error: 'empty or invalid email address'});
-			//event.response.writeHead(200, {
-			//	'Access-Control-Allow-Origin': '*',
-			//	'Access-Control-Allow-Credentials': true,
-			//	'Content-Length': 3
-			//});
-			//event.response.end('!!!');
-		}
+		//if ( email && isEmail(email) ) {
+		//	// generate session token
+		//	crypto.randomBytes(config.session.tokenSize + config.session.confirmCodeSize, function ( error, data ) {
+		//		var token, ccode;
+		//
+		//		if ( error ) { throw error; }
+		//
+		//		// set token lifetime 1 year
+		//		tDate.setFullYear(tDate.getFullYear() + 1);
+		//
+		//		token = data.slice(0, config.session.tokenSize).toString('base64');
+		//		ccode = data.slice(config.session.tokenSize).toString('base64');
+		//
+		//		// building a response
+		//		//event.response.writeHead(200, {
+		//		//	'Access-Control-Allow-Origin': '*',
+		//		//	'Access-Control-Allow-Credentials': 'true',
+		//		//	'Set-Cookie': ['token=' + data.toString('base64') + '; expires=' + tDate.toUTCString()]
+		//		//});
+		//		//event.response.end();
+		//
+		//		getUserId(email, function ( error, id ) {
+		//			if ( error ) {
+		//				return response.send(400, {error: 'was not able to find or create user'});
+		//			}
+		//
+		//			stmtSessionCreate.run([id, token, ccode, +new Date()], function ( error, row ) {
+		//				db.get('select id from sessions where token = ?', token, function ( error, row ) {
+		//					response.setHeader('Set-Cookie', 'token=' + 'token' + '; domain=localhost; expires=' + tDate.toUTCString());
+		//					response.send(200, {id: row.id, token: token});
+		//				});
+		//			});
+		//		});
+		//
+		//	});
+		//} else {
+		//	// building a response
+		//	response.send(400, {error: 'empty or invalid email address'});
+		//	//event.response.writeHead(200, {
+		//	//	'Access-Control-Allow-Origin': '*',
+		//	//	'Access-Control-Allow-Credentials': true,
+		//	//	'Content-Length': 3
+		//	//});
+		//	//event.response.end('!!!');
+		//}
 	}
 );
 
@@ -239,26 +277,36 @@ restify.post('/sessions',
  */
 restify.put('/sessions/:id',
 	function ( request, response ) {
-		var id   = Number(request.params.id),
-			code = request.params.code;
+		//var id   = Number(request.params.id),
+		//	code = request.params.code;
 
-		if ( id && code ) {
-			db.get('select state, code, attempts from sessions where id = ?', id, function ( error, session ) {
-				//console.log(session);
-				if ( session && session.state === 0 && session.code === code && session.attempts < config.session.confirmAttempts ) {
-					db.run('update sessions set state = 1, atime = ? where id = ?', +new Date(), id, function ( error, row ) {
-						response.send(200, true);
-					});
-				} else {
-					response.send(400, {error: 'invalid session'});
-				}
+		db.models.sessions.confirm(request.params.id, request.params.code, function ( error, session ) {
+			if ( error ) {
+				// fail
+				response.send(400, error);
+			} else {
+				// ok
+				response.send(200, true);
+			}
+		});
 
-				// increase attempts amount
-				db.run('update sessions set attempts = attempts + 1 where id = ?', id);
-			});
-		} else {
-			response.send(400, {error: 'invalid session id or confirmation code'});
-		}
+		//if ( id && code ) {
+		//	db.get('select state, code, attempts from sessions where id = ?', id, function ( error, session ) {
+		//		//console.log(session);
+		//		if ( session && session.state === 0 && session.code === code && session.attempts < config.session.confirmAttempts ) {
+		//			db.run('update sessions set state = 1, atime = ? where id = ?', +new Date(), id, function ( error, row ) {
+		//				response.send(200, true);
+		//			});
+		//		} else {
+		//			response.send(400, {error: 'invalid session'});
+		//		}
+		//
+		//		// increase attempts amount
+		//		db.run('update sessions set attempts = attempts + 1 where id = ?', id);
+		//	});
+		//} else {
+		//	response.send(400, {error: 'invalid session id or confirmation code'});
+		//}
 	}
 );
 
@@ -290,16 +338,27 @@ restify.put('/sessions/:id',
  */
 restify.del('/sessions/:id',
 	function ( request, response ) {
-		var id = Number(request.params.id);
+		var token = request.headers.authorization.slice(7),
+			id    = Number(request.params.id);
 
-		authUser(request, response, function ( userId ) {
-			db.run('update sessions set state = 2, ttime = ? where id = ? and user_id = ?', +new Date(), id, userId, function ( error ) {
-				if ( error ) { throw error; }
-
-				// todo: check update result
-
+		db.models.sessions.terminate(token, id, function ( error ) {
+			if ( error ) {
+				// fail
+				response.send(400, error);
+			} else {
+				// ok
 				response.send(200, true);
-			});
+			}
 		});
+
+		//authUser(request, response, function ( userId ) {
+		//	db.run('update sessions set state = 2, ttime = ? where id = ? and user_id = ?', +new Date(), id, userId, function ( error ) {
+		//		if ( error ) { throw error; }
+		//
+		//		// todo: check update result
+		//
+		//		response.send(200, true);
+		//	});
+		//});
 	}
 );
