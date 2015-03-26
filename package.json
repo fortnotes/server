@@ -25,6 +25,8 @@
 	"dependencies": {
 		"cookie": "^0.1.2",
 		"isemail": "^1.1.1",
+		"orm": "^2.1.24",
+		"sqlite3": "^3.0.5",
 		"restify": "^3.0.1"
 	},
 	"devDependencies": {
@@ -36,7 +38,6 @@
 		"gulp-nodemon": "^2.0.2",
 		"gulp-plumber": "^1.0.0",
 		"gulp-webpack": "^1.2.0",
-		"node-static": "^0.7.6",
-		"sqlite3": "^3.0.5"
+		"node-static": "^0.7.6"
 	}
 }

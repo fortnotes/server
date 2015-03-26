@@ -1,0 +1,51 @@
+/**
+ * Object Relational Mapping.
+ *
+ * @author DarkPark
+ * @license GNU GENERAL PUBLIC LICENSE Version 3
+ */
+
+'use strict';
+
+var orm = require('orm'),
+	db;
+
+
+// global options
+orm.settings.set('connection.debug', true);
+
+// init
+db = orm.connect('sqlite://./db.sqlite');
+
+db.on('connect', function ( error ) {
+	function loadResult ( error ) {
+		if ( error ) { throw error; }
+	}
+
+	if ( error ) { throw error; }
+
+	// models
+	db.load('./models/users',    loadResult);
+	db.load('./models/sessions', loadResult);
+
+	//db.models.sessions.hasOne('user', db.models.users, {index: true});
+
+	db.sync(function ( error ) {
+		if ( error ) { throw error; }
+
+		/*db.models.sessions.request('qwe@rty.com', function ( error, session ) {
+			console.log(error);
+			console.log(session.id);
+		});/**/
+
+		/*db.models.sessions.confirm(1, '2x8ZKRuNjhIupAv4', function ( error, session ) {
+			console.log(error);
+			console.log(session.id);
+		});/**/
+
+	});
+});
+
+
+// public export
+module.exports = db;

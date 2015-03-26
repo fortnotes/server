@@ -12,6 +12,10 @@ var restify = require('./restify'),
 	config  = require('./config/main');
 
 
+// init db
+require('./orm');
+
+
 // apply resources
 require('./api/sessions');
 
