@@ -54,12 +54,15 @@ var restify = require('../restify'),
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     [
- *         {"id":128, "state":0, "attempts":0, "ctime":1427190024722, "atime":0, "ttime":0},
- *         {"id":129, "state":1, "attempts":1, "ctime":1427190838740, "atime":1427201953944, "ttime":0}
+ *         {"id": 128, "active": 1, "confirmed": 0, "attempts": 0, "ctime": 1427190024722, "atime": 0, "ttime": 0},
+ *         {"id": 129, "active": 1, "confirmed": 1, "attempts": 1, "ctime": 1427190838740, "atime": 1427201953944, "ttime": 0},
+ *         {"id": 129, "active": 0, "confirmed": 1, "attempts": 2, "ctime": 1427190838740, "atime": 1427201953944, "ttime": 1427201959845}
  *     ]
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 401 Unauthorized
+ *
+ *     {"error": "invalid session"}
  *
  * @param {Request} request incoming message
  * @param {Response} response server response
@@ -69,7 +72,7 @@ restify.get('/sessions', function ( request, response ) {
 
 	db.models.sessions.check(token, function ( error, session ) {
 		if ( error ) {
-			response.send(400, error);
+			response.send(401, error);
 		} else {
 			db.models.sessions.find({userId: session.userId}).only('id', 'active', 'confirmed', 'attempts', 'ctime', 'atime', 'ttime').run(function ( error, sessions ) {
 				var data = [];
@@ -163,7 +166,7 @@ restify.post('/sessions', function ( request, response ) {
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Bad Request
  *
- *     {"error": "invalid session"}
+ *     {"error": "invalid session id or confirmation code"}
  *
  * @param {Request} request incoming message
  * @param {Response} response server response
