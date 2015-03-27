@@ -17,7 +17,7 @@ require('./orm');
 
 
 // apply resources
-require('./api/sessions');
+require('./resources/sessions');
 
 
 restify.listen(config.httpPort, function () {
