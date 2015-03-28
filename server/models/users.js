@@ -15,7 +15,13 @@ module.exports = function ( db ) {
 		email: {type: 'text', size: 512, required: true, unique: true},
 
 		// inactive till at least one session is confirmed
-		active: {type: 'boolean', defaultValue: false}
+		active: {type: 'boolean', defaultValue: false},
+
+		// user password sha512 hash for validation
+		passHash: {type: 'text', size: 128},
+
+		// creation time
+		ctime: {type: 'integer', unsigned: true, defaultValue: 0}
 	});
 
 
@@ -29,7 +35,7 @@ module.exports = function ( db ) {
 		// validate
 		if ( email && isEmail(email) ) {
 			// try to insert
-			users.create({email: email}, function ( error, user ) {
+			users.create({email: email, ctime: +new Date()}, function ( error, user ) {
 				if ( error ) {
 					// can't insert - already exists
 					users.one({email: email}, callback);
