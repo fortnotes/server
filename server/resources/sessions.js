@@ -32,7 +32,7 @@ var restify = require('../restify'),
 
 
 /**
- * @resources {get} /sessions Receive a list of a user sessions.
+ * @api {get} /sessions Receive a list of a user sessions.
  *
  * @apiVersion 1.0.0
  * @apiName getSessions
@@ -63,44 +63,43 @@ var restify = require('../restify'),
  *     HTTP/1.1 401 Unauthorized
  *
  *     {"error": "invalid session"}
- *
- * @param {Request} request incoming message
- * @param {Response} response server response
  */
-restify.get('/sessions', function ( request, response ) {
-	var token = request.headers.authorization.slice(7);
+restify.get('/sessions',
+	function ( request, response ) {
+		var token = request.headers.authorization.slice(7);
 
-	db.models.sessions.check(token, function ( error, session ) {
-		if ( error ) {
-			response.send(401, error);
-		} else {
-			db.models.sessions.find({userId: session.userId}).only('id', 'active', 'confirmed', 'attempts', 'ctime', 'atime', 'ttime').run(function ( error, sessions ) {
-				var data = [];
+		db.models.sessions.check(token, function ( error, session ) {
+			if ( error ) {
+				response.send(401, error);
+			} else {
+				db.models.sessions.find({userId: session.userId}).only('id', 'active', 'confirmed', 'attempts', 'ctime', 'atime', 'ttime').run(function ( error, sessions ) {
+					var data = [];
 
-				if ( error ) {
-					response.send(400, error);
-				} else {
-					sessions.forEach(function ( item ) {
-						data.push({
-							id: item.id,
-							active: item.active,
-							confirmed: item.confirmed,
-							attempts: item.attempts,
-							ctime: item.ctime,
-							atime: item.atime,
-							ttime: item.ttime
+					if ( error ) {
+						response.send(400, error);
+					} else {
+						sessions.forEach(function ( item ) {
+							data.push({
+								id: item.id,
+								active: item.active,
+								confirmed: item.confirmed,
+								attempts: item.attempts,
+								ctime: item.ctime,
+								atime: item.atime,
+								ttime: item.ttime
+							});
 						});
-					});
-					response.send(200, data);
-				}
-			});
-		}
-	});
-});
+						response.send(200, data);
+					}
+				});
+			}
+		});
+	}
+);
 
 
 /**
- * @resources {post} /sessions Initialize a new session for the given email address.
+ * @api {post} /sessions Initialize a new session for the given email address.
  *
  * @apiVersion 1.0.0
  * @apiName postSessions
@@ -126,26 +125,25 @@ restify.get('/sessions', function ( request, response ) {
  *     HTTP/1.1 400 Bad Request
  *
  *     {"error": "empty or invalid email address"}
- *
- * @param {Request} request incoming message
- * @param {Response} response server response
  */
-restify.post('/sessions', function ( request, response ) {
-	// todo: add limitation for total amount of user sessions
+restify.post('/sessions',
+	function ( request, response ) {
+		// todo: add limitation for total amount of user sessions
 
-	db.models.sessions.request(request.params.email, function ( error, session ) {
-		if ( error ) {
-			// building a response
-			response.send(400, error);
-		} else {
-			response.send(200, {id: session.id, token: session.token});
-		}
-	});
-});
+		db.models.sessions.request(request.params.email, function ( error, session ) {
+			if ( error ) {
+				// building a response
+				response.send(400, error);
+			} else {
+				response.send(200, {id: session.id, token: session.token});
+			}
+		});
+	}
+);
 
 
 /**
- * @resources {put} /sessions/:id Activate a new session with the code sent to the user email address.
+ * @api {put} /sessions/:id Activate a new session with the code sent to the user email address.
  *
  * @apiVersion 1.0.0
  * @apiName putSessionItem
@@ -167,25 +165,24 @@ restify.post('/sessions', function ( request, response ) {
  *     HTTP/1.1 400 Bad Request
  *
  *     {"error": "invalid session id or confirmation code"}
- *
- * @param {Request} request incoming message
- * @param {Response} response server response
  */
-restify.put('/sessions/:id', function ( request, response ) {
-	db.models.sessions.confirm(request.params.id, request.params.code, function ( error ) {
-		if ( error ) {
-			// fail
-			response.send(400, error);
-		} else {
-			// ok
-			response.send(200, true);
-		}
-	});
-});
+restify.put('/sessions/:id',
+	function ( request, response ) {
+		db.models.sessions.confirm(request.params.id, request.params.code, function ( error ) {
+			if ( error ) {
+				// fail
+				response.send(400, error);
+			} else {
+				// ok
+				response.send(200, true);
+			}
+		});
+	}
+);
 
 
 /**
- * @resources {delete} /sessions/:id Terminate the given user session.
+ * @api {delete} /sessions/:id Terminate the given user session.
  *
  * @apiVersion 1.0.0
  * @apiName deleteSessionItem
@@ -208,21 +205,20 @@ restify.put('/sessions/:id', function ( request, response ) {
  *     HTTP/1.1 400 Bad Request
  *
  *     {"error":"invalid session"}
- *
- * @param {Request} request incoming message
- * @param {Response} response server response
  */
-restify.del('/sessions/:id', function ( request, response ) {
-	var token = request.headers.authorization.slice(7),
-		id    = Number(request.params.id);
+restify.del('/sessions/:id',
+	function ( request, response ) {
+		var token = request.headers.authorization.slice(7),
+			id    = Number(request.params.id);
 
-	db.models.sessions.terminate(token, id, function ( error ) {
-		if ( error ) {
-			// fail
-			response.send(400, error);
-		} else {
-			// ok
-			response.send(200, true);
-		}
-	});
-});
+		db.models.sessions.terminate(token, id, function ( error ) {
+			if ( error ) {
+				// fail
+				response.send(400, error);
+			} else {
+				// ok
+				response.send(200, true);
+			}
+		});
+	}
+);
