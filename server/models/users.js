@@ -17,8 +17,11 @@ module.exports = function ( db ) {
 		// inactive till at least one session is confirmed
 		active: {type: 'boolean', defaultValue: false},
 
-		// user password sha512 hash for validation
-		passHash: {type: 'text', size: 128},
+		// password hash salt
+		salt: {type: 'text', size: 128},
+
+		// user password sha512 hash
+		hash: {type: 'text', size: 128},
 
 		// creation time
 		ctime: {type: 'integer', unsigned: true, defaultValue: 0}
