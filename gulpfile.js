@@ -11,7 +11,8 @@ var gulp    = require('gulp'),
 	apidoc  = require('gulp-apidoc'),
 	plumber = require('gulp-plumber'),
 	eslint  = require('gulp-eslint'),
-	nodemon = require('gulp-nodemon');
+	nodemon = require('gulp-nodemon'),
+	mocha   = require('gulp-mocha');
 
 
 gulp.task('lint', function () {
@@ -44,6 +45,13 @@ gulp.task('serve', function () {
 		watch: ['./server/'],
 		ext: 'js'
 	});
+});
+
+
+// unit tests
+gulp.task('tests', function () {
+	return gulp.src('./server/tests/*.js', {read: false})
+		.pipe(mocha({reporter: 'spec'}));
 });
 
 
