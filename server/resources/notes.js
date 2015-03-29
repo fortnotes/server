@@ -8,49 +8,59 @@
 
 'use strict';
 
-/**
- * read
- */
-module.get = function ( path, query, request, callback ) {
-	//console.log(query);
-	query.skip  = parseInt(query.skip,  10) || 0;
-	query.limit = parseInt(query.limit, 10) || 20;
-	//console.log(mongoDb);
-	//console.log(response);
-	mongoNotes.find({}, {sort:{mtime:-1}, skip:query.skip, limit:query.limit}).toArray(function(err, docs) {
-		callback({code: 1, data: docs || []});
-	});
-};
+var restify = require('../restify'),
+	db      = require('../orm');
 
 
 /**
- * update
- * @return {Object} operation status and data
+ * @api {get} /notes Get user notes.
+ *
+ * @apiVersion 1.0.0
+ * @apiName getNotes
+ * @apiGroup Notes
+ * @apiPermission authUser
+ *
+ * @apiExample {curl} Example usage:
+ *     curl --include --header "Authorization: Bearer 5nNOF+dNQaHvq..." http://localhost:9090/notes
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *
+ *     []
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 401 Unauthorized
+ *
+ *     {"error": "invalid session"}
  */
-module.put = function ( path, query, request, callback ) {
-	return {code: 1};
-};
+restify.get('/notes',
+	function ( request, response ) {
+		var token = request.headers.authorization.slice(7);
 
+		db.models.sessions.check(token, function ( error, session ) {
+			if ( error ) {
+				return response.send(401, error);
+			}
 
-/**
- * create
- */
-module.post = function ( path, query, postData, request, callback ) {
-	//postData._id = new mongodb.ObjectID();
-	delete postData._id;
-	//postData._id = 123;
-	//console.log(postData);
-	mongoNotes.insert(postData, {}, function(err) {
-		//console.log(postData);
-		callback({code: 1, data: {_id:postData._id}});
-	});
-};
+			db.models.notes.find({userId: session.userId}, function ( error, notes ) {
+				var data = [];
 
+				if ( error ) {
+					return response.send(400, error);
+				}
 
-/**
- * remove
- * @return {Object} operation status and data
- */
-module.delete = function () {
-	return {code: 1};
-};
+				// reformat data
+				notes.forEach(function ( item ) {
+					data.push({
+						id:    item.id,
+						ctime: item.ctime,
+						mtime: item.mtime,
+						atime: item.atime
+					});
+				});
+
+				response.send(200, data);
+			});
+		});
+	}
+);
