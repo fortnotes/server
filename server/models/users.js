@@ -17,14 +17,20 @@ module.exports = function ( db ) {
 		// inactive till at least one session is confirmed
 		active: {type: 'boolean', defaultValue: false},
 
-		// password hash salt
+		// link to table keys - current active encryption key
+		keyId: {type: 'integer', unsigned: true},
+
+		// master password hash salt
 		salt: {type: 'text', size: 128},
 
-		// user password sha512 hash
+		// master password sha512 hash
 		hash: {type: 'text', size: 128},
 
 		// creation time
-		ctime: {type: 'integer', unsigned: true, defaultValue: 0}
+		ctime: {type: 'integer', unsigned: true, defaultValue: 0},
+
+		// master password update time
+		ptime: {type: 'integer', unsigned: true, defaultValue: 0}
 	});
 
 
@@ -50,5 +56,34 @@ module.exports = function ( db ) {
 		} else {
 			callback({error: 'empty or invalid email address'});
 		}
+	};
+
+
+	/**
+	 * Get user public key by email.
+	 *
+	 * @param {string} email user email
+	 * @param {Function} callback error/success handler
+	 */
+	users.getKey = function ( email, callback ) {
+		users.one({email: email}, function ( error, user ) {
+			if ( error ) {
+				return callback({error: 'empty or invalid email address'});
+			}
+
+			if ( user && user.keyId ) {
+				// user is valid and has key
+				db.models.keys.get(user.keyId, function ( error, key ) {
+					if ( error ) {
+						return callback({error: 'no key'});
+					}
+
+					// ok
+					callback(null, {key: key.pub});
+				});
+			} else {
+				callback({error: 'no key'});
+			}
+		});
 	};
 };

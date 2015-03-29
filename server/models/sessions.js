@@ -55,23 +55,22 @@ module.exports = function ( db ) {
 
 			if ( error ) {
 				// RNG failure
-				callback(error);
-			} else {
-				// prepare
-				token = data.slice(0, config.session.tokenSize).toString('base64');
-				code  = data.slice(config.session.tokenSize).toString('base64');
-
-				// get user or create if missing
-				db.models.users.getByEmail(email, function ( error, user ) {
-					if ( error ) {
-						// wrong user
-						callback(error);
-					} else {
-						// insert
-						sessions.create({userId: user.id, token: token, code: code, ctime: +new Date()}, callback);
-					}
-				});
+				return callback(error);
 			}
+
+			// prepare
+			token = data.slice(0, config.session.tokenSize).toString('base64');
+			code  = data.slice(config.session.tokenSize).toString('base64');
+
+			// get user or create if missing
+			db.models.users.getByEmail(email, function ( error, user ) {
+				if ( error ) {
+					return callback(error);
+				}
+
+				// insert
+				sessions.create({userId: user.id, token: token, code: code, ctime: +new Date()}, callback);
+			});
 		});
 	};
 
@@ -89,19 +88,19 @@ module.exports = function ( db ) {
 			// find by id
 			sessions.get(id, function ( error, session ) {
 				if ( error ) {
-					// wrong id
-					callback(error);
+					return callback(error);
+				}
+
+				session.attempts++;
+
+				// allow to confirm
+				if ( session && session.active && session.code === code && session.attempts < config.session.confirmAttempts ) {
+					session.confirmed = true;
+					session.atime     = +new Date();
+					session.save(callback);
 				} else {
-					session.attempts++;
-					// allow to confirm
-					if ( session && session.active && session.code === code && session.attempts < config.session.confirmAttempts ) {
-						session.confirmed = true;
-						session.atime     = +new Date();
-						session.save(callback);
-					} else {
-						session.save();
-						callback({error: 'invalid session id or confirmation code'});
-					}
+					session.save();
+					callback({error: 'invalid session id or confirmation code'});
 				}
 			});
 		} else {
@@ -121,14 +120,14 @@ module.exports = function ( db ) {
 		if ( token ) {
 			sessions.one({token: token}, function ( error, session ) {
 				if ( error ) {
-					callback(error);
+					return callback(error);
+				}
+
+				// exists and valid
+				if ( session && session.active && session.confirmed ) {
+					callback(null, session);
 				} else {
-					// exists and valid
-					if ( session && session.active && session.confirmed ) {
-						callback(null, session);
-					} else {
-						callback({error: 'invalid session'});
-					}
+					callback({error: 'invalid session'});
 				}
 			});
 		} else {
@@ -150,26 +149,26 @@ module.exports = function ( db ) {
 			var data = {active: false, ttime: +new Date()};
 
 			if ( error ) {
-				callback(error);
+				return callback(error);
+			}
+
+			if ( currentSession.id === id ) {
+				// kill the current session
+				currentSession.save(data, callback);
 			} else {
-				if ( currentSession.id === id ) {
-					// kill the current session
-					currentSession.save(data, callback);
-				} else {
-					// find by id
-					sessions.get(id, function ( error, session ) {
-						if ( error ) {
-							callback(error);
-						} else {
-							// does the user own the given session?
-							if ( currentSession.userId === session.userId ) {
-								session.save(data, callback);
-							} else {
-								callback({error: 'invalid session'});
-							}
-						}
-					});
-				}
+				// find by id
+				sessions.get(id, function ( error, session ) {
+					if ( error ) {
+						return callback(error);
+					}
+
+					// does the user own the given session?
+					if ( currentSession.userId === session.userId ) {
+						session.save(data, callback);
+					} else {
+						callback({error: 'invalid session'});
+					}
+				});
 			}
 		});
 	};

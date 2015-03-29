@@ -8,37 +8,42 @@
 
 'use strict';
 
-/**
- * read
- * @return {Object} operation status and data
- */
-module.get = function () {
-	return {code: 1};
-};
+var restify = require('../restify'),
+	db      = require('../orm');
 
 
 /**
- * update
- * @return {Object} operation status and data
+ * @api {get} /users/:email/keys/current Get user public key by email.
+ *
+ * @apiVersion 1.0.0
+ * @apiName getUserKey
+ * @apiGroup Users
+ * @apiPermission none
+ *
+ * @apiParam {string} email User email address.
+ *
+ * @apiExample {curl} Example usage:
+ *     curl --include http://localhost:9090/users/test@gmail.com/keys/current
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *
+ *     {"key": "[key data]"}
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Bad Request
+ *
+ *     {"error": "empty or invalid email address"}
  */
-module.put = function () {
-	return {code: 1};
-};
+restify.get('/users/:email/keys/current',
+	function ( request, response ) {
+		db.models.users.getKey(request.params.email, function ( error, key ) {
+			if ( error ) {
+				return response.send(400, error);
+			}
 
-
-/**
- * create
- * @return {Object} operation status and data
- */
-module.post = function () {
-	return {code: 1};
-};
-
-
-/**
- * remove
- * @return {Object} operation status and data
- */
-module.delete = function () {
-	return {code: 1};
-};
+			// ok
+			response.send(200, key);
+		});
+	}
+);

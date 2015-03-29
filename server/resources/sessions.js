@@ -70,29 +70,30 @@ restify.get('/sessions',
 
 		db.models.sessions.check(token, function ( error, session ) {
 			if ( error ) {
-				response.send(401, error);
-			} else {
-				db.models.sessions.find({userId: session.userId}).only('id', 'active', 'confirmed', 'attempts', 'ctime', 'atime', 'ttime').run(function ( error, sessions ) {
-					var data = [];
-
-					if ( error ) {
-						response.send(400, error);
-					} else {
-						sessions.forEach(function ( item ) {
-							data.push({
-								id: item.id,
-								active: item.active,
-								confirmed: item.confirmed,
-								attempts: item.attempts,
-								ctime: item.ctime,
-								atime: item.atime,
-								ttime: item.ttime
-							});
-						});
-						response.send(200, data);
-					}
-				});
+				return response.send(401, error);
 			}
+
+			db.models.sessions.find({userId: session.userId}).only('id', 'active', 'confirmed', 'attempts', 'ctime', 'atime', 'ttime').run(function ( error, sessions ) {
+				var data = [];
+
+				if ( error ) {
+					return response.send(400, error);
+				}
+
+				// reformat data
+				sessions.forEach(function ( item ) {
+					data.push({
+						id: item.id,
+						active: item.active,
+						confirmed: item.confirmed,
+						attempts: item.attempts,
+						ctime: item.ctime,
+						atime: item.atime,
+						ttime: item.ttime
+					});
+				});
+				response.send(200, data);
+			});
 		});
 	}
 );
@@ -106,7 +107,7 @@ restify.get('/sessions',
  * @apiGroup Sessions
  * @apiPermission none
  *
- * @apiParam {string} email Users email address.
+ * @apiParam {string} email User email address.
  *
  * @apiExample {curl} Example usage:
  *     curl --include --data "email=test@gmail.com" http://localhost:9090/sessions
@@ -132,11 +133,11 @@ restify.post('/sessions',
 
 		db.models.sessions.request(request.params.email, function ( error, session ) {
 			if ( error ) {
-				// building a response
-				response.send(400, error);
-			} else {
-				response.send(200, {id: session.id, token: session.token});
+				return response.send(400, error);
 			}
+
+			// ok
+			response.send(200, {id: session.id, token: session.token});
 		});
 	}
 );
@@ -170,12 +171,11 @@ restify.put('/sessions/:id',
 	function ( request, response ) {
 		db.models.sessions.confirm(request.params.id, request.params.code, function ( error ) {
 			if ( error ) {
-				// fail
-				response.send(400, error);
-			} else {
-				// ok
-				response.send(200, true);
+				return response.send(400, error);
 			}
+
+			// ok
+			response.send(200, true);
 		});
 	}
 );
@@ -213,12 +213,11 @@ restify.del('/sessions/:id',
 
 		db.models.sessions.terminate(token, id, function ( error ) {
 			if ( error ) {
-				// fail
-				response.send(400, error);
-			} else {
-				// ok
-				response.send(200, true);
+				return response.send(400, error);
 			}
+
+			// ok
+			response.send(200, true);
 		});
 	}
 );

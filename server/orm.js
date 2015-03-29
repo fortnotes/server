@@ -25,6 +25,7 @@ db.on('connect', function ( error ) {
 	if ( error ) { throw error; }
 
 	// models
+	db.load('./models/keys',     loadResult);
 	db.load('./models/users',    loadResult);
 	db.load('./models/sessions', loadResult);
 
