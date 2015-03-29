@@ -83,15 +83,16 @@ restify.get('/sessions',
 				// reformat data
 				sessions.forEach(function ( item ) {
 					data.push({
-						id: item.id,
-						active: item.active,
+						id:        item.id,
+						active:    item.active,
 						confirmed: item.confirmed,
-						attempts: item.attempts,
-						ctime: item.ctime,
-						atime: item.atime,
-						ttime: item.ttime
+						attempts:  item.attempts,
+						ctime:     item.ctime,
+						atime:     item.atime,
+						ttime:     item.ttime
 					});
 				});
+
 				response.send(200, data);
 			});
 		});
@@ -122,10 +123,15 @@ restify.get('/sessions',
  *         "token": "2r1W5ItJN4GlqK2teD77JLZGddf0unnvAlKv+SAl7VCViStq5VcLgkmFZ85iyBS4Wmp1omOnXNlKeQkoM+UmBt/oMda91ovjNlUR8Kl2oG8Hec+Hrijy8xp3+qQwg1qs"
  *     }
  *
- * @apiErrorExample Error-Response:
+ * @apiErrorExample Error 400:
  *     HTTP/1.1 400 Bad Request
  *
- *     {"error": "empty or invalid email address"}
+ *     "empty or invalid email address"
+ *
+ * @apiErrorExample Error 500:
+ *     HTTP/1.1 500 Internal Server Error
+ *
+ *     "RNG failure"
  */
 restify.post('/sessions',
 	function ( request, response ) {
@@ -133,7 +139,7 @@ restify.post('/sessions',
 
 		db.models.sessions.request(request.params.email, function ( error, session ) {
 			if ( error ) {
-				return response.send(400, error);
+				return response.send(error.code, error.message);
 			}
 
 			// ok
@@ -162,16 +168,21 @@ restify.post('/sessions',
  *
  *     true
  *
- * @apiErrorExample Error-Response:
+ * @apiErrorExample Error 400:
  *     HTTP/1.1 400 Bad Request
  *
- *     {"error": "invalid session id or confirmation code"}
+ *     "invalid session id or confirmation code"
+ *
+ * @apiErrorExample Error 500:
+ *     HTTP/1.1 500 Internal Server Error
+ *
+ *     "failed to confirm session"
  */
 restify.put('/sessions/:id',
 	function ( request, response ) {
-		db.models.sessions.confirm(request.params.id, request.params.code, function ( error ) {
+		db.models.sessions.confirm(Number(request.params.id), request.params.code, function ( error ) {
 			if ( error ) {
-				return response.send(400, error);
+				return response.send(error.code, error.message);
 			}
 
 			// ok

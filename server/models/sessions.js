@@ -55,7 +55,8 @@ module.exports = function ( db ) {
 
 			if ( error ) {
 				// RNG failure
-				return callback(error);
+				console.log(error);
+				return callback({code: 500, message: 'RNG failure'});
 			}
 
 			// prepare
@@ -88,23 +89,30 @@ module.exports = function ( db ) {
 			// find by id
 			sessions.get(id, function ( error, session ) {
 				if ( error ) {
-					return callback(error);
+					return callback({code: 404, message: 'session was not found'});
 				}
 
 				session.attempts++;
 
 				// allow to confirm
 				if ( session && session.active && session.code === code && session.attempts < config.session.confirmAttempts ) {
+					console.log(session.attempts);
 					session.confirmed = true;
 					session.atime     = +new Date();
-					session.save(callback);
+					session.save(function ( error, session ) {
+						if ( error ) {
+							return callback({code: 500, message: 'failed to confirm session'});
+						}
+
+						callback(null, session);
+					});
 				} else {
 					session.save();
-					callback({error: 'invalid session id or confirmation code'});
+					callback({code: 400, message: 'invalid session or confirmation code'});
 				}
 			});
 		} else {
-			callback({error: 'invalid session id or confirmation code'});
+			callback({code: 400, message: 'invalid session id or confirmation code'});
 		}
 	};
 
@@ -127,11 +135,11 @@ module.exports = function ( db ) {
 				if ( session && session.active && session.confirmed ) {
 					callback(null, session);
 				} else {
-					callback({error: 'invalid session'});
+					callback({message: 'invalid session'});
 				}
 			});
 		} else {
-			callback({error: 'no session token'});
+			callback({message: 'no session token'});
 		}
 	};
 
@@ -166,7 +174,7 @@ module.exports = function ( db ) {
 					if ( currentSession.userId === session.userId ) {
 						session.save(data, callback);
 					} else {
-						callback({error: 'invalid session'});
+						callback({message: 'invalid session'});
 					}
 				});
 			}

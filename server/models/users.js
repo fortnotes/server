@@ -47,14 +47,21 @@ module.exports = function ( db ) {
 			users.create({email: email, ctime: +new Date()}, function ( error, user ) {
 				if ( error ) {
 					// can't insert - already exists
-					users.one({email: email}, callback);
+					users.one({email: email}, function ( error, user ) {
+						if ( error || !user ) {
+							console.log(error);
+							callback({code: 404, message: 'user was not found'});
+						} else {
+							callback(null, user);
+						}
+					});
 				} else {
 					// inserted
 					callback(null, user);
 				}
 			});
 		} else {
-			callback({error: 'empty or invalid email address'});
+			callback({code: 400, message: 'empty or invalid email address'});
 		}
 	};
 
@@ -68,21 +75,21 @@ module.exports = function ( db ) {
 	users.getKey = function ( email, callback ) {
 		users.one({email: email}, function ( error, user ) {
 			if ( error ) {
-				return callback({error: 'empty or invalid email address'});
+				return callback({message: 'empty or invalid email address'});
 			}
 
 			if ( user && user.keyId ) {
 				// user is valid and has key
 				db.models.keys.get(user.keyId, function ( error, key ) {
 					if ( error ) {
-						return callback({error: 'no key'});
+						return callback({message: 'no key'});
 					}
 
 					// ok
 					callback(null, {key: key.pub});
 				});
 			} else {
-				callback({error: 'no key'});
+				callback({message: 'no key'});
 			}
 		});
 	};
