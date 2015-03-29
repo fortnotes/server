@@ -1,5 +1,52 @@
 define({ "api": [
   {
+    "type": "get",
+    "url": "/notes",
+    "title": "Get user notes.",
+    "version": "1.0.0",
+    "name": "getNotes",
+    "group": "Notes",
+    "permission": [
+      {
+        "name": "authUser",
+        "title": "Authorized user access only.",
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+      }
+    ],
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" http://localhost:9090/notes",
+        "type": "curl"
+      }
+    ],
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\n[]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 401 Unauthorized\n\n{\"error\": \"invalid session\"}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "server/resources/notes.js",
+    "groupTitle": "Notes",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/notes"
+      }
+    ]
+  },
+  {
     "type": "delete",
     "url": "/sessions/:id",
     "title": "Terminate the given user session.",
@@ -123,8 +170,13 @@ define({ "api": [
     "error": {
       "examples": [
         {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n\n{\"error\": \"invalid session id or confirmation code\"}",
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n\n\"invalid session id or confirmation code\"",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n\n\"failed to confirm session\"",
           "type": "json"
         }
       ]
@@ -263,7 +315,7 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "email",
-            "description": "<p>Users email address.</p> "
+            "description": "<p>User email address.</p> "
           }
         ]
       }
@@ -305,8 +357,13 @@ define({ "api": [
     "error": {
       "examples": [
         {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n\n{\"error\": \"empty or invalid email address\"}",
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n\n\"empty or invalid email address\"",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n\n\"RNG failure\"",
           "type": "json"
         }
       ]
@@ -316,6 +373,64 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://localhost:9090/sessions"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/users/:email/keys/current",
+    "title": "Get user public key by email.",
+    "version": "1.0.0",
+    "name": "getUserKey",
+    "group": "Users",
+    "permission": [
+      {
+        "name": "none"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "email",
+            "description": "<p>User email address.</p> "
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include http://localhost:9090/users/test@gmail.com/keys/current",
+        "type": "curl"
+      }
+    ],
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\n{\"key\": \"[key data]\"}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n\n{\"error\": \"empty or invalid email address\"}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "server/resources/users.js",
+    "groupTitle": "Users",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/users/:email/keys/current"
       }
     ]
   }
