@@ -8,6 +8,7 @@
 'use strict';
 
 /* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 
 var assert  = require('assert'),
 	restify = require('restify'),
@@ -20,7 +21,12 @@ var assert  = require('assert'),
 
 
 describe('Sessions', function () {
-	var session = null;
+	var u1s1 = {},
+		u1s2 = {},
+		u2s1 = {},
+		u2s2 = {},
+		sessionId   = null,
+		sessionCode = null;
 
 	before(function () {
 
@@ -28,8 +34,10 @@ describe('Sessions', function () {
 
 
 	after(function () {
-		// need to do manually
+		// need to close http connection manually
 		client.close();
+		// and database
+		db.close();
 	});
 
 	describe('request a new session', function () {
@@ -68,9 +76,12 @@ describe('Sessions', function () {
 				assert.ok(data.token);
 				assert.strictEqual(Number(data.id), data.id);
 
-				// save this session instance
+				// save this session info
 				db.models.sessions.get(data.id, function ( error, data ) {
-					session = data;
+					assert.ifError(error);
+
+					sessionId   = data.id;
+					sessionCode = data.code;
 					done();
 				});
 			});
@@ -95,7 +106,7 @@ describe('Sessions', function () {
 		});
 
 		it('should fail - no code', function ( done ) {
-			client.put('/sessions/' + session.id, {}, function ( error, request, response, data ) {
+			client.put('/sessions/' + sessionId, {}, function ( error, request, response, data ) {
 				assert.strictEqual(response.statusCode, 400);
 				assert.strictEqual(data, 'invalid session id or confirmation code');
 				done();
@@ -103,7 +114,7 @@ describe('Sessions', function () {
 		});
 
 		it('should fail - wrong id and code', function ( done ) {
-			client.put('/sessions/' + (session.id + 1000), {code: 123456}, function ( error, request, response, data ) {
+			client.put('/sessions/' + (sessionId + 1000), {code: 123456}, function ( error, request, response, data ) {
 				assert.strictEqual(response.statusCode, 404);
 				assert.strictEqual(data, 'session was not found');
 				done();
@@ -111,7 +122,7 @@ describe('Sessions', function () {
 		});
 
 		it('should fail - wrong code', function ( done ) {
-			client.put('/sessions/' + session.id, {code: 123}, function ( error, request, response, data ) {
+			client.put('/sessions/' + sessionId, {code: 123}, function ( error, request, response, data ) {
 				assert.strictEqual(response.statusCode, 400);
 				assert.strictEqual(data, 'invalid session or confirmation code');
 				done();
@@ -119,7 +130,7 @@ describe('Sessions', function () {
 		});
 
 		it('should activate', function ( done ) {
-			client.put('/sessions/' + session.id, {code: session.code}, function ( error, request, response, data ) {
+			client.put('/sessions/' + sessionId, {code: sessionCode}, function ( error, request, response, data ) {
 				assert.ifError(error);
 				assert.strictEqual(response.statusCode, 200);
 				assert.strictEqual(data, true);
@@ -128,27 +139,62 @@ describe('Sessions', function () {
 		});
 
 		it('should fail - already active', function ( done ) {
-			db.models.sessions.get(session.id, function ( error, session ) {
-				assert.ifError(error);
-				client.put('/sessions/' + session.id, {code: session.code}, function ( error, request, response, data ) {
-					assert.strictEqual(response.statusCode, 400);
-					assert.strictEqual(data, 'invalid session or confirmation code');
-					done();
-				});
+			client.put('/sessions/' + sessionId, {code: sessionCode}, function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 400);
+				assert.strictEqual(data, 'invalid session or confirmation code');
+				done();
 			});
 		});
 
 		it('should deactivate', function ( done ) {
-			/*db.models.users.create({email: '!!!', ctime: +new Date()}, function ( error, user ) {
-				//assert.ifError(error);
-				console.log(error);
-				done();
-			});*/
-			session.confirmed = false;
-			session.save(function ( error, data ) {
+			db.transaction(function ( error, transaction ) {
 				assert.ifError(error);
-				console.log(data.confirmed);
+
+				db.models.sessions.get(sessionId, function ( error, session ) {
+					assert.ifError(error);
+
+					session.save({confirmed: false, attempts: config.session.confirmAttempts}, function ( error, data ) {
+						assert.ifError(error);
+
+						transaction.commit(function ( error ) {
+							assert.ifError(error);
+
+							done();
+						});
+					});
+				});
+			});
+		});
+
+		it('should fail - confirm attempts exceeded', function ( done ) {
+			client.put('/sessions/' + sessionId, {code: sessionCode}, function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 400);
+				assert.strictEqual(data, 'invalid session or confirmation code');
 				done();
+			});
+		});
+
+		it('should create new session and activate', function ( done ) {
+			client.post('/sessions', {email: 'qwe@rty.com'}, function ( error, request, response, data ) {
+				assert.ifError(error);
+				assert.strictEqual(response.statusCode, 200);
+				assert.strictEqual(response.headers['content-type'], 'application/json');
+				assert.strictEqual(Number(response.headers['content-length']), response.body.length);
+				assert.ok(data.id);
+				assert.ok(data.token);
+				assert.strictEqual(Number(data.id), data.id);
+
+				// save this session info
+				db.models.sessions.get(data.id, function ( error, session ) {
+					assert.ifError(error);
+
+					client.put('/sessions/' + session.id, {code: session.code}, function ( error, request, response, data ) {
+						assert.ifError(error);
+						assert.strictEqual(response.statusCode, 200);
+						assert.strictEqual(data, true);
+						done();
+					});
+				});
 			});
 		});
 	});
