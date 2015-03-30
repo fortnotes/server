@@ -25,10 +25,11 @@
 	"dependencies": {
 		"cookie": "^0.1.2",
 		"isemail": "^1.1.1",
+		"mysql": "^2.6.1",
 		"orm": "^2.1.24",
 		"orm-transaction": "^0.0.2",
-		"sqlite3": "^3.0.5",
-		"restify": "^3.0.1"
+		"restify": "^3.0.1",
+		"sqlite3": "^3.0.5"
 	},
 	"devDependencies": {
 		"gulp": "^3.8.0",

@@ -12,11 +12,12 @@ var orm = require('orm'),
 
 
 // global options
-orm.settings.set('connection.debug', true);
+orm.settings.set('connection.debug', false);
 orm.settings.set('instance.cache',   false);
 
 // init
-db = orm.connect('sqlite://./db.sqlite');
+//db = orm.connect('sqlite://./db.sqlite');
+db = orm.connect('mysql://fortnotes:fortpass@localhost/fortnotes');
 
 db.on('connect', function ( error ) {
 	function loadResult ( error ) {

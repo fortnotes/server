@@ -96,7 +96,6 @@ module.exports = function ( db ) {
 
 				// allow to confirm
 				if ( session && session.active && session.code === code && session.attempts < config.session.confirmAttempts ) {
-					console.log(session.attempts);
 					session.confirmed = true;
 					session.atime     = +new Date();
 					session.save(function ( error, session ) {
