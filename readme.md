@@ -1,5 +1,7 @@
 # FortNotes #
 
+[![Join the chat at https://gitter.im/DarkPark/FortNotes](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/DarkPark/FortNotes?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 FortNotes is a highly secure online private information manager based on the AES encryption in the browser.
 The current stable version - <https://bitbucket.org/DarkPark/fortnotes>
 
