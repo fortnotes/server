@@ -13,6 +13,7 @@ var orm = require('orm'),
 
 // global options
 orm.settings.set('connection.debug', true);
+orm.settings.set('instance.cache',   false);
 
 // init
 db = orm.connect('sqlite://./db.sqlite');
@@ -24,13 +25,13 @@ db.on('connect', function ( error ) {
 
 	if ( error ) { throw error; }
 
+	db.use(require('orm-transaction'));
+
 	// models
 	db.load('./models/keys',     loadResult);
 	db.load('./models/notes',    loadResult);
 	db.load('./models/users',    loadResult);
 	db.load('./models/sessions', loadResult);
-
-	db.settings.set('instance.cache', false);
 
 	//db.models.sessions.hasOne('user', db.models.users, {index: true});
 
