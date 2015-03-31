@@ -3,6 +3,7 @@
 	"version": "2.0.0",
 	"description": "client-server app to communicate with desktop/mobile clients and sync data to the sync server",
 	"main": "server/main.js",
+	"bin": "./bin/cli.js",
 	"author": "DarkPark",
 	"license": "GPLv3",
 	"homepage": "https://fortnotes.com/",
@@ -19,13 +20,14 @@
 	},
 	"bugs": "https://github.com/DarkPark/FortNotes/issues",
 	"scripts": {
-		"start": "node server/main.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"start": "node ./bin/cli.js",
+		"test": "gulp tests"
 	},
 	"dependencies": {
-		"cookie": "^0.1.2",
+		"commander": "^2.7.0",
 		"isemail": "^1.1.1",
 		"mysql": "^2.6.1",
+		"node-static": "^0.7.6",
 		"orm": "^2.1.24",
 		"orm-transaction": "^0.0.2",
 		"restify": "^3.0.1",
@@ -34,13 +36,12 @@
 	"devDependencies": {
 		"gulp": "^3.8.0",
 		"gulp-apidoc": "^0.1.2",
-		"gulp-eslint": "^0.7.0",
+		"gulp-eslint": "^0.8.0",
 		"gulp-jade": "^1.0.0",
 		"gulp-livereload": "^3.8.0",
 		"gulp-nodemon": "^2.0.2",
 		"gulp-mocha": "^2.0.0",
 		"gulp-plumber": "^1.0.0",
-		"gulp-webpack": "^1.2.0",
-		"node-static": "^0.7.6"
+		"gulp-webpack": "^1.2.0"
 	}
 }
