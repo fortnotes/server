@@ -26,6 +26,7 @@
 	"dependencies": {
 		"commander": "^2.7.0",
 		"isemail": "^1.1.1",
+		"ip": "^0.3.2",
 		"mysql": "^2.6.1",
 		"node-static": "^0.7.6",
 		"orm": "^2.1.24",

@@ -4,7 +4,6 @@
 
 var fs      = require('fs'),
 	path    = require('path'),
-	//gulp    = require('gulp'),
 	program = require('commander'),
 	pkgInfo = require('../package.json');
 
@@ -26,15 +25,14 @@ fs.mkdir(path.join(process.env.HOME || process.env.USERPROFILE, '.fortnotes'), f
  */
 function initApp ( command ) {
 	var nodeStatic  = require('node-static'),
-		staticFiles = new nodeStatic.Server('./client/build');
+		staticFiles = new nodeStatic.Server(path.join(__dirname, '..', 'client', 'build'));
 
 	require('http').createServer(function ( request, response ) {
-		console.log(request);
 		request.addListener('end', function () {
 			staticFiles.serve(request, response);
 		}).resume();
-	}).listen(8080, function () {
-		console.log('FortNotes client listening at %s', command.port);
+	}).listen(command.port, function () {
+		console.log('FortNotes client app is serving at %s:%s', require('ip').address(), command.port);
 	});
 }
 
