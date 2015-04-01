@@ -1,7 +1,7 @@
 {
 	"name": "fortnotes",
 	"version": "2.0.0",
-	"description": "client-server app to communicate with desktop/mobile clients and sync data to the sync server",
+	"description": "Server application to serve client API requests.",
 	"main": "server/main.js",
 	"bin": "./bin/cli.js",
 	"author": "DarkPark",
@@ -12,13 +12,16 @@
 		"encryption",
 		"private",
 		"notes",
-		"storage"
+		"storage",
+		"server",
+		"rest",
+		"api"
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/DarkPark/FortNotes.git"
+		"url": "git@github.com:fortnotes/server.git"
 	},
-	"bugs": "https://github.com/DarkPark/FortNotes/issues",
+	"bugs": "https://github.com/fortnotes/server/issues",
 	"scripts": {
 		"start": "node ./bin/cli.js",
 		"test": "gulp tests"
@@ -28,7 +31,6 @@
 		"isemail": "^1.1.1",
 		"ip": "^0.3.2",
 		"mysql": "^2.6.1",
-		"node-static": "^0.7.6",
 		"orm": "^2.1.24",
 		"orm-transaction": "^0.0.2",
 		"restify": "^3.0.1",
@@ -38,11 +40,8 @@
 		"gulp": "^3.8.0",
 		"gulp-apidoc": "^0.1.2",
 		"gulp-eslint": "^0.8.0",
-		"gulp-jade": "^1.0.0",
-		"gulp-livereload": "^3.8.0",
 		"gulp-nodemon": "^2.0.2",
 		"gulp-mocha": "^2.0.0",
-		"gulp-plumber": "^1.0.0",
-		"gulp-webpack": "^1.2.0"
+		"gulp-plumber": "^1.0.0"
 	}
 }
