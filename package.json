@@ -42,6 +42,7 @@
 		"gulp-eslint": "^0.8.0",
 		"gulp-nodemon": "^2.0.2",
 		"gulp-mocha": "^2.0.0",
-		"gulp-plumber": "^1.0.0"
+		"gulp-plumber": "^1.0.0",
+		"minimist": "^1.1.1"
 	}
 }

@@ -12,7 +12,7 @@
 
 var assert  = require('assert'),
 	restify = require('restify'),
-	config  = require('../config/main'),
+	//config  = require('../config/main'),
 	client  = restify.createJsonClient({
 		url: 'http://localhost:9090',
 		version: '*'
@@ -153,7 +153,7 @@ describe('Sessions', function () {
 				db.models.sessions.get(sessionId, function ( error, session ) {
 					assert.ifError(error);
 
-					session.save({confirmed: false, attempts: config.session.confirmAttempts}, function ( error, data ) {
+					session.save({confirmed: false, attempts: global.config.session.confirmAttempts}, function ( error, data ) {
 						assert.ifError(error);
 
 						transaction.commit(function ( error ) {

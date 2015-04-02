@@ -7,8 +7,8 @@
 
 'use strict';
 
-var crypto = require('crypto'),
-	config = require('../config/main');
+var crypto = require('crypto');
+	//config = require('../config/main');
 
 
 module.exports = function ( db ) {
@@ -50,7 +50,7 @@ module.exports = function ( db ) {
 	 */
 	sessions.request = function ( email, callback ) {
 		// generate session token
-		crypto.randomBytes(config.session.tokenSize + config.session.confirmCodeSize, function ( error, data ) {
+		crypto.randomBytes(global.config.session.tokenSize + global.config.port.session.confirmCodeSize, function ( error, data ) {
 			var token, code;
 
 			if ( error ) {
@@ -60,8 +60,8 @@ module.exports = function ( db ) {
 			}
 
 			// prepare
-			token = data.slice(0, config.session.tokenSize).toString('base64');
-			code  = data.slice(config.session.tokenSize).toString('base64');
+			token = data.slice(0, global.config.session.tokenSize).toString('base64');
+			code  = data.slice(global.config.session.tokenSize).toString('base64');
 
 			// get user or create if missing
 			db.models.users.getByEmail(email, function ( error, user ) {
@@ -95,7 +95,7 @@ module.exports = function ( db ) {
 				session.attempts++;
 
 				// allow to confirm
-				if ( session && session.active && session.code === code && session.attempts < config.session.confirmAttempts ) {
+				if ( session && session.active && session.code === code && session.attempts < global.config.session.confirmAttempts ) {
 					session.confirmed = true;
 					session.atime     = +new Date();
 					session.save(function ( error, session ) {

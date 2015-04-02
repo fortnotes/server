@@ -54,6 +54,11 @@ gulp.task('serve', function () {
 
 // unit tests
 gulp.task('tests', function () {
+	var argv = require('minimist')(process.argv.slice(2));
+
+	console.log(argv);
+	return;
+
 	return gulp.src('./tests/*.js', {read: false})
 		.pipe(mocha({reporter: 'spec'}));
 });
