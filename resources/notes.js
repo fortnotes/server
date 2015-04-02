@@ -8,8 +8,8 @@
 
 'use strict';
 
-var restify = require('../restify'),
-	db      = require('../orm');
+var restify = require('../lib/restify'),
+	db      = require('../lib/orm');
 
 
 /**

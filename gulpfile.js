@@ -19,8 +19,12 @@ gulp.task('lint', function () {
 	return gulp
 		.src([
 			//'./client/app/js/**/*.js',
-			'./client/config/**/*.js',
-			'./server/**/*.js'
+			'./bin/**/*.js',
+			'./config/**/*.js',
+			'./lib/**/*.js',
+			'./models/**/*.js',
+			'./resources/**/*.js',
+			'./tests/**/*.js'
 		])
 		.pipe(plumber())
 		.pipe(eslint())
@@ -50,7 +54,7 @@ gulp.task('serve', function () {
 
 // unit tests
 gulp.task('tests', function () {
-	return gulp.src('./server/tests/*.js', {read: false})
+	return gulp.src('./tests/*.js', {read: false})
 		.pipe(mocha({reporter: 'spec'}));
 });
 

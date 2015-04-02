@@ -17,7 +17,7 @@ var assert  = require('assert'),
 		url: 'http://localhost:9090',
 		version: '*'
 	}),
-	db = require('../orm');
+	db = require('../lib/orm');
 
 
 describe('Sessions', function () {
