@@ -39,11 +39,11 @@ restify.get('/users/:email/keys/current',
 	function ( request, response ) {
 		db.models.users.getKey(request.params.email, function ( error, key ) {
 			if ( error ) {
-				return response.send(400, error);
+				return response.send(error);
 			}
 
 			// ok
-			response.send(200, key);
+			response.send(key);
 		});
 	}
 );

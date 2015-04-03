@@ -66,18 +66,18 @@ var restify = require('../lib/restify'),
  */
 restify.get('/sessions',
 	function ( request, response ) {
-		var token = request.headers.authorization.slice(7);
+		//var token = request.headers.authorization.slice(7);
 
-		db.models.sessions.check(token, function ( error, session ) {
+		db.models.sessions.check(request.authorization.token, function ( error, session ) {
 			if ( error ) {
-				return response.send(401, error);
+				return response.send(error);
 			}
 
 			db.models.sessions.find({userId: session.userId}).only('id', 'active', 'confirmed', 'attempts', 'ctime', 'atime', 'ttime').run(function ( error, sessions ) {
 				var data = [];
 
 				if ( error ) {
-					return response.send(400, error);
+					return response.send(error);
 				}
 
 				// reformat data
@@ -93,7 +93,7 @@ restify.get('/sessions',
 					});
 				});
 
-				response.send(200, data);
+				response.send(data);
 			});
 		});
 	}
@@ -139,11 +139,11 @@ restify.post('/sessions',
 
 		db.models.sessions.request(request.params.email, function ( error, session ) {
 			if ( error ) {
-				return response.send(error.code, error.message);
+				return response.send(error);
 			}
 
 			// ok
-			response.send(200, {id: session.id, token: session.token});
+			response.send({id: session.id, token: session.token});
 		});
 	}
 );
@@ -182,11 +182,11 @@ restify.put('/sessions/:id',
 	function ( request, response ) {
 		db.models.sessions.confirm(Number(request.params.id), request.params.code, function ( error ) {
 			if ( error ) {
-				return response.send(error.code, error.message);
+				return response.send(error);
 			}
 
 			// ok
-			response.send(200, true);
+			response.send(true);
 		});
 	}
 );
@@ -219,16 +219,16 @@ restify.put('/sessions/:id',
  */
 restify.del('/sessions/:id',
 	function ( request, response ) {
-		var token = request.headers.authorization.slice(7),
+		var //token = request.headers.authorization.slice(7),
 			id    = Number(request.params.id);
 
-		db.models.sessions.terminate(token, id, function ( error ) {
+		db.models.sessions.terminate(request.authorization.token, id, function ( error ) {
 			if ( error ) {
-				return response.send(400, error);
+				return response.send(error);
 			}
 
 			// ok
-			response.send(200, true);
+			response.send(true);
 		});
 	}
 );

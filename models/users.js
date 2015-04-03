@@ -7,7 +7,8 @@
 
 'use strict';
 
-var isEmail = require('isemail');
+var isEmail = require('isemail'),
+	restify = require('restify');
 
 
 module.exports = function ( db ) {
@@ -50,7 +51,7 @@ module.exports = function ( db ) {
 					users.one({email: email}, function ( error, user ) {
 						if ( error || !user ) {
 							console.log(error);
-							callback({code: 404, message: 'user was not found'});
+							callback(new restify.errors.NotFoundError('user was not found'));
 						} else {
 							callback(null, user);
 						}
@@ -61,7 +62,7 @@ module.exports = function ( db ) {
 				}
 			});
 		} else {
-			callback({code: 400, message: 'empty or invalid email address'});
+			callback(new restify.errors.BadRequestError('empty or invalid email address'));
 		}
 	};
 
@@ -75,21 +76,21 @@ module.exports = function ( db ) {
 	users.getKey = function ( email, callback ) {
 		users.one({email: email}, function ( error, user ) {
 			if ( error ) {
-				return callback({message: 'empty or invalid email address'});
+				return callback(new restify.errors.BadRequestError('empty or invalid email address'));
 			}
 
 			if ( user && user.keyId ) {
 				// user is valid and has key
 				db.models.keys.get(user.keyId, function ( error, key ) {
 					if ( error ) {
-						return callback({message: 'no key'});
+						return callback(new restify.errors.BadRequestError('no key'));
 					}
 
 					// ok
 					callback(null, {key: key.pub});
 				});
 			} else {
-				callback({message: 'no key'});
+				return callback(new restify.errors.BadRequestError('no key'));
 			}
 		});
 	};

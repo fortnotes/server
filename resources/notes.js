@@ -35,9 +35,9 @@ var restify = require('../lib/restify'),
  */
 restify.get('/notes',
 	function ( request, response ) {
-		var token = request.headers.authorization.slice(7);
+		//var token = request.headers.authorization.slice(7);
 
-		db.models.sessions.check(token, function ( error, session ) {
+		db.models.sessions.check(request.authorization.token, function ( error, session ) {
 			if ( error ) {
 				return response.send(401, error);
 			}
@@ -59,7 +59,7 @@ restify.get('/notes',
 					});
 				});
 
-				response.send(200, data);
+				response.send(data);
 			});
 		});
 	}

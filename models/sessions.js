@@ -7,8 +7,8 @@
 
 'use strict';
 
-var crypto = require('crypto');
-	//config = require('../config/main');
+var crypto  = require('crypto'),
+	restify = require('restify');
 
 
 module.exports = function ( db ) {
@@ -56,7 +56,7 @@ module.exports = function ( db ) {
 			if ( error ) {
 				// RNG failure
 				console.log(error);
-				return callback({code: 500, message: 'RNG failure'});
+				return callback(new restify.errors.InternalServerError('RNG failure'));
 			}
 
 			// prepare
@@ -89,7 +89,7 @@ module.exports = function ( db ) {
 			// find by id
 			sessions.get(id, function ( error, session ) {
 				if ( error ) {
-					return callback({code: 404, message: 'session was not found'});
+					return callback(new restify.errors.NotFoundError('session was not found'));
 				}
 
 				session.attempts++;
@@ -100,18 +100,19 @@ module.exports = function ( db ) {
 					session.atime     = +new Date();
 					session.save(function ( error, session ) {
 						if ( error ) {
-							return callback({code: 500, message: 'failed to confirm session'});
+							console.log(error);
+							return callback(new restify.errors.InternalServerError('failed to confirm session'));
 						}
 
 						callback(null, session);
 					});
 				} else {
 					session.save();
-					callback({code: 400, message: 'invalid session or confirmation code'});
+					callback(new restify.errors.BadRequestError('invalid session or confirmation code'));
 				}
 			});
 		} else {
-			callback({code: 400, message: 'invalid session id or confirmation code'});
+			callback(new restify.errors.BadRequestError('invalid session id or confirmation code'));
 		}
 	};
 
@@ -127,18 +128,19 @@ module.exports = function ( db ) {
 		if ( token ) {
 			sessions.one({token: token}, function ( error, session ) {
 				if ( error ) {
-					return callback(error);
+					console.log(error);
+					return new restify.errors.InternalServerError('token search failure');
 				}
 
 				// exists and valid
 				if ( session && session.active && session.confirmed ) {
 					callback(null, session);
 				} else {
-					callback({message: 'invalid session'});
+					callback(new restify.errors.BadRequestError('invalid session'));
 				}
 			});
 		} else {
-			callback({message: 'no session token'});
+			callback(new restify.errors.BadRequestError('no session token'));
 		}
 	};
 
@@ -166,14 +168,22 @@ module.exports = function ( db ) {
 				// find by id
 				sessions.get(id, function ( error, session ) {
 					if ( error ) {
-						return callback(error);
+						console.log(error);
+						return callback(new restify.errors.InternalServerError('session search failure'));
 					}
 
 					// does the user own the given session?
 					if ( currentSession.userId === session.userId ) {
-						session.save(data, callback);
+						session.save(data, function ( error, session ) {
+							if ( error ) {
+								console.log(error);
+								return callback(new restify.errors.InternalServerError('session saving failure'));
+							}
+
+							callback(session);
+						});
 					} else {
-						callback({message: 'invalid session'});
+						callback(new restify.errors.BadRequestError('invalid session'));
 					}
 				});
 			}
