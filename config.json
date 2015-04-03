@@ -2,7 +2,7 @@
 	"port": 9090,
 
 	"restify": {
-		"name": "FortNotes API Server"
+		"name": "FortNotes API REST Server"
 	},
 
 	"session": {
@@ -15,7 +15,12 @@
 		"protocol": "sqlite",
 		"pathname": "./data.sqlite",
 		"query": {
-			"debug": true
+			"debug": false
+		},
+		"connection": {
+			"debug": false
 		}
-	}
+	},
+
+	"database": "sqlite://./data.sqlite"
 }
