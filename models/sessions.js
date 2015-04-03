@@ -50,7 +50,7 @@ module.exports = function ( db ) {
 	 */
 	sessions.request = function ( email, callback ) {
 		// generate session token
-		crypto.randomBytes(global.config.session.tokenSize + global.config.port.session.confirmCodeSize, function ( error, data ) {
+		crypto.randomBytes(global.config.session.tokenSize + global.config.session.confirmCodeSize, function ( error, data ) {
 			var token, code;
 
 			if ( error ) {
