@@ -7,7 +7,8 @@
 
 'use strict';
 
-var gulp    = require('gulp'),
+var path    = require('path'),
+	gulp    = require('gulp'),
 	apidoc  = require('gulp-apidoc'),
 	plumber = require('gulp-plumber'),
 	eslint  = require('gulp-eslint'),
@@ -54,10 +55,16 @@ gulp.task('serve', function () {
 
 // unit tests
 gulp.task('tests', function () {
-	var argv = require('minimist')(process.argv.slice(2));
+	var argv = require('minimist')(process.argv.slice(2)),
+		file = argv.config || path.join(__dirname, 'config.json');
 
-	console.log(argv);
-	return;
+	// map loaded configuration to global scope
+	global.config = require(file);
+
+	// set logging verbosity level
+	global.config.debug = !!argv.debug;
+
+	console.log('Config file name: %s', file);
 
 	return gulp.src('./tests/*.js', {read: false})
 		.pipe(mocha({reporter: 'spec'}));
