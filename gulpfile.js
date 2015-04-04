@@ -65,6 +65,7 @@ gulp.task('tests', function () {
 	global.config.debug = !!argv.debug;
 
 	console.log('Config file name: %s', file);
+	console.log('(to use another config file use flag --config <file>)');
 
 	return gulp.src('./tests/*.js', {read: false})
 		.pipe(mocha({reporter: 'spec'}));
