@@ -70,7 +70,14 @@ module.exports = function ( db ) {
 				}
 
 				// insert
-				sessions.create({userId: user.id, token: token, code: code, ctime: +new Date()}, callback);
+				sessions.create({userId: user.id, token: token, code: code, ctime: +new Date()}, function ( error, session ) {
+					if ( error ) {
+						console.log(error);
+						return callback(new restify.errors.InternalServerError('session creation failure'));
+					}
+
+					callback(null, session);
+				});
 			});
 		});
 	};
