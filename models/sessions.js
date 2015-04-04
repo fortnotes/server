@@ -143,7 +143,7 @@ module.exports = function ( db ) {
 				if ( session && session.active && session.confirmed ) {
 					callback(null, session);
 				} else {
-					callback(new restify.errors.BadRequestError('invalid session'));
+					callback(new restify.errors.UnauthorizedError('invalid session'));
 				}
 			});
 		} else {

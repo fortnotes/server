@@ -327,8 +327,8 @@ describe('Sessions', function () {
 			client.headers.authorization = 'Bearer qwe';
 
 			client.get('/sessions', function ( error, request, response, data ) {
-				assert.strictEqual(response.statusCode, 400);
-				assert.strictEqual(data.code, 'BadRequestError');
+				assert.strictEqual(response.statusCode, 401);
+				assert.strictEqual(data.code, 'UnauthorizedError');
 				assert.strictEqual(data.message, 'invalid session');
 				done();
 			});
@@ -397,8 +397,8 @@ describe('Sessions', function () {
 			client.headers.authorization = 'Bearer qwe';
 
 			client.del('/sessions/' + userA.sessionA.id, function ( error, request, response, data ) {
-				assert.strictEqual(response.statusCode, 400);
-				assert.strictEqual(data.code, 'BadRequestError');
+				assert.strictEqual(response.statusCode, 401);
+				assert.strictEqual(data.code, 'UnauthorizedError');
 				assert.strictEqual(data.message, 'invalid session');
 				done();
 			});
@@ -408,8 +408,8 @@ describe('Sessions', function () {
 			client.headers.authorization = 'Bearer ' + userA.sessionA.token;
 
 			client.del('/sessions/' + userA.sessionA.id, function ( error, request, response, data ) {
-				assert.strictEqual(response.statusCode, 400);
-				assert.strictEqual(data.code, 'BadRequestError');
+				assert.strictEqual(response.statusCode, 401);
+				assert.strictEqual(data.code, 'UnauthorizedError');
 				assert.strictEqual(data.message, 'invalid session');
 				done();
 			});
