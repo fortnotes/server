@@ -42,7 +42,7 @@ module.exports = function ( db ) {
 	 * @param {Function} callback error/success handler
 	 */
 	users.getByEmail = function ( email, callback ) {
-		// validate
+		// correct incoming params
 		if ( email && isEmail(email) ) {
 			// try to insert
 			users.create({email: email, ctime: +new Date()}, function ( error, user ) {

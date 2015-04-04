@@ -84,7 +84,7 @@ module.exports = function ( db ) {
 	 * @param {Function} callback error/success handler
 	 */
 	sessions.confirm = function ( id, code, callback ) {
-		// validate
+		// correct incoming params
 		if ( id && code ) {
 			// find by id
 			sessions.get(id, function ( error, session ) {
@@ -101,7 +101,7 @@ module.exports = function ( db ) {
 					session.save(function ( error, session ) {
 						if ( error ) {
 							console.log(error);
-							return callback(new restify.errors.InternalServerError('failed to confirm session'));
+							return callback(new restify.errors.InternalServerError('session saving failure'));
 						}
 
 						callback(null, session);
@@ -124,7 +124,7 @@ module.exports = function ( db ) {
 	 * @param {Function} callback error/success handler
 	 */
 	sessions.check = function ( token, callback ) {
-		// validate
+		// correct incoming params
 		if ( token ) {
 			sessions.one({token: token}, function ( error, session ) {
 				if ( error ) {
@@ -146,6 +146,46 @@ module.exports = function ( db ) {
 
 
 	/**
+	 * Get all user session list.
+	 *
+	 * @param {string} token user session token
+	 * @param {Function} callback error/success handler
+	 */
+	sessions.list = function ( token, callback ) {
+		// is valid user
+		sessions.check(token, function ( error, session ) {
+			if ( error ) {
+				return callback(error);
+			}
+
+			sessions.find({userId: session.userId}).only('id', 'active', 'confirmed', 'attempts', 'ctime', 'atime', 'ttime').run(function ( error, sessions ) {
+				var data = [];
+
+				if ( error ) {
+					console.log(error);
+					return callback(new restify.errors.NotFoundError('sessions were not found'));
+				}
+
+				// reformat data
+				sessions.forEach(function ( item ) {
+					data.push({
+						id:        item.id,
+						active:    item.active,
+						confirmed: item.confirmed,
+						attempts:  item.attempts,
+						ctime:     item.ctime,
+						atime:     item.atime,
+						ttime:     item.ttime
+					});
+				});
+
+				callback(null, data);
+			});
+		});
+	};
+
+
+	/**
 	 * Terminate the given user session by id.
 	 *
 	 * @param {string} token user session token
@@ -153,40 +193,52 @@ module.exports = function ( db ) {
 	 * @param {Function} callback error/success handler
 	 */
 	sessions.terminate = function ( token, id, callback ) {
-		// authenticate
-		sessions.check(token, function ( error, currentSession ) {
-			var data = {active: false, ttime: +new Date()};
-
+		function sessionSave ( error, session ) {
 			if ( error ) {
-				return callback(error);
+				console.log(error);
+				return callback(new restify.errors.InternalServerError('session saving failure'));
 			}
 
-			if ( currentSession.id === id ) {
-				// kill the current session
-				currentSession.save(data, callback);
-			} else {
-				// find by id
-				sessions.get(id, function ( error, session ) {
-					if ( error ) {
-						console.log(error);
-						return callback(new restify.errors.InternalServerError('session search failure'));
-					}
+			callback(null, session);
+		}
 
-					// does the user own the given session?
-					if ( currentSession.userId === session.userId ) {
-						session.save(data, function ( error, session ) {
-							if ( error ) {
-								console.log(error);
-								return callback(new restify.errors.InternalServerError('session saving failure'));
+		// correct incoming params
+		if ( id ) {
+			// is valid user
+			sessions.check(token, function ( error, currentSession ) {
+				var data = {active: false, ttime: +new Date()};
+
+				if ( error ) {
+					return callback(error);
+				}
+
+
+				if ( currentSession.id === id ) {
+					// kill the current session
+					currentSession.save(data, sessionSave);
+				} else {
+					// find by id
+					sessions.get(id, function ( error, session ) {
+						if ( error ) {
+							console.log(error);
+							return callback(new restify.errors.InternalServerError('session search failure'));
+						}
+
+						// does the user own the given session?
+						if ( currentSession.userId === session.userId ) {
+							if ( session.active ) {
+								session.save(data, sessionSave);
+							} else {
+								callback(new restify.errors.BadRequestError('session is already terminated'));
 							}
-
-							callback(session);
-						});
-					} else {
-						callback(new restify.errors.BadRequestError('invalid session'));
-					}
-				});
-			}
-		});
+						} else {
+							callback(new restify.errors.BadRequestError('invalid session'));
+						}
+					});
+				}
+			});
+		} else {
+			callback(new restify.errors.BadRequestError('no session id'));
+		}
 	};
 };
