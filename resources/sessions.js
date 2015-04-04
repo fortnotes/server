@@ -46,7 +46,8 @@ var restify  = require('../lib/restify'),
  *     curl --include --header "Authorization: Bearer 5nNOF+dNQaHvq..." http://localhost:9090/sessions
  *
  * @apiSuccess {number} id User session ID.
- * @apiSuccess {number} state Session active state: 0 - not active, 1 - active, 2 - terminated.
+ * @apiSuccess {number} active Session active state: 0 - not active, 1 - active.
+ * @apiSuccess {number} confirmed Session confirmation state: 0 - not confirmed, 1 - confirmed.
  * @apiSuccess {number} attempts Amount of attempts to activate the session (default maximum is 3).
  * @apiSuccess {number} ctime Session creation time.
  * @apiSuccess {number} atime Session activation time.
@@ -60,10 +61,33 @@ var restify  = require('../lib/restify'),
  *         {"id": 129, "active": 0, "confirmed": 1, "attempts": 2, "ctime": 1427190838740, "atime": 1427201953944, "ttime": 1427201959845}
  *     ]
  *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 401 Unauthorized
+ * @apiErrorExample Error 400:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *         "code": "BadRequestError",
+ *         "message": "no session token"
+ *     }
  *
- *     {"error": "invalid session"}
+ * @apiErrorExample Error 401:
+ *     HTTP/1.1 400 Unauthorized
+ *     {
+ *         "code": "UnauthorizedError",
+ *         "message": "invalid session"
+ *     }
+ *
+ * @apiErrorExample Error 404:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *         "code": "NotFoundError",
+ *         "message": "sessions were not found"
+ *     }
+ *
+ * @apiErrorExample Error 500:
+ *     HTTP/1.1 500 Internal Server Error
+ *     {
+ *         "code": "InternalServerError",
+ *         "message": "token search failure"
+ *     }
  */
 restify.get('/sessions',
 	function ( request, response ) {
@@ -104,13 +128,24 @@ restify.get('/sessions',
  *
  * @apiErrorExample Error 400:
  *     HTTP/1.1 400 Bad Request
- *
- *     "empty or invalid email address"
+ *     {
+ *         "code": "BadRequestError",
+ *         "message": "empty or invalid email address"
+ *     }
  *
  * @apiErrorExample Error 500:
  *     HTTP/1.1 500 Internal Server Error
+ *     {
+ *         "code": "InternalServerError",
+ *         "message": "session creation failure"
+ *     }
  *
- *     "RNG failure"
+ * @apiErrorExample Error 500:
+ *     HTTP/1.1 500 Internal Server Error
+ *     {
+ *         "code": "InternalServerError",
+ *         "message": "RNG failure"
+ *     }
  */
 restify.post('/sessions',
 	function ( request, response ) {
@@ -149,13 +184,24 @@ restify.post('/sessions',
  *
  * @apiErrorExample Error 400:
  *     HTTP/1.1 400 Bad Request
+ *     {
+ *         "code": "BadRequestError",
+ *         "message": "invalid session or confirmation code"
+ *     }
  *
- *     "invalid session id or confirmation code"
+ * @apiErrorExample Error 404:
+ *     HTTP/1.1 400 Not Found
+ *     {
+ *         "code": "NotFoundError",
+ *         "message": "session was not found"
+ *     }
  *
  * @apiErrorExample Error 500:
  *     HTTP/1.1 500 Internal Server Error
- *
- *     "failed to confirm session"
+ *     {
+ *         "code": "InternalServerError",
+ *         "message": "session saving failure"
+ *     }
  */
 restify.put('/sessions/:id',
 	function ( request, response ) {
@@ -191,10 +237,40 @@ restify.put('/sessions/:id',
  *
  *     true
  *
- * @apiErrorExample Error-Response:
+ * @apiErrorExample Error 400:
  *     HTTP/1.1 400 Bad Request
+ *     {
+ *         "code": "BadRequestError",
+ *         "message": "no session id"
+ *     }
  *
- *     {"error":"invalid session"}
+ * @apiErrorExample Error 400:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *         "code": "BadRequestError",
+ *         "message": "no session token"
+ *     }
+ *
+ * @apiErrorExample Error 400:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *         "code": "BadRequestError",
+ *         "message": "invalid session"
+ *     }
+ *
+ * @apiErrorExample Error 400:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *         "code": "BadRequestError",
+ *         "message": "session is already terminated"
+ *     }
+ *
+ * @apiErrorExample Error 401:
+ *     HTTP/1.1 400 Unauthorized
+ *     {
+ *         "code": "UnauthorizedError",
+ *         "message": "invalid session"
+ *     }
  */
 restify.del('/sessions/:id',
 	function ( request, response ) {
