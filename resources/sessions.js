@@ -8,8 +8,9 @@
 
 'use strict';
 
-var restify = require('../lib/restify'),
-	db      = require('../lib/orm');
+var restify  = require('../lib/restify'),
+	db       = require('../lib/orm'),
+	sessions = db.models.sessions;
 
 
 /**
@@ -66,35 +67,13 @@ var restify = require('../lib/restify'),
  */
 restify.get('/sessions',
 	function ( request, response ) {
-		//var token = request.headers.authorization.slice(7);
-
-		db.models.sessions.check(request.authorization.token, function ( error, session ) {
+		sessions.list(request.authorization.token, function ( error, data ) {
 			if ( error ) {
 				return response.send(error);
 			}
 
-			db.models.sessions.find({userId: session.userId}).only('id', 'active', 'confirmed', 'attempts', 'ctime', 'atime', 'ttime').run(function ( error, sessions ) {
-				var data = [];
-
-				if ( error ) {
-					return response.send(error);
-				}
-
-				// reformat data
-				sessions.forEach(function ( item ) {
-					data.push({
-						id:        item.id,
-						active:    item.active,
-						confirmed: item.confirmed,
-						attempts:  item.attempts,
-						ctime:     item.ctime,
-						atime:     item.atime,
-						ttime:     item.ttime
-					});
-				});
-
-				response.send(data);
-			});
+			// ok
+			response.send(data);
 		});
 	}
 );
@@ -137,7 +116,7 @@ restify.post('/sessions',
 	function ( request, response ) {
 		// todo: add limitation for total amount of user sessions
 
-		db.models.sessions.request(request.params.email, function ( error, session ) {
+		sessions.request(request.params.email, function ( error, session ) {
 			if ( error ) {
 				return response.send(error);
 			}
@@ -180,7 +159,7 @@ restify.post('/sessions',
  */
 restify.put('/sessions/:id',
 	function ( request, response ) {
-		db.models.sessions.confirm(Number(request.params.id), request.params.code, function ( error ) {
+		sessions.confirm(Number(request.params.id), request.params.code, function ( error ) {
 			if ( error ) {
 				return response.send(error);
 			}
@@ -219,10 +198,7 @@ restify.put('/sessions/:id',
  */
 restify.del('/sessions/:id',
 	function ( request, response ) {
-		var //token = request.headers.authorization.slice(7),
-			id    = Number(request.params.id);
-
-		db.models.sessions.terminate(request.authorization.token, id, function ( error ) {
+		sessions.terminate(request.authorization.token, Number(request.params.id), function ( error ) {
 			if ( error ) {
 				return response.send(error);
 			}

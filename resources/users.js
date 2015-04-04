@@ -8,8 +8,9 @@
 
 'use strict';
 
-var restify = require('../lib/restify'),
-	db      = require('../lib/orm');
+var restify  = require('../lib/restify'),
+	db       = require('../lib/orm'),
+	sessions = db.models.sessions;
 
 
 /**

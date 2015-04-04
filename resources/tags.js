@@ -8,6 +8,6 @@
 
 'use strict';
 
-module.exports = {
-
-};
+var restify  = require('../lib/restify'),
+	db       = require('../lib/orm'),
+	sessions = db.models.sessions;

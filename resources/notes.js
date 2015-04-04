@@ -8,8 +8,10 @@
 
 'use strict';
 
-var restify = require('../lib/restify'),
-	db      = require('../lib/orm');
+var restify  = require('../lib/restify'),
+	db       = require('../lib/orm'),
+	sessions = db.models.sessions,
+	notes    = db.models.notes;
 
 
 /**
@@ -35,14 +37,13 @@ var restify = require('../lib/restify'),
  */
 restify.get('/notes',
 	function ( request, response ) {
-		//var token = request.headers.authorization.slice(7);
-
-		db.models.sessions.check(request.authorization.token, function ( error, session ) {
+		// is valid user
+		sessions.check(request.authorization.token, function ( error, session ) {
 			if ( error ) {
 				return response.send(401, error);
 			}
 
-			db.models.notes.find({userId: session.userId}, function ( error, notes ) {
+			notes.find({userId: session.userId}, function ( error, notes ) {
 				var data = [];
 
 				if ( error ) {
