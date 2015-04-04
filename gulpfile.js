@@ -36,7 +36,7 @@ gulp.task('lint', function () {
 // build REST documentation
 gulp.task('apidoc', function () {
 	apidoc.exec({
-		src: './server/',
+		src: './resources/',
 		dest: './doc/api/',
 		debug: false
 	});
