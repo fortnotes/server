@@ -1,3 +1,3 @@
 Welcome to the FortNotes REST API documentation.
 
-Please visit https://github.com/DarkPark/FortNotes.git to see the project details.
+This interface is for communication between [FortNotes Server](https://github.com/fortnotes/server) and [FortNotes Client](https://github.com/fortnotes/client).
