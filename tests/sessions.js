@@ -13,12 +13,7 @@
 var assert  = require('assert'),
 	crypto  = require('crypto'),
 	restify = require('restify'),
-	//config  = require('../config/main'),
-	client  = restify.createJsonClient({
-		url: 'http://localhost:9090',
-		version: '*'
-	}),
-	db = require('../lib/orm');
+	db      = require('../lib/orm');
 
 
 describe('Sessions', function () {
@@ -30,9 +25,10 @@ describe('Sessions', function () {
 			email: crypto.randomBytes(4).toString('hex') + '@' + crypto.randomBytes(4).toString('hex') + '.com',
 			sessionA: {}
 		},
-		sessionId    = null,
-		sessionToken = null,
-		sessionCode  = null;
+		client  = restify.createJsonClient({
+			url: 'http://localhost:9090',
+			version: '*'
+		});
 
 	before(function () {
 
@@ -335,12 +331,9 @@ describe('Sessions', function () {
 			});
 		});
 
-		it('should fail: wrong authorization token', function ( done ) {
+		it('should pass: get two userA sessions', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userA.sessionB.token;
 			client.get('/sessions', function ( error, request, response, data ) {
-				//console.log(response.statusCode);
-				//console.log(data);
-				//console.log(sessionToken);
 				assert.strictEqual(response.statusCode, 200);
 				assert.strictEqual(typeof data, 'object');
 				assert.strictEqual(data.length, 2);
