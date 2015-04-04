@@ -1,15 +1,18 @@
 define({
   "name": "FortNotes REST API",
   "version": "1.0.0",
-  "description": "FortNotes server-side communication protocol.",
+  "description": "FortNotes client-server communication protocol.",
   "header": {
     "title": "Intro",
-    "content": "<p>Welcome to the FortNotes REST API documentation.</p>\n<p>Please visit <a href=\"https://github.com/DarkPark/FortNotes.git\">https://github.com/DarkPark/FortNotes.git</a> to see the project details.</p>\n"
+    "content": "<p>Welcome to the FortNotes REST API documentation.</p>\n<p>This interface is for communication between <a href=\"https://github.com/fortnotes/server\">FortNotes Server</a> and <a href=\"https://github.com/fortnotes/client\">FortNotes Client</a>.</p>\n"
   },
   "url": "https://api.fortnotes.com",
   "sampleUrl": "http://localhost:9090",
   "order": [
-    "Sessions"
+    "Sessions",
+    "Session",
+    "Notes",
+    "Users"
   ],
   "template": {
     "withCompare": true,
@@ -18,7 +21,7 @@ define({
   "apidoc": "0.2.0",
   "generator": {
     "name": "apidoc",
-    "time": "2015-03-30T16:11:27.968Z",
+    "time": "2015-04-04T15:30:35.503Z",
     "url": "http://apidocjs.com",
     "version": "0.12.1"
   }

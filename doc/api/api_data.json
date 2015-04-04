@@ -38,7 +38,7 @@
         }
       ]
     },
-    "filename": "server/resources/notes.js",
+    "filename": "resources/notes.js",
     "groupTitle": "Notes",
     "sampleRequest": [
       {
@@ -105,13 +105,33 @@
     "error": {
       "examples": [
         {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n\n{\"error\":\"invalid session\"}",
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session id\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"invalid session\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"session is already terminated\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 401:",
+          "content": "HTTP/1.1 400 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
           "type": "json"
         }
       ]
     },
-    "filename": "server/resources/sessions.js",
+    "filename": "resources/sessions.js",
     "groupTitle": "Session",
     "sampleRequest": [
       {
@@ -171,17 +191,22 @@
       "examples": [
         {
           "title": "Error 400:",
-          "content": "HTTP/1.1 400 Bad Request\n\n\"invalid session id or confirmation code\"",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"invalid session or confirmation code\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 404:",
+          "content": "HTTP/1.1 400 Not Found\n{\n    \"code\": \"NotFoundError\",\n    \"message\": \"session was not found\"\n}",
           "type": "json"
         },
         {
           "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n\n\"failed to confirm session\"",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"session saving failure\"\n}",
           "type": "json"
         }
       ]
     },
-    "filename": "server/resources/sessions.js",
+    "filename": "resources/sessions.js",
     "groupTitle": "Session",
     "sampleRequest": [
       {
@@ -237,8 +262,15 @@
             "group": "Success 200",
             "type": "number",
             "optional": false,
-            "field": "state",
-            "description": "<p>Session active state: 0 - not active, 1 - active, 2 - terminated.</p> "
+            "field": "active",
+            "description": "<p>Session active state: 0 - not active, 1 - active.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "confirmed",
+            "description": "<p>Session confirmation state: 0 - not confirmed, 1 - confirmed.</p> "
           },
           {
             "group": "Success 200",
@@ -281,13 +313,28 @@
     "error": {
       "examples": [
         {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 401 Unauthorized\n\n{\"error\": \"invalid session\"}",
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 401:",
+          "content": "HTTP/1.1 400 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 404:",
+          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": \"NotFoundError\",\n    \"message\": \"sessions were not found\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"token search failure\"\n}",
           "type": "json"
         }
       ]
     },
-    "filename": "server/resources/sessions.js",
+    "filename": "resources/sessions.js",
     "groupTitle": "Sessions",
     "sampleRequest": [
       {
@@ -358,17 +405,22 @@
       "examples": [
         {
           "title": "Error 400:",
-          "content": "HTTP/1.1 400 Bad Request\n\n\"empty or invalid email address\"",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"empty or invalid email address\"\n}",
           "type": "json"
         },
         {
           "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n\n\"RNG failure\"",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"session creation failure\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"RNG failure\"\n}",
           "type": "json"
         }
       ]
     },
-    "filename": "server/resources/sessions.js",
+    "filename": "resources/sessions.js",
     "groupTitle": "Sessions",
     "sampleRequest": [
       {
@@ -426,7 +478,7 @@
         }
       ]
     },
-    "filename": "server/resources/users.js",
+    "filename": "resources/users.js",
     "groupTitle": "Users",
     "sampleRequest": [
       {
