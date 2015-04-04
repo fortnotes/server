@@ -129,7 +129,7 @@ describe('Sessions', function () {
 				assert.ok(data.token);
 				assert.strictEqual(Number(data.id), data.id);
 
-				// save this session info
+				// get this session info
 				db.models.sessions.get(data.id, function ( error, data ) {
 					assert.ifError(error);
 
@@ -303,6 +303,7 @@ describe('Sessions', function () {
 
 		it('should fail: empty authorization header', function ( done ) {
 			client.headers.authorization = '';
+
 			client.get('/sessions', function ( error, request, response, data ) {
 				assert.strictEqual(response.statusCode, 400);
 				assert.strictEqual(data.code, 'BadRequestError');
@@ -313,6 +314,7 @@ describe('Sessions', function () {
 
 		it('should fail: wrong authorization header', function ( done ) {
 			client.headers.authorization = 'qwe';
+
 			client.get('/sessions', function ( error, request, response, data ) {
 				assert.strictEqual(response.statusCode, 400);
 				assert.strictEqual(data.code, 'BadRequestError');
@@ -323,6 +325,7 @@ describe('Sessions', function () {
 
 		it('should fail: wrong authorization token', function ( done ) {
 			client.headers.authorization = 'Bearer qwe';
+
 			client.get('/sessions', function ( error, request, response, data ) {
 				assert.strictEqual(response.statusCode, 400);
 				assert.strictEqual(data.code, 'BadRequestError');
@@ -333,6 +336,7 @@ describe('Sessions', function () {
 
 		it('should pass: get two userA sessions', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userA.sessionB.token;
+
 			client.get('/sessions', function ( error, request, response, data ) {
 				assert.strictEqual(response.statusCode, 200);
 				assert.strictEqual(typeof data, 'object');
@@ -345,7 +349,146 @@ describe('Sessions', function () {
 	});
 
 
-	/*describe('terminate a session', function () {
+	describe('terminate a session', function () {
+		it('should fail: no authorization header and id', function ( done ) {
+			// reset session
+			delete client.headers.authorization;
 
-	});*/
+			client.del('/sessions/', function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 400);
+				assert.strictEqual(data.code, 'BadRequestError');
+				assert.strictEqual(data.message, 'no session id');
+				done();
+			});
+		});
+
+		it('should fail: no authorization header', function ( done ) {
+			client.del('/sessions/' + userA.sessionA.id, function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 400);
+				assert.strictEqual(data.code, 'BadRequestError');
+				assert.strictEqual(data.message, 'no session token');
+				done();
+			});
+		});
+
+		it('should fail: empty authorization header', function ( done ) {
+			client.headers.authorization = '';
+
+			client.del('/sessions/' + userA.sessionA.id, function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 400);
+				assert.strictEqual(data.code, 'BadRequestError');
+				assert.strictEqual(data.message, 'no session token');
+				done();
+			});
+		});
+
+		it('should fail: wrong authorization header', function ( done ) {
+			client.headers.authorization = 'qwe';
+
+			client.del('/sessions/' + userA.sessionA.id, function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 400);
+				assert.strictEqual(data.code, 'BadRequestError');
+				assert.strictEqual(data.message, 'no session token');
+				done();
+			});
+		});
+
+		it('should fail: wrong authorization token', function ( done ) {
+			client.headers.authorization = 'Bearer qwe';
+
+			client.del('/sessions/' + userA.sessionA.id, function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 400);
+				assert.strictEqual(data.code, 'BadRequestError');
+				assert.strictEqual(data.message, 'invalid session');
+				done();
+			});
+		});
+
+		it('should fail: inactive session token', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userA.sessionA.token;
+
+			client.del('/sessions/' + userA.sessionA.id, function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 400);
+				assert.strictEqual(data.code, 'BadRequestError');
+				assert.strictEqual(data.message, 'invalid session');
+				done();
+			});
+		});
+
+		it('should fail: active session token but wrong user owner', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userA.sessionB.token;
+
+			client.del('/sessions/' + userB.sessionA.id, function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 400);
+				assert.strictEqual(data.code, 'BadRequestError');
+				assert.strictEqual(data.message, 'invalid session');
+				done();
+			});
+		});
+
+		it('should pass: inactive sessionA terminated', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userA.sessionB.token;
+
+			client.del('/sessions/' + userA.sessionA.id, function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 200);
+				assert.strictEqual(data, true);
+
+				// get this session info
+				db.models.sessions.get(userA.sessionA.id, function ( error, session ) {
+					assert.ifError(error);
+					assert.strictEqual(session.active, false);
+					assert.strictEqual(session.confirmed, false);
+					done();
+				});
+			});
+		});
+
+		it('should fail: sessionA is already inactive', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userA.sessionB.token;
+
+			client.del('/sessions/' + userA.sessionA.id, function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 400);
+				assert.strictEqual(data.code, 'BadRequestError');
+				assert.strictEqual(data.message, 'session is already terminated');
+				done();
+			});
+		});
+
+		it('should pass: active sessionB terminated', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userA.sessionB.token;
+
+			client.del('/sessions/' + userA.sessionB.id, function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 200);
+				assert.strictEqual(data, true);
+
+				// get this session info
+				db.models.sessions.get(userA.sessionB.id, function ( error, session ) {
+					assert.ifError(error);
+					assert.strictEqual(session.active, false);
+					done();
+				});
+			});
+		});
+	});
+
+
+	describe('wrong requests', function () {
+		it('should fail: PUT /sessions is not allowed', function ( done ) {
+			client.put('/sessions', {qwe: 123}, function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 405);
+				assert.strictEqual(data.code, 'MethodNotAllowedError');
+				assert.strictEqual(data.message, 'PUT is not allowed');
+				done();
+			});
+		});
+
+		it('should fail: DELETE /sessions is not allowed', function ( done ) {
+			client.del('/sessions', function ( error, request, response, data ) {
+				assert.strictEqual(response.statusCode, 405);
+				assert.strictEqual(data.code, 'MethodNotAllowedError');
+				assert.strictEqual(data.message, 'DELETE is not allowed');
+				done();
+			});
+		});
+	});
 });
