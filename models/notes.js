@@ -28,4 +28,67 @@ module.exports = function ( db ) {
 		// last time note was fully shown
 		atime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0}
 	});
+
+
+	/**
+	 * Get a list of user notes.
+	 *
+	 * @param {string} token user session token
+	 * @param {Function} callback error/success handler
+	 */
+	notes.list = function ( token, callback ) {
+		// is valid user
+		db.models.sessions.check(token, function ( error, session ) {
+			if ( error ) {
+				return callback(error);
+			}
+
+			notes.find({userId: session.userId}).only('id', 'ctime', 'mtime', 'atime').run(function ( error, noteList ) {
+				var data = [];
+
+				if ( error ) {
+					console.log(error);
+					return callback(new restify.errors.InternalServerError('notes search failure'));
+				}
+
+				// reformat data
+				noteList.forEach(function ( item ) {
+					data.push({
+						id:        item.id,
+						ctime:     item.ctime,
+						mtime:     item.mtime,
+						atime:     item.atime
+					});
+				});
+
+				callback(null, data);
+			});
+		});
+	};
+
+
+	/**
+	 * Get all user session list.
+	 *
+	 * @param {string} token user session token
+	 * @param {Function} callback error/success handler
+	 */
+	notes.add = function ( token, callback ) {
+		// is valid user
+		db.models.sessions.check(token, function ( error, session ) {
+			if ( error ) {
+				return callback(error);
+			}
+
+			// insert
+			notes.create({userId: session.userId, ctime: +new Date()}, function ( error, note ) {
+				if ( error ) {
+					console.log(error);
+					return callback(new restify.errors.InternalServerError('user creation failure'));
+				}
+
+				callback(null, note);
+			});
+		});
+	};
 };

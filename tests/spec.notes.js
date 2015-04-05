@@ -25,14 +25,94 @@ describe('Notes', function () {
 	});
 
 	after(function () {
-		// need to close http connection manually
+		// need to close all connections manually
 		client.close();
+		db.close();
 	});
 
 
-	describe('create users and sessions', function () {
-		it('should fail: no email', function ( done ) {
-			done();
+	describe('get users notes', function () {
+		it('should fail: no authorization header', function ( done ) {
+			client.get('/notes', function ( error, request, response, data ) {
+				response.statusCode.should.equal(400);
+				data.code.should.equal('BadRequestError');
+				data.message.should.equal('no session token');
+				done();
+			});
+		});
+
+		it('should fail: empty authorization header', function ( done ) {
+			client.headers.authorization = '';
+
+			client.get('/notes', function ( error, request, response, data ) {
+				response.statusCode.should.equal(400);
+				data.code.should.equal('BadRequestError');
+				data.message.should.equal('no session token');
+				done();
+			});
+		});
+
+		it('should fail: wrong authorization header', function ( done ) {
+			client.headers.authorization = 'qwe';
+
+			client.get('/notes', function ( error, request, response, data ) {
+				response.statusCode.should.equal(400);
+				data.code.should.equal('BadRequestError');
+				data.message.should.equal('no session token');
+				done();
+			});
+		});
+
+		it('should fail: wrong authorization token', function ( done ) {
+			client.headers.authorization = 'Bearer qwe';
+
+			client.get('/notes', function ( error, request, response, data ) {
+				response.statusCode.should.equal(401);
+				data.code.should.equal('UnauthorizedError');
+				data.message.should.equal('invalid session');
+				done();
+			});
+		});
+
+		it('should pass: empty note list', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.get('/notes', function ( error, request, response, data ) {
+				response.statusCode.should.equal(200);
+				data.should.be.instanceOf(Array);
+				data.should.have.length(0);
+				done();
+			});
+		});
+	});
+
+
+	describe('create users notes', function () {
+		it('should fail: wrong authorization token', function ( done ) {
+			client.headers.authorization = 'Bearer qwe';
+
+			client.post('/notes', {}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(401);
+				data.code.should.equal('UnauthorizedError');
+				data.message.should.equal('invalid session');
+				done();
+			});
+		});
+
+		it('should pass: add new note', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.post('/notes', {}, function ( error, request, response, data ) {
+				//console.log(response.statusCode);
+				//console.log(data);
+
+				response.statusCode.should.equal(200);
+				data.should.be.instanceOf(Object);
+				data.should.have.property('id');
+				//data.code.should.equal('BadRequestError');
+				//data.message.should.equal('empty or invalid email address');
+				done();
+			});
 		});
 	});
 });
