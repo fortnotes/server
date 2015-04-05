@@ -29,10 +29,10 @@ module.exports = function ( db ) {
 		hash: {type: 'text', size: 128},
 
 		// creation time
-		ctime: {type: 'integer', unsigned: true, defaultValue: 0},
+		ctime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0},
 
 		// master password update time
-		ptime: {type: 'integer', unsigned: true, defaultValue: 0}
+		ptime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0}
 	});
 
 

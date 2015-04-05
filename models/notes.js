@@ -7,6 +7,9 @@
 
 'use strict';
 
+var restify = require('restify');
+
+
 // public
 module.exports = function ( db ) {
 	var notes = db.define('notes', {
@@ -17,12 +20,12 @@ module.exports = function ( db ) {
 		//active: {type: 'boolean', defaultValue: true},
 
 		// creation time
-		ctime: {type: 'integer', unsigned: true, defaultValue: 0},
+		ctime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0},
 
 		// last time note data was saved
-		mtime: {type: 'integer', unsigned: true, defaultValue: 0},
+		mtime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0},
 
 		// last time note was fully shown
-		atime: {type: 'integer', unsigned: true, defaultValue: 0}
+		atime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0}
 	});
 };

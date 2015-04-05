@@ -33,13 +33,13 @@ module.exports = function ( db ) {
 		attempts: {type: 'integer', unsigned: true, defaultValue: 0},
 
 		// creation time
-		ctime: {type: 'integer', unsigned: true, defaultValue: 0},
+		ctime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0},
 
 		// activation time
-		atime: {type: 'integer', unsigned: true, defaultValue: 0},
+		atime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0},
 
 		// termination time
-		ttime: {type: 'integer', unsigned: true, defaultValue: 0}
+		ttime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0}
 	});
 
 
