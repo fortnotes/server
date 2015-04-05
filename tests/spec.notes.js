@@ -103,14 +103,9 @@ describe('Notes', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.post('/notes', {}, function ( error, request, response, data ) {
-				//console.log(response.statusCode);
-				//console.log(data);
-
 				response.statusCode.should.equal(200);
 				data.should.be.instanceOf(Object);
 				data.should.have.property('id');
-				//data.code.should.equal('BadRequestError');
-				//data.message.should.equal('empty or invalid email address');
 				done();
 			});
 		});
