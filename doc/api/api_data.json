@@ -2,7 +2,7 @@
   {
     "type": "get",
     "url": "/notes",
-    "title": "Get user notes.",
+    "title": "Receive a list of user notes.",
     "version": "1.0.0",
     "name": "getNotes",
     "group": "Notes",
@@ -13,6 +13,19 @@
         "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token for the user session.</p> "
+          }
+        ]
+      }
+    },
     "examples": [
       {
         "title": "Example usage:",
@@ -21,10 +34,42 @@
       }
     ],
     "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>User notes ID.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "ctime",
+            "description": "<p>Note creation time.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "mtime",
+            "description": "<p>Note modification time.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "atime",
+            "description": "<p>Note last access time.</p> "
+          }
+        ]
+      },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n\n[]",
+          "content": "HTTP/1.1 200 OK\n[\n    {\"id\": 512, \"ctime\": 1427190024722, \"mtime\": 0, \"atime\": 0},\n    {\"id\": 513, \"ctime\": 1427190838740, \"mtime\": 1427201953944, \"atime\": 0},\n    {\"id\": 513, \"ctime\": 1427190838740, \"mtime\": 1427201953944, \"atime\": 1427201959845}\n]",
           "type": "json"
         }
       ]
@@ -32,8 +77,88 @@
     "error": {
       "examples": [
         {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 401 Unauthorized\n\n{\"error\": \"invalid session\"}",
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 401:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"notes search failure\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"token search failure\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "resources/notes.js",
+    "groupTitle": "Notes",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/notes"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/notes",
+    "title": "Create a user note.",
+    "version": "1.0.0",
+    "name": "postNotes",
+    "group": "Notes",
+    "permission": [
+      {
+        "name": "authUser",
+        "title": "Authorized user access only.",
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token for the user session.</p> "
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" --request POST http://localhost:9090/notes",
+        "type": "curl"
+      }
+    ],
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\n{id:512}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 401:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
           "type": "json"
         }
       ]
@@ -126,7 +251,7 @@
         },
         {
           "title": "Error 401:",
-          "content": "HTTP/1.1 400 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
           "type": "json"
         }
       ]
@@ -319,12 +444,12 @@
         },
         {
           "title": "Error 401:",
-          "content": "HTTP/1.1 400 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
           "type": "json"
         },
         {
-          "title": "Error 404:",
-          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": \"NotFoundError\",\n    \"message\": \"sessions were not found\"\n}",
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"sessions search failure\"\n}",
           "type": "json"
         },
         {
@@ -425,6 +550,216 @@
     "sampleRequest": [
       {
         "url": "http://localhost:9090/sessions"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/tags",
+    "title": "Receive user tags data.",
+    "version": "1.0.0",
+    "name": "getTags",
+    "group": "Tags",
+    "permission": [
+      {
+        "name": "authUser",
+        "title": "Authorized user access only.",
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token for the user session.</p> "
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" http://localhost:9090/tags",
+        "type": "curl"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "data",
+            "description": "<p>User tags encrypted data.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "hash",
+            "description": "<p>Hash of tags data before encryption.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "time",
+            "description": "<p>Tags modification time.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success (no tags):",
+          "content": "HTTP/1.1 200 OK\n\n{\"data\":null,\"hash\":null,\"time\":0}",
+          "type": "json"
+        },
+        {
+          "title": "Success (some data):",
+          "content": "HTTP/1.1 200 OK\n\n{\"data\":null,\"hash\":null,\"time\":0}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 401:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"tags search failure\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"token search failure\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "resources/tags.js",
+    "groupTitle": "Tags",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/tags"
+      }
+    ]
+  },
+  {
+    "type": "put",
+    "url": "/tags",
+    "title": "Save user tags data.",
+    "version": "1.0.0",
+    "name": "putTags",
+    "group": "Tags",
+    "permission": [
+      {
+        "name": "authUser",
+        "title": "Authorized user access only.",
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token for the user session.</p> "
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" --data \"data=qwe&hash=rty\" --request PUT http://localhost:9090/tags",
+        "type": "curl"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "data",
+            "description": "<p>User tags encrypted data.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "hash",
+            "description": "<p>Hash of tags data before encryption.</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\ntrue",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"invalid tags data or hash\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 401:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"tags receiving failure\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"tags saving failure\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"token search failure\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "resources/tags.js",
+    "groupTitle": "Tags",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/tags"
       }
     ]
   },
