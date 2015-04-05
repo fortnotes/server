@@ -10,35 +10,23 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 
-var crypto  = require('crypto'),
-	should  = require('should'),
+var should  = require('should'),
 	restify = require('restify'),
-	db      = require('../lib/orm');
+	db      = require('../lib/orm'),
+	data    = require('./data'),
+	userA   = data.userA,
+	userB   = data.userB;
 
 
 describe('Sessions', function () {
-	var userA = {
-			email: crypto.randomBytes(4).toString('hex') + '@' + crypto.randomBytes(4).toString('hex') + '.com',
-			sessionA: {}
-		},
-		userB = {
-			email: crypto.randomBytes(4).toString('hex') + '@' + crypto.randomBytes(4).toString('hex') + '.com',
-			sessionA: {}
-		},
-		client  = restify.createJsonClient({
+	var client = restify.createJsonClient({
 			url: 'http://localhost:9090',
 			version: '*'
 		});
 
-	before(function () {
-
-	});
-
 	after(function () {
 		// need to close http connection manually
 		client.close();
-		// and database
-		db.close();
 	});
 
 
