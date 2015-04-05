@@ -64,6 +64,7 @@ describe('Sessions', function () {
 				response.statusCode.should.equal(200);
 				response.headers['content-type'].should.equal('application/json');
 				response.body.length.should.equal(Number(response.headers['content-length']));
+				data.should.be.instanceOf(Object);
 				data.should.have.property('id');
 				data.should.have.property('token');
 				data.id.should.equal(Number(data.id));
@@ -88,6 +89,7 @@ describe('Sessions', function () {
 				response.statusCode.should.equal(200);
 				response.headers['content-type'].should.equal('application/json');
 				response.body.length.should.equal(Number(response.headers['content-length']));
+				data.should.be.instanceOf(Object);
 				data.should.have.property('id');
 				data.should.have.property('token');
 				data.id.should.equal(Number(data.id));
@@ -112,6 +114,7 @@ describe('Sessions', function () {
 				response.statusCode.should.equal(200);
 				response.headers['content-type'].should.equal('application/json');
 				response.body.length.should.equal(Number(response.headers['content-length']));
+				data.should.be.instanceOf(Object);
 				data.should.have.property('id');
 				data.should.have.property('token');
 				data.id.should.equal(Number(data.id));
@@ -136,6 +139,7 @@ describe('Sessions', function () {
 				response.statusCode.should.equal(200);
 				response.headers['content-type'].should.equal('application/json');
 				response.body.length.should.equal(Number(response.headers['content-length']));
+				data.should.be.instanceOf(Object);
 				data.should.have.property('id');
 				data.should.have.property('token');
 				data.id.should.equal(Number(data.id));
@@ -222,6 +226,15 @@ describe('Sessions', function () {
 
 		it('should pass: activate sessionB for userA', function ( done ) {
 			client.put('/sessions/' + userA.sessionB.id, {code: userA.sessionB.code}, function ( error, request, response, data ) {
+				should.not.exist(error);
+				response.statusCode.should.equal(200);
+				data.should.equal(true);
+				done();
+			});
+		});
+
+		it('should pass: activate sessionB for userB', function ( done ) {
+			client.put('/sessions/' + userB.sessionB.id, {code: userB.sessionB.code}, function ( error, request, response, data ) {
 				should.not.exist(error);
 				response.statusCode.should.equal(200);
 				data.should.equal(true);
