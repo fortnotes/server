@@ -7,6 +7,7 @@
 
 'use strict';
 
+// public
 module.exports = function ( db ) {
 	var notes = db.define('notes', {
 		// link to the table users - owner of the note

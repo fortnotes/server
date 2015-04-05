@@ -11,6 +11,7 @@ var isEmail = require('isemail'),
 	restify = require('restify');
 
 
+// public
 module.exports = function ( db ) {
 	var users = db.define('users', {
 		email: {type: 'text', size: 512, required: true, unique: true},

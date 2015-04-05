@@ -7,7 +7,7 @@
 
 'use strict';
 
-
+// public
 module.exports = function ( db ) {
 	db.define('keys', {
 		// link to the table users - owner of the key

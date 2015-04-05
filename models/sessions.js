@@ -11,6 +11,7 @@ var crypto  = require('crypto'),
 	restify = require('restify');
 
 
+// public
 module.exports = function ( db ) {
 	var sessions = db.define('sessions', {
 		// link to the table users - owner of the session
