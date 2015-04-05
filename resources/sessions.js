@@ -65,7 +65,7 @@ var restify  = require('../lib/restify'),
  * @apiErrorExample Error 500:
  *     HTTP/1.1 500 Internal Server Error
  *     {
- *         "code": "NotFoundError",
+ *         "code": "InternalServerError",
  *         "message": "sessions search failure"
  *     }
  *
