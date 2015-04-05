@@ -13,18 +13,6 @@ var restify  = require('../lib/restify'),
 
 
 /**
- * @apiDefine UserNotFoundError
- *
- * @apiError UserNotFound The ID of the User was not found.
- *
- * @apiErrorExample Error-Response:
- * HTTP/1.1 404 Not Found
- * {
- *     "error": "UserNotFound"
- * }
- */
-
-/**
  * @apiDefine authUser Authorized user access only.
  *
  * Requests are valid only in case the user is authorized and have a valid active session.
