@@ -23,16 +23,25 @@ module.exports = function ( db ) {
 		keyId: {type: 'integer', unsigned: true},
 
 		// master password hash salt
-		salt: {type: 'text', size: 128},
+		passSalt: {type: 'text', size: 128},
 
 		// master password sha512 hash
-		hash: {type: 'text', size: 128},
+		passHash: {type: 'text', size: 128},
 
 		// creation time
 		ctime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0},
 
 		// master password update time
-		ptime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0}
+		ptime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0},
+
+		// tags encrypted data
+		tagsData: {type: 'text', big: true},
+
+		// sha512 hash of tags data before encryption
+		tagsHash: {type: 'text', size: 128},
+
+		// tags modification time
+		ttime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0}
 	});
 
 
@@ -94,5 +103,73 @@ module.exports = function ( db ) {
 				return callback(new restify.errors.BadRequestError('no key'));
 			}
 		});
+	};
+
+
+	/**
+	 * Receive user encrypted tags.
+	 *
+	 * @param {string} token user session token
+	 * @param {Function} callback error/success handler
+	 */
+	users.getTags = function ( token, callback ) {
+		// is valid user
+		db.models.sessions.check(token, function ( error, session ) {
+			if ( error ) {
+				return callback(error);
+			}
+
+			users.find({id: session.userId}).only('tagsData', 'tagsHash', 'ttime').run(function ( error, data ) {
+				if ( error ) {
+					console.log(error);
+					return callback(new restify.errors.InternalServerError('tags search failure'));
+				}
+
+				callback(null, {
+					data: data[0].tagsData,
+					hash: data[0].tagsHash,
+					time: data[0].ttime
+				});
+			});
+		});
+	};
+
+
+	/**
+	 * Save user encrypted tags.
+	 *
+	 * @param {string} token user session token
+	 * @param {string} data tags encrypted data
+	 * @param {string} hash hash of tags data before encryption
+	 * @param {Function} callback error/success handler
+	 */
+	users.setTags = function ( token, data, hash, callback ) {
+		// correct incoming params
+		if ( data && hash ) {
+			// is valid user
+			db.models.sessions.check(token, function ( error, session ) {
+				if ( error ) {
+					return callback(error);
+				}
+
+				users.get(session.userId, function ( error, user ) {
+					if ( error ) {
+						console.log(error);
+						return callback(new restify.errors.InternalServerError('tags receiving failure'));
+					}
+
+					user.save({tagsData: data, tagsHash: hash, ttime: +new Date()}, function ( error ) {
+						if ( error ) {
+							console.log(error);
+							return callback(new restify.errors.InternalServerError('tags saving failure'));
+						}
+
+						callback(null, true);
+					});
+				});
+			});
+		} else {
+			callback(new restify.errors.BadRequestError('invalid tags data or hash'));
+		}
 	};
 };
