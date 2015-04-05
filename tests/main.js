@@ -26,4 +26,5 @@ console.log('  * to see verbose log use flag --debug');
 
 // specs
 require('./spec.sessions');
+require('./spec.tags');
 require('./spec.notes');
