@@ -69,17 +69,17 @@ var restify  = require('../lib/restify'),
  *     }
  *
  * @apiErrorExample Error 401:
- *     HTTP/1.1 400 Unauthorized
+ *     HTTP/1.1 401 Unauthorized
  *     {
  *         "code": "UnauthorizedError",
  *         "message": "invalid session"
  *     }
  *
- * @apiErrorExample Error 404:
- *     HTTP/1.1 404 Not Found
+ * @apiErrorExample Error 500:
+ *     HTTP/1.1 500 Internal Server Error
  *     {
  *         "code": "NotFoundError",
- *         "message": "sessions were not found"
+ *         "message": "sessions search failure"
  *     }
  *
  * @apiErrorExample Error 500:
@@ -266,7 +266,7 @@ restify.put('/sessions/:id',
  *     }
  *
  * @apiErrorExample Error 401:
- *     HTTP/1.1 400 Unauthorized
+ *     HTTP/1.1 401 Unauthorized
  *     {
  *         "code": "UnauthorizedError",
  *         "message": "invalid session"

@@ -166,16 +166,16 @@ module.exports = function ( db ) {
 				return callback(error);
 			}
 
-			sessions.find({userId: session.userId}).only('id', 'active', 'confirmed', 'attempts', 'ctime', 'atime', 'ttime').run(function ( error, sessions ) {
+			sessions.find({userId: session.userId}).only('id', 'active', 'confirmed', 'attempts', 'ctime', 'atime', 'ttime').run(function ( error, sessionList ) {
 				var data = [];
 
 				if ( error ) {
 					console.log(error);
-					return callback(new restify.errors.NotFoundError('sessions were not found'));
+					return callback(new restify.errors.InternalServerError('sessions search failure'));
 				}
 
 				// reformat data
-				sessions.forEach(function ( item ) {
+				sessionList.forEach(function ( item ) {
 					data.push({
 						id:        item.id,
 						active:    item.active,
