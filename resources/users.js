@@ -8,9 +8,8 @@
 
 'use strict';
 
-var restify  = require('../lib/restify'),
-	db       = require('../lib/orm'),
-	sessions = db.models.sessions;
+var restify = require('../lib/restify'),
+	users   = require('../lib/orm').models.users;
 
 
 /**
@@ -38,7 +37,7 @@ var restify  = require('../lib/restify'),
  */
 restify.get('/users/:email/keys/current',
 	function ( request, response ) {
-		db.models.users.getKey(request.params.email, function ( error, key ) {
+		users.getKey(request.params.email, function ( error, key ) {
 			if ( error ) {
 				return response.send(error);
 			}
