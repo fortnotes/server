@@ -1,5 +1,83 @@
 [
   {
+    "type": "post",
+    "url": "/notes/:id",
+    "title": "Add note data.",
+    "version": "1.0.0",
+    "name": "postNote",
+    "group": "Note",
+    "permission": [
+      {
+        "name": "authUser",
+        "title": "Authorized user access only.",
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token for the user session.</p> "
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Note ID.</p> "
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" --data \"data=qwe&hash=rty\" --request POST http://localhost:9090/notes",
+        "type": "curl"
+      }
+    ],
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\ntrue",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 401:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "resources/notes.js",
+    "groupTitle": "Note",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/notes/:id"
+      }
+    ]
+  },
+  {
     "type": "get",
     "url": "/notes",
     "title": "Receive a list of user notes.",
@@ -47,21 +125,21 @@
             "group": "Success 200",
             "type": "number",
             "optional": false,
-            "field": "ctime",
+            "field": "createTime",
             "description": "<p>Note creation time.</p> "
           },
           {
             "group": "Success 200",
             "type": "number",
             "optional": false,
-            "field": "mtime",
+            "field": "updateTime",
             "description": "<p>Note modification time.</p> "
           },
           {
             "group": "Success 200",
             "type": "number",
             "optional": false,
-            "field": "atime",
+            "field": "readTime",
             "description": "<p>Note last access time.</p> "
           }
         ]
@@ -69,7 +147,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n[\n    {\"id\": 512, \"ctime\": 1427190024722, \"mtime\": 0, \"atime\": 0},\n    {\"id\": 513, \"ctime\": 1427190838740, \"mtime\": 1427201953944, \"atime\": 0},\n    {\"id\": 513, \"ctime\": 1427190838740, \"mtime\": 1427201953944, \"atime\": 1427201959845}\n]",
+          "content": "HTTP/1.1 200 OK\n[\n    {\"id\": 512, \"createTime\": 1427190024722, \"updateTime\": 0, \"readTime\": 0},\n    {\"id\": 513, \"createTime\": 1427190838740, \"updateTime\": 1427201953944, \"readTime\": 0},\n    {\"id\": 513, \"createTime\": 1427190838740, \"updateTime\": 1427201953944, \"readTime\": 1427201959845}\n]",
           "type": "json"
         }
       ]
@@ -387,42 +465,21 @@
             "group": "Success 200",
             "type": "number",
             "optional": false,
-            "field": "active",
-            "description": "<p>Session active state: 0 - not active, 1 - active.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "number",
-            "optional": false,
-            "field": "confirmed",
-            "description": "<p>Session confirmation state: 0 - not confirmed, 1 - confirmed.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "number",
-            "optional": false,
-            "field": "attempts",
-            "description": "<p>Amount of attempts to activate the session (default maximum is 3).</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "number",
-            "optional": false,
-            "field": "ctime",
+            "field": "createTime",
             "description": "<p>Session creation time.</p> "
           },
           {
             "group": "Success 200",
             "type": "number",
             "optional": false,
-            "field": "atime",
+            "field": "confirmTime",
             "description": "<p>Session activation time.</p> "
           },
           {
             "group": "Success 200",
             "type": "number",
             "optional": false,
-            "field": "ttime",
+            "field": "deleteTime",
             "description": "<p>Session termination time.</p> "
           }
         ]
@@ -430,7 +487,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n[\n    {\"id\": 128, \"active\": 1, \"confirmed\": 0, \"attempts\": 0, \"ctime\": 1427190024722, \"atime\": 0, \"ttime\": 0},\n    {\"id\": 129, \"active\": 1, \"confirmed\": 1, \"attempts\": 1, \"ctime\": 1427190838740, \"atime\": 1427201953944, \"ttime\": 0},\n    {\"id\": 129, \"active\": 0, \"confirmed\": 1, \"attempts\": 2, \"ctime\": 1427190838740, \"atime\": 1427201953944, \"ttime\": 1427201959845}\n]",
+          "content": "HTTP/1.1 200 OK\n[\n    {\"id\": 128, \"createTime\": 1427190024722, \"confirmTime\": 0, \"deleteTime\": 0},\n    {\"id\": 129, \"createTime\": 1427190838740, \"confirmTime\": 1427201953944, \"deleteTime\": 0},\n    {\"id\": 129, \"createTime\": 1427190838740, \"confirmTime\": 1427201953944, \"deleteTime\": 1427201959845}\n]",
           "type": "json"
         }
       ]

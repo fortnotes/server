@@ -12,6 +12,8 @@
     "Sessions",
     "Session",
     "Notes",
+    "Note",
+    "Tags",
     "Users"
   ],
   "template": {
@@ -21,7 +23,7 @@
   "apidoc": "0.2.0",
   "generator": {
     "name": "apidoc",
-    "time": "2015-04-05T20:49:56.712Z",
+    "time": "2015-04-06T20:48:57.966Z",
     "url": "http://apidocjs.com",
     "version": "0.12.1"
   }
