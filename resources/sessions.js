@@ -33,19 +33,16 @@ var restify  = require('../lib/restify'),
  *     curl --include --header "Authorization: Bearer 5nNOF+dNQaHvq..." http://localhost:9090/sessions
  *
  * @apiSuccess {number} id User session ID.
- * @apiSuccess {number} active Session active state: 0 - not active, 1 - active.
- * @apiSuccess {number} confirmed Session confirmation state: 0 - not confirmed, 1 - confirmed.
- * @apiSuccess {number} attempts Amount of attempts to activate the session (default maximum is 3).
- * @apiSuccess {number} ctime Session creation time.
- * @apiSuccess {number} atime Session activation time.
- * @apiSuccess {number} ttime Session termination time.
+ * @apiSuccess {number} createTime Session creation time.
+ * @apiSuccess {number} confirmTime Session activation time.
+ * @apiSuccess {number} deleteTime Session termination time.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     [
- *         {"id": 128, "active": 1, "confirmed": 0, "attempts": 0, "ctime": 1427190024722, "atime": 0, "ttime": 0},
- *         {"id": 129, "active": 1, "confirmed": 1, "attempts": 1, "ctime": 1427190838740, "atime": 1427201953944, "ttime": 0},
- *         {"id": 129, "active": 0, "confirmed": 1, "attempts": 2, "ctime": 1427190838740, "atime": 1427201953944, "ttime": 1427201959845}
+ *         {"id": 128, "createTime": 1427190024722, "confirmTime": 0, "deleteTime": 0},
+ *         {"id": 129, "createTime": 1427190838740, "confirmTime": 1427201953944, "deleteTime": 0},
+ *         {"id": 129, "createTime": 1427190838740, "confirmTime": 1427201953944, "deleteTime": 1427201959845}
  *     ]
  *
  * @apiErrorExample Error 400:

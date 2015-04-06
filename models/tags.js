@@ -20,6 +20,6 @@ module.exports = function ( db ) {
 		hash: {type: 'text', size: 128},
 
 		// modification time
-		mtime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0}
+		updateTime: {type: 'integer', unsigned: true, size: 8, defaultValue: 0}
 	});
 };

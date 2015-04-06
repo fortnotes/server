@@ -88,6 +88,8 @@ describe('Notes', function () {
 
 
 	describe('create users notes', function () {
+		var noteId;
+
 		it('should fail: wrong authorization token', function ( done ) {
 			client.headers.authorization = 'Bearer qwe';
 
@@ -106,6 +108,18 @@ describe('Notes', function () {
 				response.statusCode.should.equal(200);
 				data.should.be.instanceOf(Object);
 				data.should.have.property('id');
+				data.id.should.be.instanceOf(Number);
+				noteId = data.id;
+				done();
+			});
+		});
+
+		it('should pass: add new note data', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.post('/notes/' + noteId, {data: 'asd', hash: 'zxc'}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(200);
+				data.should.equal(true);
 				done();
 			});
 		});

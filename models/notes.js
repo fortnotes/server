@@ -17,13 +17,13 @@ module.exports = function ( db ) {
 		userId: {type: 'integer', unsigned: true, required: true, index: true},
 
 		// creation time
-		ctime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0},
+		createTime: {type: 'integer', unsigned: true, size: 8, defaultValue: 0},
 
 		// last time note data was saved
-		mtime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0},
+		updateTime: {type: 'integer', unsigned: true, size: 8, defaultValue: 0},
 
 		// last time note was fully shown
-		atime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0}
+		readTime: {type: 'integer', unsigned: true, size: 8, defaultValue: 0}
 	});
 
 
@@ -34,13 +34,14 @@ module.exports = function ( db ) {
 	 * @param {Function} callback error/success handler
 	 */
 	notes.list = function ( token, callback ) {
-		// is valid user
+		// is user authorized
 		db.models.sessions.check(token, function ( error, session ) {
 			if ( error ) {
 				return callback(error);
 			}
 
-			notes.find({userId: session.userId}).only('id', 'ctime', 'mtime', 'atime').run(function ( error, noteList ) {
+			// get all notes
+			notes.find({userId: session.userId}).only('id', 'createTime', 'updateTime', 'readTime').run(function ( error, noteList ) {
 				var data = [];
 
 				if ( error ) {
@@ -51,10 +52,10 @@ module.exports = function ( db ) {
 				// reformat data
 				noteList.forEach(function ( item ) {
 					data.push({
-						id:        item.id,
-						ctime:     item.ctime,
-						mtime:     item.mtime,
-						atime:     item.atime
+						id:         item.id,
+						createTime: item.createTime,
+						updateTime: item.updateTime,
+						readTime:   item.readTime
 					});
 				});
 
@@ -71,14 +72,14 @@ module.exports = function ( db ) {
 	 * @param {Function} callback error/success handler
 	 */
 	notes.add = function ( token, callback ) {
-		// is valid user
+		// is user authorized
 		db.models.sessions.check(token, function ( error, session ) {
 			if ( error ) {
 				return callback(error);
 			}
 
-			// insert
-			notes.create({userId: session.userId, ctime: +new Date()}, function ( error, note ) {
+			// insert a new note
+			notes.create({userId: session.userId, createTime: +new Date()}, function ( error, note ) {
 				if ( error ) {
 					console.log(error);
 					return callback(new restify.errors.InternalServerError('user creation failure'));

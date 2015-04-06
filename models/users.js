@@ -16,11 +16,11 @@ module.exports = function ( db ) {
 	var users = db.define('users', {
 		email: {type: 'text', size: 512, required: true, unique: true},
 
-		// inactive till at least one session is confirmed
-		active: {type: 'boolean', defaultValue: false},
-
 		// link to table keys - current active encryption key
-		keyId: {type: 'integer', unsigned: true},
+		//keyId: {type: 'integer', unsigned: true},
+
+		// creation time
+		createTime: {type: 'integer', unsigned: true, size: 8, defaultValue: 0},
 
 		// master password hash salt
 		passSalt: {type: 'text', size: 128},
@@ -28,11 +28,8 @@ module.exports = function ( db ) {
 		// master password sha512 hash
 		passHash: {type: 'text', size: 128},
 
-		// creation time
-		ctime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0},
-
 		// master password update time
-		ptime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0},
+		passTime: {type: 'integer', unsigned: true, size: 8, defaultValue: 0},
 
 		// tags encrypted data
 		tagsData: {type: 'text', big: true},
@@ -41,7 +38,7 @@ module.exports = function ( db ) {
 		tagsHash: {type: 'text', size: 128},
 
 		// tags modification time
-		ttime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0}
+		tagsTime: {type: 'integer', unsigned: true, size: 8, defaultValue: 0}
 	});
 
 
@@ -55,7 +52,7 @@ module.exports = function ( db ) {
 		// correct incoming params
 		if ( email && isEmail(email) ) {
 			// try to insert
-			users.create({email: email, ctime: +new Date()}, function ( error, user ) {
+			users.create({email: email, createTime: +new Date()}, function ( error, user ) {
 				if ( error ) {
 					// can't insert - already exists
 					users.one({email: email}, function ( error, user ) {
@@ -113,13 +110,14 @@ module.exports = function ( db ) {
 	 * @param {Function} callback error/success handler
 	 */
 	users.getTags = function ( token, callback ) {
-		// is valid user
+		// is user authorized
 		db.models.sessions.check(token, function ( error, session ) {
 			if ( error ) {
 				return callback(error);
 			}
 
-			users.find({id: session.userId}).only('tagsData', 'tagsHash', 'ttime').run(function ( error, data ) {
+			// get user data
+			users.find({id: session.userId}).only('tagsData', 'tagsHash', 'tagsTime').run(function ( error, data ) {
 				if ( error ) {
 					console.log(error);
 					return callback(new restify.errors.InternalServerError('tags search failure'));
@@ -128,7 +126,7 @@ module.exports = function ( db ) {
 				callback(null, {
 					data: data[0].tagsData,
 					hash: data[0].tagsHash,
-					time: data[0].ttime
+					time: data[0].tagsTime
 				});
 			});
 		});
@@ -146,19 +144,21 @@ module.exports = function ( db ) {
 	users.setTags = function ( token, data, hash, callback ) {
 		// correct incoming params
 		if ( data && hash ) {
-			// is valid user
+			// is user authorized
 			db.models.sessions.check(token, function ( error, session ) {
 				if ( error ) {
 					return callback(error);
 				}
 
+				// get the necessary user
 				users.get(session.userId, function ( error, user ) {
 					if ( error ) {
 						console.log(error);
 						return callback(new restify.errors.InternalServerError('tags receiving failure'));
 					}
 
-					user.save({tagsData: data, tagsHash: hash, ttime: +new Date()}, function ( error ) {
+					// update
+					user.save({tagsData: data, tagsHash: hash, tagsTime: +new Date()}, function ( error ) {
 						if ( error ) {
 							console.log(error);
 							return callback(new restify.errors.InternalServerError('tags saving failure'));

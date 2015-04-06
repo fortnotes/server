@@ -18,9 +18,9 @@ module.exports = function ( db ) {
 		key: {type: 'text', size: 4096, required: true},
 
 		// creation time
-		ctime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0},
+		createTime: {type: 'integer', unsigned: true, size: 8, defaultValue: 0},
 
 		// termination time
-		ttime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0}
+		deleteTime: {type: 'integer', unsigned: true, size: 8, defaultValue: 0}
 	});
 };

@@ -76,7 +76,7 @@ describe('Sessions', function () {
 					userA.sessionA = {
 						id:    data.id,
 						token: data.token,
-						code:  data.code
+						code:  data.confirmCode
 					};
 					done();
 				});
@@ -101,7 +101,7 @@ describe('Sessions', function () {
 					userB.sessionA = {
 						id:    data.id,
 						token: data.token,
-						code:  data.code
+						code:  data.confirmCode
 					};
 					done();
 				});
@@ -126,7 +126,7 @@ describe('Sessions', function () {
 					userA.sessionB = {
 						id:    data.id,
 						token: data.token,
-						code:  data.code
+						code:  data.confirmCode
 					};
 					done();
 				});
@@ -151,7 +151,7 @@ describe('Sessions', function () {
 					userB.sessionB = {
 						id:    data.id,
 						token: data.token,
-						code:  data.code
+						code:  data.confirmCode
 					};
 					done();
 				});
@@ -258,7 +258,7 @@ describe('Sessions', function () {
 				db.models.sessions.get(userA.sessionA.id, function ( error, session ) {
 					should.not.exist(error);
 
-					session.save({confirmed: false, attempts: global.config.session.confirmAttempts}, function ( error, data ) {
+					session.save({confirmTime: 0, confirmAttempts: global.config.session.confirmAttempts}, function ( error ) {
 						should.not.exist(error);
 
 						transaction.commit(function ( error ) {
@@ -436,8 +436,8 @@ describe('Sessions', function () {
 				// get this session info
 				db.models.sessions.get(userA.sessionA.id, function ( error, session ) {
 					should.not.exist(error);
-					session.active.should.equal(false);
-					session.confirmed.should.equal(false);
+					session.deleteTime.should.not.equal(0);
+					session.confirmTime.should.equal(0);
 					done();
 				});
 			});
@@ -464,7 +464,7 @@ describe('Sessions', function () {
 				// get this session info
 				db.models.sessions.get(userA.sessionB.id, function ( error, session ) {
 					should.not.exist(error);
-					session.active.should.equal(false);
+					session.deleteTime.should.not.equal(0);
 					done();
 				});
 			});
