@@ -8,8 +8,9 @@
 
 'use strict';
 
-var restify = require('../lib/restify'),
-	notes   = require('../lib/orm').models.notes;
+var restify   = require('../lib/restify'),
+	notes     = require('../lib/orm').models.notes,
+	notesData = require('../lib/orm').models.notesData;
 
 
 /**
@@ -26,16 +27,16 @@ var restify = require('../lib/restify'),
  *     curl --include --header "Authorization: Bearer 5nNOF+dNQaHvq..." http://localhost:9090/notes
  *
  * @apiSuccess {number} id User notes ID.
- * @apiSuccess {number} ctime Note creation time.
- * @apiSuccess {number} mtime Note modification time.
- * @apiSuccess {number} atime Note last access time.
+ * @apiSuccess {number} createTime Note creation time.
+ * @apiSuccess {number} updateTime Note modification time.
+ * @apiSuccess {number} readTime Note last access time.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     [
- *         {"id": 512, "ctime": 1427190024722, "mtime": 0, "atime": 0},
- *         {"id": 513, "ctime": 1427190838740, "mtime": 1427201953944, "atime": 0},
- *         {"id": 513, "ctime": 1427190838740, "mtime": 1427201953944, "atime": 1427201959845}
+ *         {"id": 512, "createTime": 1427190024722, "updateTime": 0, "readTime": 0},
+ *         {"id": 513, "createTime": 1427190838740, "updateTime": 1427201953944, "readTime": 0},
+ *         {"id": 513, "createTime": 1427190838740, "updateTime": 1427201953944, "readTime": 1427201959845}
  *     ]
  *
  * @apiErrorExample Error 400:
@@ -121,6 +122,54 @@ restify.post('/notes',
 
 			// ok
 			response.send({id: note.id});
+		});
+	}
+);
+
+
+/**
+ * @api {post} /notes/:id Add note data.
+ *
+ * @apiVersion 1.0.0
+ * @apiName postNote
+ * @apiGroup Note
+ * @apiPermission authUser
+ *
+ * @apiHeader {string} Authorization Bearer token for the user session.
+ *
+ * @apiParam {string} id Note ID.
+ *
+ * @apiExample {curl} Example usage:
+ *     curl --include --header "Authorization: Bearer 5nNOF+dNQaHvq..." --data "data=qwe&hash=rty" --request POST http://localhost:9090/notes
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *
+ *     true
+ *
+ * @apiErrorExample Error 400:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *         "code": "BadRequestError",
+ *         "message": "no session token"
+ *     }
+ *
+ * @apiErrorExample Error 401:
+ *     HTTP/1.1 401 Unauthorized
+ *     {
+ *         "code": "UnauthorizedError",
+ *         "message": "invalid session"
+ *     }
+ */
+restify.post('/notes/:id',
+	function ( request, response ) {
+		notesData.add(request.authorization.token, Number(request.params.id), request.params.data, request.params.hash, function ( error ) {
+			if ( error ) {
+				return response.send(error);
+			}
+
+			// ok
+			response.send(true);
 		});
 	}
 );
