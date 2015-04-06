@@ -16,9 +16,6 @@ module.exports = function ( db ) {
 		// link to the table users - owner of the note
 		userId: {type: 'integer', unsigned: true, required: true, index: true},
 
-		// active till termination
-		//active: {type: 'boolean', defaultValue: true},
-
 		// creation time
 		ctime: {type: 'integer', size: 8, unsigned: true, defaultValue: 0},
 
@@ -68,7 +65,7 @@ module.exports = function ( db ) {
 
 
 	/**
-	 * Get all user session list.
+	 * Create new user note.
 	 *
 	 * @param {string} token user session token
 	 * @param {Function} callback error/success handler
