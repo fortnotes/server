@@ -44,5 +44,29 @@
 		"gulp-plumber": "^1.0.0",
 		"minimist": "^1.1.1",
 		"should": "^5.2.0"
+	},
+
+	"apidoc": {
+		"name": "FortNotes REST API Documentation",
+		"version": "1.0.0",
+		"description": "FortNotes client-server communication protocol.",
+		"header": {
+			"title": "Intro",
+			"filename": "./doc/header.md"
+		},
+		"url" : "https://api.fortnotes.com",
+		"sampleUrl": "http://localhost:9090",
+		"order": [
+			"Sessions",
+			"Session",
+			"Notes",
+			"Note",
+			"Tags",
+			"Users"
+		],
+		"template": {
+			"withCompare": true,
+			"withGenerator": true
+		}
 	}
 }
