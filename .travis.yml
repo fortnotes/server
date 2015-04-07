@@ -9,4 +9,4 @@ before_script:
 install:
     - npm install
 script:
-    - node ./bin/cli.js --config ./config/mysql.json
+    - node ./bin/cli.js --config ../config/mysql.json
