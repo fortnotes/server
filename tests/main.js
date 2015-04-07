@@ -23,6 +23,7 @@ console.log('Config file name: %s', file);
 console.log('  * to use another config file use flag --config <file>');
 console.log('  * to see verbose log use flag --debug');
 
+require('../lib/main');
 
 // specs
 require('./spec.sessions');

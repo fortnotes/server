@@ -41,7 +41,10 @@ gulp.task('apidoc', function () {
 // mocha bdd tests
 gulp.task('tests', function () {
 	return gulp.src(['./tests/main.js'], {read: false})
-		.pipe(mocha({reporter: 'spec'}));
+		.pipe(mocha({reporter: 'spec'}))
+		.on('end', function () {
+			process.exit();
+		});
 });
 
 
