@@ -24,7 +24,7 @@
 	"bugs": "https://github.com/fortnotes/server/issues",
 	"scripts": {
 		"start": "node ./bin/cli.js",
-		"test": "gulp tests"
+		"test": "gulp tests --config ./config/mysql.json"
 	},
 	"dependencies": {
 		"commander": "^2.7.0",
