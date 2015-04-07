@@ -20,8 +20,6 @@ gulp.task('lint', function () {
 			'./bin/**/*.js',
 			'./config/**/*.js',
 			'./lib/**/*.js',
-			'./models/**/*.js',
-			'./resources/**/*.js',
 			'./tests/**/*.js'
 		])
 		.pipe(plumber())
@@ -33,7 +31,7 @@ gulp.task('lint', function () {
 // build REST documentation
 gulp.task('apidoc', function () {
 	apidoc.exec({
-		src: './resources/',
+		src: './lib/resources/',
 		dest: './doc/apidoc/',
 		debug: false
 	});
