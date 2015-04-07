@@ -5,11 +5,12 @@ node_js:
 sudo: false
 services:
     - mysql
-before_script:
-    - mysql -e 'create database fortnotes;'
-    - node ./bin/cli.js --config ../config/mysql.json
 install:
     - npm install
 cache:
     directories:
         - node_modules
+before_script:
+    - mysql -e "create database fortnotes;"
+script:
+	- gulp tests --config ../config/mysql.json
