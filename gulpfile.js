@@ -46,6 +46,7 @@ gulp.task('tests', function () {
 
 
 // entry point
-gulp.task('default', ['serve'], function () {
-	gulp.watch(['./server/**/*.js'], ['apidoc']);
+gulp.task('default', ['lint'], function () {
+	// rebuild docs
+	gulp.watch(['./lib/resources/**/*.js'], ['apidoc']);
 });
