@@ -34,7 +34,7 @@ gulp.task('lint', function () {
 gulp.task('apidoc', function () {
 	apidoc.exec({
 		src: './resources/',
-		dest: './doc/api/',
+		dest: './doc/apidoc/',
 		debug: false
 	});
 });
