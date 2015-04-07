@@ -2,7 +2,7 @@
 	"name": "fortnotes",
 	"version": "2.0.0",
 	"description": "Server application to process client REST API requests.",
-	"main": "server/main.js",
+	"main": "./bin/cli.js",
 	"bin": "./bin/cli.js",
 	"author": "DarkPark",
 	"license": "GPLv3",
@@ -43,6 +43,7 @@
 		"gulp-nodemon": "^2.0.2",
 		"gulp-mocha": "^2.0.0",
 		"gulp-plumber": "^1.0.0",
-		"minimist": "^1.1.1"
+		"minimist": "^1.1.1",
+		"should": "^5.2.0"
 	}
 }
