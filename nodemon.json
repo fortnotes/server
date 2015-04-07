@@ -1,0 +1,5 @@
+{
+	"verbose": true,
+	"watch": ["bin", "lib", "models", "resources"],
+	"ext": "js"
+}

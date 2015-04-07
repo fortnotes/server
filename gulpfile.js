@@ -11,14 +11,12 @@ var gulp    = require('gulp'),
 	apidoc  = require('gulp-apidoc'),
 	plumber = require('gulp-plumber'),
 	eslint  = require('gulp-eslint'),
-	nodemon = require('gulp-nodemon'),
 	mocha   = require('gulp-mocha');
 
 
 gulp.task('lint', function () {
 	return gulp
 		.src([
-			//'./client/app/js/**/*.js',
 			'./bin/**/*.js',
 			'./config/**/*.js',
 			'./lib/**/*.js',
@@ -38,16 +36,6 @@ gulp.task('apidoc', function () {
 		src: './resources/',
 		dest: './doc/api/',
 		debug: false
-	});
-});
-
-
-// serve API requests
-gulp.task('serve', function () {
-	nodemon({
-		script: './server/main.js',
-		watch: ['./server/'],
-		ext: 'js'
 	});
 });
 
