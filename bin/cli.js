@@ -12,6 +12,7 @@ program
 	.version(pkgInfo.version)
 	.description('Server application to process client REST API requests.\n  See the details at https://fortnotes.com/.')
 	.option('-d, --debug', 'enable verbose debug mode')
+	.option('-t, --test', 'run tests and exit')
 	//.option('-t, --api-token-size <number>', 'HTTP port to listen [96]', 96)
 	//.option('-c, --config <file>', 'path to the configuration options file [~/.fortnotes/config.json]', path.join(process.env.HOME || process.env.USERPROFILE, '.fortnotes', 'config.json'))
 	.option('-c, --config <file>', 'path to the configuration options JSON file', path.join(__dirname, '..', 'config.json'))
@@ -38,10 +39,13 @@ program.parse(process.argv);
 global.config = require(program.config);
 
 global.config.debug = !!program.debug;
+global.config.test = !!program.test;
 
 //console.log(global.config);
 
-require('../lib/main');
+//require('../lib/main')();
+require('../lib/orm');
+//require('./lib/init')();
 
 //global.config = {
 //	port: parseInt(program.port, 10),

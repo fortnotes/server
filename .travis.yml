@@ -13,4 +13,4 @@ cache:
 before_script:
     - mysql -e "create database fortnotes;"
 script:
-    - gulp tests --config ../config/mysql.json
+    - node ./bin/cli.js --config ../config/mysql.json --test

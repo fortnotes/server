@@ -13,19 +13,20 @@ var path = require('path'),
 
 
 // map loaded configuration to global scope
-global.config = require(file);
+//global.config = require(file);
 
 // set logging verbosity level
-global.config.debug = !!argv.debug;
+//global.config.debug = !!argv.debug;
 
 // report with help
-console.log('Config file name: %s', file);
-console.log('  * to use another config file use flag --config <file>');
-console.log('  * to see verbose log use flag --debug');
+//console.log('Config file name: %s', file);
+//console.log('  * to use another config file use flag --config <file>');
+//console.log('  * to see verbose log use flag --debug');
 
-require('../lib/main');
 
-// specs
+//require('../lib/main')(function () {
+	// specs
 require('./spec.sessions');
 require('./spec.tags');
 require('./spec.notes');
+//});
