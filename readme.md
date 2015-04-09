@@ -69,6 +69,14 @@ Where the content of `config.json`:
 }
 ```
 
+### DBMS Support
+
+- MySQL & MariaDB
+- PostgreSQL
+- Amazon Redshift
+- SQLite
+- MongoDB
+
 There are some config file examples for
 [mysql](config/mysql.json),
 [postgres](config/postgres.json),
@@ -103,11 +111,13 @@ Now you cat start it like this:
 node-dev ./bin/cli.js --debug
 ```
 
-It's possible to run all tests:
+It's possible to run all tests locally with given config:
 
 ```bash
 fortnotes --config ~/.fortnotes/config.json --test
 ```
+
+Tests are also run on [Travis CI](https://travis-ci.org/fortnotes/server) for node versions `0.10.x`, `0.12.x` and `iojs`.
 
 
 ## License
