@@ -11,16 +11,5 @@
 		"confirmAttempts": 3
 	},
 
-	"database": {
-		"protocol": "sqlite",
-		"pathname": "./data.sqlite",
-		"query": {
-			"debug": false
-		},
-		"connection": {
-			"debug": false
-		}
-	},
-
 	"database": "sqlite://./data.sqlite"
 }
