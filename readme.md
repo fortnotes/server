@@ -70,10 +70,10 @@ Where the content of `config.json`:
 ```
 
 There are some config file examples for
-[mysql](blob/master/config/mysql.json),
-[postgres](blob/master/config/postgres.json),
-[sqlite](blob/master/config/sqlite.json) and
-[sqlite in memory](blob/master/config/memory.json).
+[mysql](config/mysql.json),
+[postgres](config/postgres.json),
+[sqlite](config/sqlite.json) and
+[sqlite in memory](config/memory.json).
 
 
 ## Development ##
