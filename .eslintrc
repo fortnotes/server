@@ -80,6 +80,8 @@
 		"no-new-require": 0,
 		"no-path-concat": 1,
 
+		"no-process-exit": 0,
+
 		"indent": [2, "tab", {"indentSwitchCase": true}],
 		"brace-style": [1, "1tbs", {"allowSingleLine": true}],
 		"camelcase": 1,
