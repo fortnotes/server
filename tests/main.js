@@ -7,26 +7,24 @@
 
 'use strict';
 
-var path = require('path'),
-	argv = require('minimist')(process.argv.slice(2)),
-	file = argv.config || path.join(__dirname, '..', 'config.json');
+var Mocha = require('mocha'),
+	mocha = new Mocha({
+		reporter: 'spec'
+	});
 
 
-// map loaded configuration to global scope
-//global.config = require(file);
+// extend Object.prototype
+require('should');
 
-// set logging verbosity level
-//global.config.debug = !!argv.debug;
+// add specs
+mocha.addFile('./tests/spec.sessions');
+mocha.addFile('./tests/spec.tags');
+mocha.addFile('./tests/spec.notes');
 
-// report with help
-//console.log('Config file name: %s', file);
-//console.log('  * to use another config file use flag --config <file>');
-//console.log('  * to see verbose log use flag --debug');
-
-
-//require('../lib/main')(function () {
-	// specs
-require('./spec.sessions');
-require('./spec.tags');
-require('./spec.notes');
-//});
+// exec
+mocha.run(function ( failures ) {
+	// close db connection
+	require('../lib/db').close();
+	// return exit code
+	process.exit(failures);
+});

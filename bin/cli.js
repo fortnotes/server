@@ -7,6 +7,7 @@ var //fs      = require('fs'),
 	program = require('commander'),
 	pkgInfo = require('../package.json');
 
+
 // init
 program
 	.version(pkgInfo.version)
@@ -20,8 +21,6 @@ program
 	//.option('-d, --db-uri <uri>', 'database connection URI', 'sqlite://' + path.join(process.env.HOME || process.env.USERPROFILE, '.fortnotes', 'data.sqlite'))
 ;
 
-//console.log(process);
-
 // extend default help info
 program.on('--help', function () {
 	console.log('  Examples:');
@@ -33,36 +32,10 @@ program.on('--help', function () {
 // parse and invoke commands when defined
 program.parse(process.argv);
 
-//console.log(program);
-
 // map loaded configuration to global scope
 global.config = require(program.config);
 
 global.config.debug = !!program.debug;
 global.config.test = !!program.test;
 
-//console.log(global.config);
-
-//require('../lib/main')();
-require('../lib/orm');
-//require('./lib/init')();
-
-//global.config = {
-//	port: parseInt(program.port, 10),
-//	dbUri: program.dbUri
-//};
-
-// create data dir
-//fs.mkdir(path.join(process.env.HOME || process.env.USERPROFILE, '.fortnotes'), function ( error ) {
-//	if ( error ) {
-//		// already exists
-//	} else {
-//		// just created
-//	}
-//
-//	require('../lib/main');
-//});
-
-
-// public export
-//module.exports = program;
+require('../lib/main');

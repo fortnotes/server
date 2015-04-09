@@ -12,7 +12,7 @@
 
 var should  = require('should'),
 	restify = require('restify'),
-	db      = require('../lib/orm'),
+	db      = require('../lib/db'),
 	data    = require('./data'),
 	userA   = data.userA,
 	userB   = data.userB;

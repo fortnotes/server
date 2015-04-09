@@ -10,9 +10,8 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 
-var should  = require('should'),
-	restify = require('restify'),
-	db      = require('../lib/orm'),
+var restify = require('restify'),
+	db      = require('../lib/db'),
 	data    = require('./data'),
 	userA   = data.userA,
 	userB   = data.userB;
@@ -27,7 +26,6 @@ describe('Notes', function () {
 	after(function () {
 		// need to close all connections manually
 		client.close();
-		db.close();
 	});
 
 
