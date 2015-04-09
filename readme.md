@@ -14,7 +14,7 @@ The current stable version can be found on the [Bitbucket](https://bitbucket.org
 [Node.js](http://nodejs.org/) and [NPM](https://www.npmjs.com/) should be installed beforehand.
 Please follow the official [instruction](http://nodejs.org/download/).
 
-`FortNotes Server` is available as an [npm package](https://www.npmjs.org/package/fortnotes-server) and should be installed globally:
+FortNotes Server is available as an [npm package](https://www.npmjs.org/package/fortnotes-server) and should be installed globally:
 
 ```bash
 npm install -g fortnotes-server
@@ -46,10 +46,39 @@ Full list of available options can be provided by the `fortnotes` application:
 fortnotes --help
 ```
 
+To run FortNotes Server with the specific configuration:
+
+```bash
+fortnotes --config ~/.fortnotes/config.json
+```
+
+Where the content of `config.json`:
+
+```json
+{
+	"port": 9090,
+	"restify": {
+		"name": "FortNotes API REST Server"
+	},
+	"session": {
+		"tokenSize":       96,
+		"confirmCodeSize": 12,
+		"confirmAttempts": 3
+	},
+	"database": "sqlite://./data.sqlite"
+}
+```
+
+There are some config file examples for
+[mysql](blob/master/config/mysql.json),
+[postgres](blob/master/config/postgres.json),
+[sqlite](blob/master/config/sqlite.json) and
+[sqlite in memory](blob/master/config/memory.json).
+
 
 ## Development ##
 
-Get the latest version from github:
+Get the latest version of source files:
 
 ```bash
 git clone git@github.com:fortnotes/server.git
@@ -74,7 +103,13 @@ Now you cat start it like this:
 node-dev ./bin/cli.js --debug
 ```
 
+It's possible to run all tests:
+
+```bash
+fortnotes --config ~/.fortnotes/config.json --test
+```
+
 
 ## License
 
-`FortNotes Server` is released under the [GPL-3.0 License](http://opensource.org/licenses/GPL-3.0).
+FortNotes Server is released under the [GPL-3.0 License](http://opensource.org/licenses/GPL-3.0).
