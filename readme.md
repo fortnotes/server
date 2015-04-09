@@ -26,6 +26,11 @@ In Linux this can be done as a root:
 sudo npm install -g fortnotes-server
 ```
 
+Then to start a server with default options:
+
+```bash
+fortnotes
+```
 
 ## Usage
 
