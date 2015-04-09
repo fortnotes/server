@@ -1,0 +1,15 @@
+{
+	"port": 9090,
+
+	"restify": {
+		"name": "FortNotes API REST Server"
+	},
+
+	"session": {
+		"tokenSize":       96,
+		"confirmCodeSize": 12,
+		"confirmAttempts": 3
+	},
+
+	"database": "postgres://postgres@127.0.0.1/fortnotes"
+}
