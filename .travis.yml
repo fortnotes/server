@@ -15,3 +15,5 @@ before_script:
     - mysql -e "create database fortnotes;"
 script:
     - node ./bin/cli.js --config ../config/mysql.json --test
+    - node ./bin/cli.js --config ../config/sqlite.json --test
+    - node ./bin/cli.js --config ../config/memory.json --test
