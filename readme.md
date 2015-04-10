@@ -69,13 +69,12 @@ Where the content of `config.json`:
 }
 ```
 
-### DBMS Support
+#### DBMS Support
 
 - MySQL & MariaDB
 - PostgreSQL
-- Amazon Redshift
+- Amazon Redshift (not tested)
 - SQLite
-- MongoDB
 
 There are some config file examples for
 [mysql](config/mysql.json),

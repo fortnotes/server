@@ -6,19 +6,16 @@ node_js:
 sudo: false
 services:
     - mysql
-    - mongodb
 install:
     - npm install
 cache:
     directories:
         - node_modules
 before_script:
-    - sleep 15
     - mysql -e "create database fortnotes;"
-    - psql -c 'create database fortnotes;' -U postgres
+    - psql -c "create database fortnotes;" -U postgres
 script:
-    - node ./bin/cli.js --config ../config/mysql.json --test
-    - node ./bin/cli.js --config ../config/postgres.json --test
-    - node ./bin/cli.js --config ../config/sqlite.json --test
-    - node ./bin/cli.js --config ../config/memory.json --test
-    - node ./bin/cli.js --config ../config/mongo.json --test
+    - node ./bin/cli.js --test --config ../config/mysql.json
+    - node ./bin/cli.js --test --config ../config/postgres.json
+    - node ./bin/cli.js --test --config ../config/sqlite.json
+    - node ./bin/cli.js --test --config ../config/memory.json
