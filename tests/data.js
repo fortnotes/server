@@ -14,10 +14,12 @@ var crypto = require('crypto');
 module.exports = {
 	userA: {
 		email: crypto.randomBytes(4).toString('hex') + '@' + crypto.randomBytes(4).toString('hex') + '.com',
-		sessionA: {}
+		sessionA: {},
+		noteA: {}
 	},
 	userB: {
 		email: crypto.randomBytes(4).toString('hex') + '@' + crypto.randomBytes(4).toString('hex') + '.com',
-		sessionA: {}
+		sessionA: {},
+		noteA: {}
 	}
 };

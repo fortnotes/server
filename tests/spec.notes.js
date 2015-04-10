@@ -10,7 +10,8 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 
-var restify = require('restify'),
+var should  = require('should'),
+	restify = require('restify'),
 	db      = require('../lib/db'),
 	data    = require('./data'),
 	userA   = data.userA,
@@ -72,7 +73,7 @@ describe('Notes', function () {
 			});
 		});
 
-		it('should pass: empty note list', function ( done ) {
+		it('should pass: userB empty note list', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.get('/notes', function ( error, request, response, data ) {
@@ -86,8 +87,6 @@ describe('Notes', function () {
 
 
 	describe('create users notes', function () {
-		var noteId;
-
 		it('should fail: wrong authorization token', function ( done ) {
 			client.headers.authorization = 'Bearer qwe';
 
@@ -99,7 +98,7 @@ describe('Notes', function () {
 			});
 		});
 
-		it('should pass: add new note', function ( done ) {
+		it('should pass: add userB new note', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.post('/notes', {}, function ( error, request, response, data ) {
@@ -107,17 +106,62 @@ describe('Notes', function () {
 				data.should.be.instanceOf(Object);
 				data.should.have.property('id');
 				data.id.should.be.instanceOf(Number);
-				noteId = data.id;
+				userB.noteA.id = data.id;
 				done();
 			});
 		});
 
-		it('should pass: add new note data', function ( done ) {
+		it('should pass: add userB new note data', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
-			client.post('/notes/' + noteId, {data: 'asd', hash: 'zxc'}, function ( error, request, response, data ) {
+			client.post('/notes/' + userB.noteA.id, {data: 'userB asd', hash: 'zxc'}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(200);
 				data.should.equal(true);
+				done();
+			});
+		});
+
+		it('should pass: reactivate userA sessionB', function ( done ) {
+			db.models.sessions.get(userA.sessionB.id, function ( error, session ) {
+				should.not.exist(error);
+
+				session.save({deleteTime: 0}, function ( error ) {
+					should.not.exist(error);
+					done();
+				});
+			});
+		});
+
+		it('should pass: add userA new note', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userA.sessionB.token;
+
+			client.post('/notes', {}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(200);
+				data.should.be.instanceOf(Object);
+				data.should.have.property('id');
+				data.id.should.be.instanceOf(Number);
+				userA.noteA.id = data.id;
+				done();
+			});
+		});
+
+		it('should pass: add userA new note data', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userA.sessionB.token;
+
+			client.post('/notes/' + userA.noteA.id, {data: 'userA asd', hash: 'zxc'}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(200);
+				data.should.equal(true);
+				done();
+			});
+		});
+
+		it('should fail: add userA new note data to userB', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userA.sessionB.token;
+
+			client.post('/notes/' + userB.noteA.id, {data: 'userA asd2', hash: 'zxc'}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(400);
+				data.code.should.equal('BadRequestError');
+				data.message.should.equal('invalid note id');
 				done();
 			});
 		});
