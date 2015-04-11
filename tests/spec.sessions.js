@@ -78,6 +78,7 @@ describe('Sessions', function () {
 						token: data.token,
 						code:  data.confirmCode
 					};
+					userA.id = data.userId;
 					done();
 				});
 			});
@@ -103,6 +104,7 @@ describe('Sessions', function () {
 						token: data.token,
 						code:  data.confirmCode
 					};
+					userB.id = data.userId;
 					done();
 				});
 			});
