@@ -157,6 +157,17 @@ describe('Tags', function () {
 			});
 		});
 
+		it('should fail: too big hash', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.put('/tags', {data: 'tagsData', hash: new Array(global.config.hashSize + 2).join('*'), amount: 10}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(406);
+				data.code.should.equal('NotAcceptableError');
+				data.message.should.equal('too big tags data or hash');
+				done();
+			});
+		});
+
 		it('should pass: add data/hash/amount', function ( done ) {
 			var tagsData   = 'qwe',
 				tagsHash   = 'rty',

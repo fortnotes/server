@@ -111,6 +111,50 @@ describe('Notes', function () {
 			});
 		});
 
+		it('should fail: add userB new note data with no data', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.post('/notes/' + userB.noteA.id, function ( error, request, response, data ) {
+				response.statusCode.should.equal(400);
+				data.code.should.equal('BadRequestError');
+				data.message.should.equal('empty or invalid request parameters');
+				done();
+			});
+		});
+
+		it('should fail: add userB new note data with empty data', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.post('/notes/' + userB.noteA.id, {data: '', hash: ''}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(400);
+				data.code.should.equal('BadRequestError');
+				data.message.should.equal('empty or invalid request parameters');
+				done();
+			});
+		});
+
+		it('should fail: add userB new note data with too big data', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.post('/notes/' + userB.noteA.id, {data: new Array(global.config.dataSize + 2).join('*'), hash: 'zxc'}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(406);
+				data.code.should.equal('NotAcceptableError');
+				data.message.should.equal('too big note data or hash');
+				done();
+			});
+		});
+
+		it('should fail: add userB new note data with too big hash', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.post('/notes/' + userB.noteA.id, {data: 'some data', hash: new Array(global.config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(406);
+				data.code.should.equal('NotAcceptableError');
+				data.message.should.equal('too big note data or hash');
+				done();
+			});
+		});
+
 		it('should pass: add userB new note data', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 

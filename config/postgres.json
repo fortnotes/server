@@ -1,6 +1,9 @@
 {
 	"port": 9090,
 
+	"dataSize": 1048576,
+	"hashSize": 128,
+
 	"restify": {
 		"name": "FortNotes API REST Server"
 	},

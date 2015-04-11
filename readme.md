@@ -57,6 +57,8 @@ Where the content of `config.json`:
 ```json
 {
 	"port": 9090,
+	"dataSize": 1048576,
+    "hashSize": 128,
 	"restify": {
 		"name": "FortNotes API REST Server"
 	},
@@ -81,6 +83,19 @@ There are some config file examples for
 [postgres](config/postgres.json),
 [sqlite](config/sqlite.json) and
 [sqlite in memory](config/memory.json).
+
+#### Config file options
+
+ Name                    | Description
+-------------------------|-------------
+ port                    | HTTP port serving REST API requests
+ dataSize                | encrypted data size (notes, tags)
+ hashSize                | notes/tags sha512 hash size
+ restify                 | server creation options passed to [restify](http://mcavage.me/node-restify/#creating-a-server)
+ session.tokenSize       | generated token size in bytes
+ session.confirmCodeSize | generated token confirmation code size in bytes
+ session.confirmAttempts | allowed amount of attempts to activate sessions
+ database                | database connection options passed to [node-orm2](https://github.com/dresende/node-orm2/wiki/Connecting-to-Database)
 
 
 ## Development ##
