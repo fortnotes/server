@@ -10,8 +10,7 @@
 var gulp    = require('gulp'),
 	apidoc  = require('gulp-apidoc'),
 	plumber = require('gulp-plumber'),
-	eslint  = require('gulp-eslint'),
-	mocha   = require('gulp-mocha');
+	eslint  = require('gulp-eslint');
 
 
 gulp.task('lint', function () {
@@ -35,16 +34,6 @@ gulp.task('apidoc', function () {
 		dest: './doc/apidoc/',
 		debug: false
 	});
-});
-
-
-// mocha bdd tests
-gulp.task('tests', function () {
-	return gulp.src(['./tests/main.js'], {read: false})
-		.pipe(mocha({reporter: 'spec'}))
-		.on('end', function () {
-			process.exit();
-		});
 });
 
 
