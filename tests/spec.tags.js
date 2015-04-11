@@ -157,13 +157,25 @@ describe('Tags', function () {
 			});
 		});
 
-		it('should pass: add data and hash', function ( done ) {
+		it('should pass: add data/hash/amount', function ( done ) {
+			var tagsData   = 'qwe',
+				tagsHash   = 'rty',
+				tagsAmount = 5;
+
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
-			client.put('/tags', {data: 'qwe', hash: 'rty'}, function ( error, request, response, data ) {
+			client.put('/tags', {data: tagsData, hash: tagsHash, amount: tagsAmount}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(200);
 				data.should.equal(true);
-				done();
+
+				// check saved data
+				db.models.users.get(userB.id, function ( error, data ) {
+					should.not.exist(error);
+					data.tagsData.should.equal(tagsData);
+					data.tagsHash.should.equal(tagsHash);
+					data.tagsAmount.should.equal(tagsAmount);
+					done();
+				});
 			});
 		});
 
@@ -180,6 +192,48 @@ describe('Tags', function () {
 				should(data.hash).equal('rty');
 				data.time.should.not.equal(0);
 				done();
+			});
+		});
+
+		it('should pass: set data/hash without amount', function ( done ) {
+			var tagsData   = 'qwe2',
+				tagsHash   = 'rty2';
+
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.put('/tags', {data: tagsData, hash: tagsHash, amount: 'not a number'}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(200);
+				data.should.equal(true);
+
+				// check saved data
+				db.models.users.get(userB.id, function ( error, data ) {
+					should.not.exist(error);
+					data.tagsData.should.equal(tagsData);
+					data.tagsHash.should.equal(tagsHash);
+					data.tagsAmount.should.equal(0);
+					done();
+				});
+			});
+		});
+
+		it('should pass: set data/hash with wrong amount', function ( done ) {
+			var tagsData   = 'qwe3',
+				tagsHash   = 'rty3';
+
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.put('/tags', {data: tagsData, hash: tagsHash}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(200);
+				data.should.equal(true);
+
+				// check saved data
+				db.models.users.get(userB.id, function ( error, data ) {
+					should.not.exist(error);
+					data.tagsData.should.equal(tagsData);
+					data.tagsHash.should.equal(tagsHash);
+					data.tagsAmount.should.equal(0);
+					done();
+				});
 			});
 		});
 	});
