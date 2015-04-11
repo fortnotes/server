@@ -62,7 +62,8 @@
 			"Notes",
 			"Note",
 			"Tags",
-			"Users"
+			"Users",
+			"Profile"
 		],
 		"template": {
 			"withCompare": true,
