@@ -119,10 +119,10 @@ Then install local dependencies:
 npm install
 ```
 
-Now you cat start it like this:
+Now you can start it like this:
 
 ```bash
-node-dev ./bin/cli.js --debug
+node-dev ./bin/cli.js --config ../config/sqlite.json --debug
 ```
 
 It's possible to run all tests locally with given config:
