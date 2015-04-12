@@ -20,6 +20,7 @@ module.exports = {
 	userB: {
 		email: crypto.randomBytes(4).toString('hex') + '@' + crypto.randomBytes(4).toString('hex') + '.com',
 		sessionA: {},
-		noteA: {}
+		noteA: {},
+		noteB: {}
 	}
 };
