@@ -33,9 +33,9 @@ describe('Notes', function () {
 	describe('get users notes', function () {
 		it('should fail: no authorization header', function ( done ) {
 			client.get('/notes', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -44,9 +44,9 @@ describe('Notes', function () {
 			client.headers.authorization = '';
 
 			client.get('/notes', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -55,9 +55,9 @@ describe('Notes', function () {
 			client.headers.authorization = 'qwe';
 
 			client.get('/notes', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -126,9 +126,9 @@ describe('Notes', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.get('/notes/', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('empty or invalid note id');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty note id');
 				done();
 			});
 		});
@@ -170,9 +170,9 @@ describe('Notes', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/notes/' + userB.noteA.id, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('empty or invalid request parameters');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty note attributes');
 				done();
 			});
 		});
@@ -181,9 +181,9 @@ describe('Notes', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/notes/' + userB.noteA.id, {}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('empty or invalid request parameters');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty note attributes');
 				done();
 			});
 		});
@@ -192,9 +192,9 @@ describe('Notes', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/notes/' + userB.noteA.id, {data: '', hash: ''}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('empty or invalid request parameters');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty note attributes');
 				done();
 			});
 		});
@@ -203,9 +203,9 @@ describe('Notes', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/notes/' + userB.noteA.id, {data: new Array(global.config.dataSize + 2).join('*'), hash: 'zxc'}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(406);
-				data.code.should.equal('NotAcceptableError');
-				data.message.should.equal('too big note data or hash');
+				response.statusCode.should.equal(400);
+				data.code.should.equal('InvalidContent');
+				data.message.should.equal('content data is too big');
 				done();
 			});
 		});
@@ -214,9 +214,9 @@ describe('Notes', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/notes/' + userB.noteA.id, {data: 'some data', hash: new Array(global.config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(406);
-				data.code.should.equal('NotAcceptableError');
-				data.message.should.equal('too big note data or hash');
+				response.statusCode.should.equal(400);
+				data.code.should.equal('InvalidContent');
+				data.message.should.equal('content data is too big');
 				done();
 			});
 		});
@@ -225,9 +225,9 @@ describe('Notes', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/notes/' + userB.noteA.id, {data: new Array(global.config.dataSize + 2).join('*'), hash: new Array(global.config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(406);
-				data.code.should.equal('NotAcceptableError');
-				data.message.should.equal('too big note data or hash');
+				response.statusCode.should.equal(400);
+				data.code.should.equal('InvalidContent');
+				data.message.should.equal('content data is too big');
 				done();
 			});
 		});

@@ -33,9 +33,9 @@ describe('Tags', function () {
 	describe('get users tags', function () {
 		it('should fail: no authorization header', function ( done ) {
 			client.get('/tags', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -44,9 +44,9 @@ describe('Tags', function () {
 			client.headers.authorization = '';
 
 			client.get('/tags', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -55,9 +55,9 @@ describe('Tags', function () {
 			client.headers.authorization = 'qwe';
 
 			client.get('/tags', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -95,18 +95,18 @@ describe('Tags', function () {
 			delete client.headers.authorization;
 
 			client.put('/tags', {}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('invalid tags data or hash');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty tags data or hash');
 				done();
 			});
 		});
 
 		it('should fail: no authorization header', function ( done ) {
 			client.put('/tags', {data: 'qwe', hash: 'rty'}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -115,9 +115,9 @@ describe('Tags', function () {
 			client.headers.authorization = '';
 
 			client.put('/tags', {data: 'qwe', hash: 'rty'}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -126,9 +126,9 @@ describe('Tags', function () {
 			client.headers.authorization = 'qwe';
 
 			client.put('/tags', {data: 'qwe', hash: 'rty'}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -148,9 +148,9 @@ describe('Tags', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/tags', {}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('invalid tags data or hash');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty tags data or hash');
 				done();
 			});
 		});
@@ -159,9 +159,9 @@ describe('Tags', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/tags', {data: new Array(global.config.dataSize + 2).join('*'), hash: 'qwe', amount: 10}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(406);
-				data.code.should.equal('NotAcceptableError');
-				data.message.should.equal('too big tags data or hash');
+				response.statusCode.should.equal(400);
+				data.code.should.equal('InvalidContent');
+				data.message.should.equal('content data is too big');
 				done();
 			});
 		});
@@ -170,9 +170,9 @@ describe('Tags', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/tags', {data: 'tagsData', hash: new Array(global.config.hashSize + 2).join('*'), amount: 10}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(406);
-				data.code.should.equal('NotAcceptableError');
-				data.message.should.equal('too big tags data or hash');
+				response.statusCode.should.equal(400);
+				data.code.should.equal('InvalidContent');
+				data.message.should.equal('content data is too big');
 				done();
 			});
 		});
@@ -181,9 +181,9 @@ describe('Tags', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/tags', {data: new Array(global.config.dataSize + 2).join('*'), hash: new Array(global.config.hashSize + 2).join('*'), amount: 10}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(406);
-				data.code.should.equal('NotAcceptableError');
-				data.message.should.equal('too big tags data or hash');
+				response.statusCode.should.equal(400);
+				data.code.should.equal('InvalidContent');
+				data.message.should.equal('content data is too big');
 				done();
 			});
 		});

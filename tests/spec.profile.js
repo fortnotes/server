@@ -33,9 +33,9 @@ describe('Profile', function () {
 	describe('save user master password', function () {
 		it('should fail: no authorization header', function ( done ) {
 			client.put('/profile/pass', {salt: 'qwe', hash: 'rty'}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -44,9 +44,9 @@ describe('Profile', function () {
 			client.headers.authorization = '';
 
 			client.put('/profile/pass', {salt: 'qwe', hash: 'rty'}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -55,9 +55,9 @@ describe('Profile', function () {
 			client.headers.authorization = 'qwe';
 
 			client.put('/profile/pass', {salt: 'qwe', hash: 'rty'}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -77,9 +77,9 @@ describe('Profile', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/profile/pass', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('invalid pass salt or hash');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty pass salt or hash');
 				done();
 			});
 		});
@@ -88,9 +88,9 @@ describe('Profile', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/profile/pass', {}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('invalid pass salt or hash');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty pass salt or hash');
 				done();
 			});
 		});
@@ -99,9 +99,9 @@ describe('Profile', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/profile/pass', {salt: new Array(global.config.hashSize + 2).join('*'), hash: 'qwe'}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(406);
-				data.code.should.equal('NotAcceptableError');
-				data.message.should.equal('too big pass salt or hash');
+				response.statusCode.should.equal(400);
+				data.code.should.equal('InvalidContent');
+				data.message.should.equal('content data is too big');
 				done();
 			});
 		});
@@ -110,9 +110,9 @@ describe('Profile', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/profile/pass', {salt: 'qwe', hash: new Array(global.config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(406);
-				data.code.should.equal('NotAcceptableError');
-				data.message.should.equal('too big pass salt or hash');
+				response.statusCode.should.equal(400);
+				data.code.should.equal('InvalidContent');
+				data.message.should.equal('content data is too big');
 				done();
 			});
 		});
@@ -121,9 +121,9 @@ describe('Profile', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.put('/profile/pass', {salt: new Array(global.config.hashSize + 2).join('*'), hash: new Array(global.config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(406);
-				data.code.should.equal('NotAcceptableError');
-				data.message.should.equal('too big pass salt or hash');
+				response.statusCode.should.equal(400);
+				data.code.should.equal('InvalidContent');
+				data.message.should.equal('content data is too big');
 				done();
 			});
 		});

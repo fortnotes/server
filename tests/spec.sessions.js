@@ -69,9 +69,9 @@ describe('Sessions', function () {
 
 		it('should fail: too big email', function ( done ) {
 			client.post('/sessions', {email: new Array(65).join('a') + '@' + new Array(60).join('b') + '.' + new Array(60).join('c')}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(406);
-				data.code.should.equal('NotAcceptableError');
-				data.message.should.equal('too big email address');
+				response.statusCode.should.equal(400);
+				data.code.should.equal('InvalidContent');
+				data.message.should.equal('content data is too big');
 				done();
 			});
 		});
@@ -179,45 +179,45 @@ describe('Sessions', function () {
 	describe('activate sessions', function () {
 		it('should fail: no request data', function ( done ) {
 			client.put('/sessions/', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('invalid session id or confirmation code');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session id or confirmation code');
 				done();
 			});
 		});
 
 		it('should fail: no id and code', function ( done ) {
 			client.put('/sessions/', {}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('invalid session id or confirmation code');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session id or confirmation code');
 				done();
 			});
 		});
 
 		it('should fail: no id', function ( done ) {
 			client.put('/sessions/', {code: 1234567890}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('invalid session id or confirmation code');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session id or confirmation code');
 				done();
 			});
 		});
 
 		it('should fail: no code', function ( done ) {
 			client.put('/sessions/' + userA.sessionA.id, {}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('invalid session id or confirmation code');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session id or confirmation code');
 				done();
 			});
 		});
 
 		it('should fail: bad-formatted id', function ( done ) {
 			client.put('/sessions/teapot', {code: 1234567890}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('invalid session id or confirmation code');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session id or confirmation code');
 				done();
 			});
 		});
@@ -226,7 +226,7 @@ describe('Sessions', function () {
 			client.put('/sessions/' + (userA.sessionA.id + 1000), {code: 123456}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(404);
 				data.code.should.equal('NotFoundError');
-				data.message.should.equal('session was not found');
+				data.message.should.equal('resource was not found');
 				done();
 			});
 		});
@@ -319,9 +319,9 @@ describe('Sessions', function () {
 	describe('get a user session list', function () {
 		it('should fail: no authorization header', function ( done ) {
 			client.get('/sessions', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -330,9 +330,9 @@ describe('Sessions', function () {
 			client.headers.authorization = '';
 
 			client.get('/sessions', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -341,9 +341,9 @@ describe('Sessions', function () {
 			client.headers.authorization = 'qwe';
 
 			client.get('/sessions', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -380,18 +380,18 @@ describe('Sessions', function () {
 			delete client.headers.authorization;
 
 			client.del('/sessions/', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session id');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session id');
 				done();
 			});
 		});
 
 		it('should fail: no authorization header', function ( done ) {
 			client.del('/sessions/' + userA.sessionA.id, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -400,9 +400,9 @@ describe('Sessions', function () {
 			client.headers.authorization = '';
 
 			client.del('/sessions/' + userA.sessionA.id, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
@@ -411,9 +411,9 @@ describe('Sessions', function () {
 			client.headers.authorization = 'qwe';
 
 			client.del('/sessions/' + userA.sessionA.id, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('no session token');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty session token');
 				done();
 			});
 		});
