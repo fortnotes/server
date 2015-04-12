@@ -20,6 +20,7 @@ require('should');
 mocha.addFile('./tests/spec.sessions');
 mocha.addFile('./tests/spec.tags');
 mocha.addFile('./tests/spec.notes');
+mocha.addFile('./tests/spec.profile');
 
 // exec
 mocha.run(function ( failures ) {

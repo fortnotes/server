@@ -111,10 +111,21 @@ describe('Notes', function () {
 			});
 		});
 
-		it('should fail: add userB new note data with no data', function ( done ) {
+		it('should fail: add userB new note data with no request data', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.post('/notes/' + userB.noteA.id, function ( error, request, response, data ) {
+				response.statusCode.should.equal(400);
+				data.code.should.equal('BadRequestError');
+				data.message.should.equal('empty or invalid request parameters');
+				done();
+			});
+		});
+
+		it('should fail: add userB new note data with no data', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.post('/notes/' + userB.noteA.id, {}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('BadRequestError');
 				data.message.should.equal('empty or invalid request parameters');
@@ -148,6 +159,17 @@ describe('Notes', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.post('/notes/' + userB.noteA.id, {data: 'some data', hash: new Array(global.config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(406);
+				data.code.should.equal('NotAcceptableError');
+				data.message.should.equal('too big note data or hash');
+				done();
+			});
+		});
+
+		it('should fail: add userB new note data with too big data and hash', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.post('/notes/' + userB.noteA.id, {data: new Array(global.config.dataSize + 2).join('*'), hash: new Array(global.config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(406);
 				data.code.should.equal('NotAcceptableError');
 				data.message.should.equal('too big note data or hash');
@@ -206,6 +228,45 @@ describe('Notes', function () {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('BadRequestError');
 				data.message.should.equal('invalid note id');
+				done();
+			});
+		});
+	});
+
+
+	describe('not allowed requests', function () {
+		it('should fail: PUT /notes is not allowed', function ( done ) {
+			client.put('/notes', {qwe: 123}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(405);
+				data.code.should.equal('MethodNotAllowedError');
+				data.message.should.equal('PUT is not allowed');
+				done();
+			});
+		});
+
+		it('should fail: DELETE /notes is not allowed', function ( done ) {
+			client.del('/notes', function ( error, request, response, data ) {
+				response.statusCode.should.equal(405);
+				data.code.should.equal('MethodNotAllowedError');
+				data.message.should.equal('DELETE is not allowed');
+				done();
+			});
+		});
+
+		it('should fail: PUT /notes/:id is not allowed', function ( done ) {
+			client.put('/notes/' + userB.noteA.id, {qwe: 123}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(405);
+				data.code.should.equal('MethodNotAllowedError');
+				data.message.should.equal('PUT is not allowed');
+				done();
+			});
+		});
+
+		it('should fail: DELETE /notes/:id is not allowed', function ( done ) {
+			client.del('/notes/' + userB.noteA.id, function ( error, request, response, data ) {
+				response.statusCode.should.equal(405);
+				data.code.should.equal('MethodNotAllowedError');
+				data.message.should.equal('DELETE is not allowed');
 				done();
 			});
 		});

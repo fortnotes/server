@@ -31,7 +31,16 @@ describe('Sessions', function () {
 
 
 	describe('create users and sessions', function () {
-		it('should fail: no email', function ( done ) {
+		it('should fail: no request data', function ( done ) {
+			client.post('/sessions', function ( error, request, response, data ) {
+				response.statusCode.should.equal(400);
+				data.code.should.equal('BadRequestError');
+				data.message.should.equal('empty or invalid email address');
+				done();
+			});
+		});
+
+		it('should fail: empty data', function ( done ) {
 			client.post('/sessions', {}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('BadRequestError');
@@ -54,6 +63,15 @@ describe('Sessions', function () {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('BadRequestError');
 				data.message.should.equal('empty or invalid email address');
+				done();
+			});
+		});
+
+		it('should fail: too big email', function ( done ) {
+			client.post('/sessions', {email: new Array(65).join('a') + '@' + new Array(60).join('b') + '.' + new Array(60).join('c')}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(406);
+				data.code.should.equal('NotAcceptableError');
+				data.message.should.equal('too big email address');
 				done();
 			});
 		});
@@ -163,6 +181,15 @@ describe('Sessions', function () {
 
 
 	describe('activate sessions', function () {
+		it('should fail: no request data', function ( done ) {
+			client.put('/sessions/', function ( error, request, response, data ) {
+				response.statusCode.should.equal(400);
+				data.code.should.equal('BadRequestError');
+				data.message.should.equal('invalid session id or confirmation code');
+				done();
+			});
+		});
+
 		it('should fail: no id and code', function ( done ) {
 			client.put('/sessions/', {}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(400);
@@ -474,7 +501,7 @@ describe('Sessions', function () {
 	});
 
 
-	describe('wrong requests', function () {
+	describe('not allowed requests', function () {
 		it('should fail: PUT /sessions is not allowed', function ( done ) {
 			client.put('/sessions', {qwe: 123}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(405);

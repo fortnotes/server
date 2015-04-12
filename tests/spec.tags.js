@@ -92,7 +92,7 @@ describe('Tags', function () {
 
 
 	describe('create users tags', function () {
-		it('should fail: wrong data and hash', function ( done ) {
+		it('should fail: no authorization header and data', function ( done ) {
 			// reset session
 			delete client.headers.authorization;
 
@@ -157,6 +157,17 @@ describe('Tags', function () {
 			});
 		});
 
+		it('should fail: too big data', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.put('/tags', {data: new Array(global.config.dataSize + 2).join('*'), hash: 'qwe', amount: 10}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(406);
+				data.code.should.equal('NotAcceptableError');
+				data.message.should.equal('too big tags data or hash');
+				done();
+			});
+		});
+
 		it('should fail: too big hash', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
@@ -168,9 +179,20 @@ describe('Tags', function () {
 			});
 		});
 
+		it('should fail: too big hash and data', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.put('/tags', {data: new Array(global.config.dataSize + 2).join('*'), hash: new Array(global.config.hashSize + 2).join('*'), amount: 10}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(406);
+				data.code.should.equal('NotAcceptableError');
+				data.message.should.equal('too big tags data or hash');
+				done();
+			});
+		});
+
 		it('should pass: add data/hash/amount', function ( done ) {
 			var tagsData   = 'qwe',
-				tagsHash   = 'rty',
+				tagsHash   = 'ac8f8cc1619fe1968457b7e71086b4d5bbe8caa8d2e6da30165ca04c3b928a1da84a4afda983bcd049338881df438dd046c23c7a971705b24af0f7f6ad067b36',
 				tagsAmount = 5;
 
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
@@ -200,7 +222,7 @@ describe('Tags', function () {
 				data.should.have.property('hash');
 				data.should.have.property('time');
 				should(data.data).equal('qwe');
-				should(data.hash).equal('rty');
+				should(data.hash).equal('ac8f8cc1619fe1968457b7e71086b4d5bbe8caa8d2e6da30165ca04c3b928a1da84a4afda983bcd049338881df438dd046c23c7a971705b24af0f7f6ad067b36');
 				data.time.should.not.equal(0);
 				done();
 			});
@@ -245,6 +267,27 @@ describe('Tags', function () {
 					data.tagsAmount.should.equal(0);
 					done();
 				});
+			});
+		});
+	});
+
+
+	describe('not allowed requests', function () {
+		it('should fail: POST /tags is not allowed', function ( done ) {
+			client.post('/tags', {qwe: 123}, function ( error, request, response, data ) {
+				response.statusCode.should.equal(405);
+				data.code.should.equal('MethodNotAllowedError');
+				data.message.should.equal('POST is not allowed');
+				done();
+			});
+		});
+
+		it('should fail: DELETE /tags is not allowed', function ( done ) {
+			client.del('/tags', function ( error, request, response, data ) {
+				response.statusCode.should.equal(405);
+				data.code.should.equal('MethodNotAllowedError');
+				data.message.should.equal('DELETE is not allowed');
+				done();
 			});
 		});
 	});
