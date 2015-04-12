@@ -79,9 +79,7 @@ describe('Tags', function () {
 			client.get('/tags', function ( error, request, response, data ) {
 				response.statusCode.should.equal(200);
 				data.should.be.instanceOf(Object);
-				data.should.have.property('data');
-				data.should.have.property('hash');
-				data.should.have.property('time');
+				data.should.have.keys('data', 'hash', 'time');
 				should(data.data).equal(null);
 				should(data.hash).equal(null);
 				data.time.should.equal(0);
@@ -218,9 +216,7 @@ describe('Tags', function () {
 			client.get('/tags', function ( error, request, response, data ) {
 				response.statusCode.should.equal(200);
 				data.should.be.instanceOf(Object);
-				data.should.have.property('data');
-				data.should.have.property('hash');
-				data.should.have.property('time');
+				data.should.have.keys('data', 'hash', 'time');
 				should(data.data).equal('qwe');
 				should(data.hash).equal('ac8f8cc1619fe1968457b7e71086b4d5bbe8caa8d2e6da30165ca04c3b928a1da84a4afda983bcd049338881df438dd046c23c7a971705b24af0f7f6ad067b36');
 				data.time.should.not.equal(0);

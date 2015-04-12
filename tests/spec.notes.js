@@ -104,7 +104,7 @@ describe('Notes', function () {
 			client.post('/notes', {}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(200);
 				data.should.be.instanceOf(Object);
-				data.should.have.property('id');
+				data.should.have.keys('id');
 				data.id.should.be.instanceOf(Number);
 				userB.noteA.id = data.id;
 				done();
@@ -204,7 +204,7 @@ describe('Notes', function () {
 			client.post('/notes', {}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(200);
 				data.should.be.instanceOf(Object);
-				data.should.have.property('id');
+				data.should.have.keys('id');
 				data.id.should.be.instanceOf(Number);
 				userA.noteA.id = data.id;
 				done();

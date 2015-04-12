@@ -83,8 +83,7 @@ describe('Sessions', function () {
 				response.headers['content-type'].should.equal('application/json');
 				response.body.length.should.equal(Number(response.headers['content-length']));
 				data.should.be.instanceOf(Object);
-				data.should.have.property('id');
-				data.should.have.property('token');
+				data.should.have.keys('id', 'token');
 				data.id.should.equal(Number(data.id));
 
 				// save this session info
@@ -109,8 +108,7 @@ describe('Sessions', function () {
 				response.headers['content-type'].should.equal('application/json');
 				response.body.length.should.equal(Number(response.headers['content-length']));
 				data.should.be.instanceOf(Object);
-				data.should.have.property('id');
-				data.should.have.property('token');
+				data.should.have.keys('id', 'token');
 				data.id.should.equal(Number(data.id));
 
 				// save this session info
@@ -135,8 +133,7 @@ describe('Sessions', function () {
 				response.headers['content-type'].should.equal('application/json');
 				response.body.length.should.equal(Number(response.headers['content-length']));
 				data.should.be.instanceOf(Object);
-				data.should.have.property('id');
-				data.should.have.property('token');
+				data.should.have.keys('id', 'token');
 				data.id.should.equal(Number(data.id));
 
 				// get this session info
@@ -160,8 +157,7 @@ describe('Sessions', function () {
 				response.headers['content-type'].should.equal('application/json');
 				response.body.length.should.equal(Number(response.headers['content-length']));
 				data.should.be.instanceOf(Object);
-				data.should.have.property('id');
-				data.should.have.property('token');
+				data.should.have.keys('id', 'token');
 				data.id.should.equal(Number(data.id));
 
 				// save this session info
