@@ -1,5 +1,5 @@
 define({
-  "name": "FortNotes REST API",
+  "name": "FortNotes REST API Documentation",
   "version": "1.0.0",
   "description": "FortNotes client-server communication protocol.",
   "header": {
@@ -14,7 +14,8 @@ define({
     "Notes",
     "Note",
     "Tags",
-    "Users"
+    "Users",
+    "Profile"
   ],
   "template": {
     "withCompare": true,
@@ -23,7 +24,7 @@ define({
   "apidoc": "0.2.0",
   "generator": {
     "name": "apidoc",
-    "time": "2015-04-06T20:48:57.966Z",
+    "time": "2015-04-12T20:32:17.952Z",
     "url": "http://apidocjs.com",
     "version": "0.12.1"
   }

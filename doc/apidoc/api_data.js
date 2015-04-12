@@ -1,10 +1,10 @@
 define({ "api": [
   {
-    "type": "post",
+    "type": "get",
     "url": "/notes/:id",
-    "title": "Add note data.",
+    "title": "Get a note old values list.",
     "version": "1.0.0",
-    "name": "postNote",
+    "name": "getNote",
     "group": "Note",
     "permission": [
       {
@@ -31,10 +31,142 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Note id.</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
             "type": "string",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Note encrypted data.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "hash",
+            "description": "<p>Hash of note data before encryption.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "time",
+            "description": "<p>Note history record creation time.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n[\n    {\"data\":\"some data\", \"hash\":\"some hash\", \"time\": 1427190024722},\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" http://localhost:9090/notes/128",
+        "type": "curl"
+      }
+    ],
+    "filename": "lib/resources/notes.js",
+    "groupTitle": "Note",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/notes/:id"
+      }
+    ],
+    "error": {
+      "examples": [
+        {
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"empty session token\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 401:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"invalid note id\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"request data is missing\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data search failure\"\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "put",
+    "url": "/notes/:id",
+    "title": "Update a note with new data.",
+    "version": "1.0.0",
+    "name": "putNote",
+    "group": "Note",
+    "permission": [
+      {
+        "name": "authUser",
+        "title": "Authorized user access only.",
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token for the user session.</p> "
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
             "optional": false,
             "field": "id",
             "description": "<p>Note ID.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Note encrypted data.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "hash",
+            "description": "<p>Hash of note data before encryption.</p> "
           }
         ]
       }
@@ -42,7 +174,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" --data \"data=qwe&hash=rty\" --request POST http://localhost:9090/notes",
+        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" --data \"data=qwe&hash=rty\" --request PUT http://localhost:9090/notes/128",
         "type": "curl"
       }
     ],
@@ -55,27 +187,72 @@ define({ "api": [
         }
       ]
     },
+    "filename": "lib/resources/notes.js",
+    "groupTitle": "Note",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/notes/:id"
+      }
+    ],
     "error": {
       "examples": [
         {
-          "title": "Error 400:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"empty session token\"\n}",
           "type": "json"
         },
         {
           "title": "Error 401:",
           "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
           "type": "json"
+        },
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"invalid note id\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 404:",
+          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": \"NotFoundError\",\n    \"message\": \"resource was not found\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"InvalidContentError\",\n    \"message\": \"content data is too big\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"request data is missing\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data search failure\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data creation failure\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data saving failure\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"transaction initialization failure\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"transaction committing failure\"\n}",
+          "type": "json"
         }
       ]
-    },
-    "filename": "resources/notes.js",
-    "groupTitle": "Note",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:9090/notes/:id"
-      }
-    ]
+    }
   },
   {
     "type": "get",
@@ -104,13 +281,6 @@ define({ "api": [
         ]
       }
     },
-    "examples": [
-      {
-        "title": "Example usage:",
-        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" http://localhost:9090/notes",
-        "type": "curl"
-      }
-    ],
     "success": {
       "fields": {
         "Success 200": [
@@ -119,7 +289,21 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "id",
-            "description": "<p>User notes ID.</p> "
+            "description": "<p>User note ID.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Note encrypted data.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "hash",
+            "description": "<p>Hash of note data before encryption.</p> "
           },
           {
             "group": "Success 200",
@@ -147,16 +331,30 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n[\n    {\"id\": 512, \"createTime\": 1427190024722, \"updateTime\": 0, \"readTime\": 0},\n    {\"id\": 513, \"createTime\": 1427190838740, \"updateTime\": 1427201953944, \"readTime\": 0},\n    {\"id\": 513, \"createTime\": 1427190838740, \"updateTime\": 1427201953944, \"readTime\": 1427201959845}\n]",
+          "content": "HTTP/1.1 200 OK\n[\n    {\"id\": 512, \"data\":\"some data\", \"hash\":\"some hash\", \"createTime\": 1427190024722, \"updateTime\": 0, \"readTime\": 0},\n    {\"id\": 513, \"data\":\"some data\", \"hash\":\"some hash\", \"createTime\": 1427190838740, \"updateTime\": 1427201953944, \"readTime\": 0},\n    {\"id\": 513, \"data\":\"some data\", \"hash\":\"some hash\", \"createTime\": 1427190838740, \"updateTime\": 1427201953944, \"readTime\": 1427201959845}\n]",
           "type": "json"
         }
       ]
     },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" http://localhost:9090/notes",
+        "type": "curl"
+      }
+    ],
+    "filename": "lib/resources/notes.js",
+    "groupTitle": "Notes",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/notes"
+      }
+    ],
     "error": {
       "examples": [
         {
-          "title": "Error 400:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"empty session token\"\n}",
           "type": "json"
         },
         {
@@ -166,23 +364,11 @@ define({ "api": [
         },
         {
           "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"notes search failure\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"token search failure\"\n}",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data search failure\"\n}",
           "type": "json"
         }
       ]
-    },
-    "filename": "resources/notes.js",
-    "groupTitle": "Notes",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:9090/notes"
-      }
-    ]
+    }
   },
   {
     "type": "post",
@@ -211,6 +397,26 @@ define({ "api": [
         ]
       }
     },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Note encrypted data.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "hash",
+            "description": "<p>Hash of note data before encryption.</p> "
+          }
+        ]
+      }
+    },
     "examples": [
       {
         "title": "Example usage:",
@@ -227,27 +433,247 @@ define({ "api": [
         }
       ]
     },
+    "filename": "lib/resources/notes.js",
+    "groupTitle": "Notes",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/notes"
+      }
+    ],
     "error": {
       "examples": [
         {
-          "title": "Error 400:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"empty session token\"\n}",
           "type": "json"
         },
         {
           "title": "Error 401:",
           "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
           "type": "json"
+        },
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"InvalidContentError\",\n    \"message\": \"content data is too big\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"request data is missing\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data creation failure\"\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
+    "url": "/profile/pass",
+    "title": "Receive user master password data.",
+    "version": "1.0.0",
+    "name": "getPass",
+    "group": "Profile",
+    "permission": [
+      {
+        "name": "authUser",
+        "title": "Authorized user access only.",
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token for the user session.</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "salt",
+            "description": "<p>User master password salt.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "hash",
+            "description": "<p>User master password sha512 hash.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "time",
+            "description": "<p>User master password modification time.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\n{\"data\":\"...\",\"hash\":\"...\",\"time\":1428777153259}",
+          "type": "json"
         }
       ]
     },
-    "filename": "resources/notes.js",
-    "groupTitle": "Notes",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" http://localhost:9090/profile/pass",
+        "type": "curl"
+      }
+    ],
+    "filename": "lib/resources/profile.js",
+    "groupTitle": "Profile",
     "sampleRequest": [
       {
-        "url": "http://localhost:9090/notes"
+        "url": "http://localhost:9090/profile/pass"
       }
-    ]
+    ],
+    "error": {
+      "examples": [
+        {
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"empty session token\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 401:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data search failure\"\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "put",
+    "url": "/profile/pass",
+    "title": "Save user master password data.",
+    "version": "1.0.0",
+    "name": "setPath",
+    "group": "Profile",
+    "permission": [
+      {
+        "name": "authUser",
+        "title": "Authorized user access only.",
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token for the user session.</p> "
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "salt",
+            "description": "<p>User master password salt.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "hash",
+            "description": "<p>User master password sha512 hash.</p> "
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" --data \"salt=[pass salt]&hash=[sha512 hash of pass]\" --request PUT http://localhost:9090/profile/pass",
+        "type": "curl"
+      }
+    ],
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\ntrue",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "lib/resources/profile.js",
+    "groupTitle": "Profile",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/profile/pass"
+      }
+    ],
+    "error": {
+      "examples": [
+        {
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"empty session token\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 401:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"InvalidContentError\",\n    \"message\": \"content data is too big\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 404:",
+          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": \"NotFoundError\",\n    \"message\": \"resource was not found\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"request data is missing\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data search failure\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data saving failure\"\n}",
+          "type": "json"
+        }
+      ]
+    }
   },
   {
     "type": "delete",
@@ -281,7 +707,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "string",
+            "type": "number",
             "optional": false,
             "field": "id",
             "description": "<p>User session ID.</p> "
@@ -309,16 +735,6 @@ define({ "api": [
       "examples": [
         {
           "title": "Error 400:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session id\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error 400:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error 400:",
           "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"invalid session\"\n}",
           "type": "json"
         },
@@ -328,13 +744,33 @@ define({ "api": [
           "type": "json"
         },
         {
+          "title": "Error 404:",
+          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": \"NotFoundError\",\n    \"message\": \"resource was not found\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"empty session token\"\n}",
+          "type": "json"
+        },
+        {
           "title": "Error 401:",
           "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": \"UnauthorizedError\",\n    \"message\": \"invalid session\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"request data is missing\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data saving failure\"\n}",
           "type": "json"
         }
       ]
     },
-    "filename": "resources/sessions.js",
+    "filename": "lib/resources/sessions.js",
     "groupTitle": "Session",
     "sampleRequest": [
       {
@@ -359,7 +795,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "string",
+            "type": "number",
             "optional": false,
             "field": "id",
             "description": "<p>User session ID.</p> "
@@ -399,17 +835,27 @@ define({ "api": [
         },
         {
           "title": "Error 404:",
-          "content": "HTTP/1.1 400 Not Found\n{\n    \"code\": \"NotFoundError\",\n    \"message\": \"session was not found\"\n}",
+          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": \"NotFoundError\",\n    \"message\": \"resource was not found\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"request data is missing\"\n}",
           "type": "json"
         },
         {
           "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"session saving failure\"\n}",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data search failure\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data saving failure\"\n}",
           "type": "json"
         }
       ]
     },
-    "filename": "resources/sessions.js",
+    "filename": "lib/resources/sessions.js",
     "groupTitle": "Session",
     "sampleRequest": [
       {
@@ -444,13 +890,6 @@ define({ "api": [
         ]
       }
     },
-    "examples": [
-      {
-        "title": "Example usage:",
-        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" http://localhost:9090/sessions",
-        "type": "curl"
-      }
-    ],
     "success": {
       "fields": {
         "Success 200": [
@@ -492,11 +931,25 @@ define({ "api": [
         }
       ]
     },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" http://localhost:9090/sessions",
+        "type": "curl"
+      }
+    ],
+    "filename": "lib/resources/sessions.js",
+    "groupTitle": "Sessions",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/sessions"
+      }
+    ],
     "error": {
       "examples": [
         {
-          "title": "Error 400:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"empty session token\"\n}",
           "type": "json"
         },
         {
@@ -506,23 +959,11 @@ define({ "api": [
         },
         {
           "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"sessions search failure\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"token search failure\"\n}",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data search failure\"\n}",
           "type": "json"
         }
       ]
-    },
-    "filename": "resources/sessions.js",
-    "groupTitle": "Sessions",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:9090/sessions"
-      }
-    ]
+    }
   },
   {
     "type": "post",
@@ -549,19 +990,12 @@ define({ "api": [
         ]
       }
     },
-    "examples": [
-      {
-        "title": "Example usage:",
-        "content": "curl --include --data \"email=test@gmail.com\" http://localhost:9090/sessions",
-        "type": "curl"
-      }
-    ],
     "success": {
       "fields": {
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "string",
+            "type": "number",
             "optional": false,
             "field": "id",
             "description": "<p>Generated user session ID.</p> "
@@ -583,26 +1017,43 @@ define({ "api": [
         }
       ]
     },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include --data \"email=test@gmail.com\" http://localhost:9090/sessions",
+        "type": "curl"
+      }
+    ],
     "error": {
       "examples": [
-        {
-          "title": "Error 400:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"empty or invalid email address\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"session creation failure\"\n}",
-          "type": "json"
-        },
         {
           "title": "Error 500:",
           "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"RNG failure\"\n}",
           "type": "json"
+        },
+        {
+          "title": "Error 404:",
+          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": \"NotFoundError\",\n    \"message\": \"resource was not found\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"InvalidContentError\",\n    \"message\": \"content data is too big\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"request data is missing\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data creation failure\"\n}",
+          "type": "json"
         }
       ]
     },
-    "filename": "resources/sessions.js",
+    "filename": "lib/resources/sessions.js",
     "groupTitle": "Sessions",
     "sampleRequest": [
       {
@@ -637,26 +1088,19 @@ define({ "api": [
         ]
       }
     },
-    "examples": [
-      {
-        "title": "Example usage:",
-        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" http://localhost:9090/tags",
-        "type": "curl"
-      }
-    ],
     "success": {
       "fields": {
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "number",
+            "type": "string",
             "optional": false,
             "field": "data",
             "description": "<p>User tags encrypted data.</p> "
           },
           {
             "group": "Success 200",
-            "type": "number",
+            "type": "string",
             "optional": false,
             "field": "hash",
             "description": "<p>Hash of tags data before encryption.</p> "
@@ -673,7 +1117,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success (no tags):",
-          "content": "HTTP/1.1 200 OK\n\n{\"data\":null,\"hash\":null,\"time\":0}",
+          "content": "HTTP/1.1 200 OK\n\n{\"data\":\"...\",\"hash\":\"...\",\"time\":1428777153259}",
           "type": "json"
         },
         {
@@ -683,11 +1127,25 @@ define({ "api": [
         }
       ]
     },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" http://localhost:9090/tags",
+        "type": "curl"
+      }
+    ],
+    "filename": "lib/resources/tags.js",
+    "groupTitle": "Tags",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/tags"
+      }
+    ],
     "error": {
       "examples": [
         {
-          "title": "Error 400:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"empty session token\"\n}",
           "type": "json"
         },
         {
@@ -697,23 +1155,11 @@ define({ "api": [
         },
         {
           "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"tags search failure\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"token search failure\"\n}",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data search failure\"\n}",
           "type": "json"
         }
       ]
-    },
-    "filename": "resources/tags.js",
-    "groupTitle": "Tags",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:9090/tags"
-      }
-    ]
+    }
   },
   {
     "type": "put",
@@ -742,33 +1188,40 @@ define({ "api": [
         ]
       }
     },
-    "examples": [
-      {
-        "title": "Example usage:",
-        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" --data \"data=qwe&hash=rty\" --request PUT http://localhost:9090/tags",
-        "type": "curl"
-      }
-    ],
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "string",
             "optional": false,
             "field": "data",
             "description": "<p>User tags encrypted data.</p> "
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "string",
             "optional": false,
             "field": "hash",
             "description": "<p>Hash of tags data before encryption.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "amount",
+            "description": "<p>Amount of user tags in tags encrypted data.</p> "
           }
         ]
       }
     },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl --include --header \"Authorization: Bearer 5nNOF+dNQaHvq...\" --data \"data=[encrypted data]&hash=[sha512 hash of data]&amount=16\" --request PUT http://localhost:9090/tags",
+        "type": "curl"
+      }
+    ],
     "success": {
       "examples": [
         {
@@ -778,16 +1231,18 @@ define({ "api": [
         }
       ]
     },
+    "filename": "lib/resources/tags.js",
+    "groupTitle": "Tags",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:9090/tags"
+      }
+    ],
     "error": {
       "examples": [
         {
-          "title": "Error 400:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"invalid tags data or hash\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error 400:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"BadRequestError\",\n    \"message\": \"no session token\"\n}",
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"empty session token\"\n}",
           "type": "json"
         },
         {
@@ -796,29 +1251,32 @@ define({ "api": [
           "type": "json"
         },
         {
-          "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"tags receiving failure\"\n}",
+          "title": "Error 400:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": \"InvalidContentError\",\n    \"message\": \"content data is too big\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 404:",
+          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": \"NotFoundError\",\n    \"message\": \"resource was not found\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"request data is missing\"\n}",
           "type": "json"
         },
         {
           "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"tags saving failure\"\n}",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data search failure\"\n}",
           "type": "json"
         },
         {
           "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"token search failure\"\n}",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data saving failure\"\n}",
           "type": "json"
         }
       ]
-    },
-    "filename": "resources/tags.js",
-    "groupTitle": "Tags",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:9090/tags"
-      }
-    ]
+    }
   },
   {
     "type": "get",
@@ -861,21 +1319,31 @@ define({ "api": [
         }
       ]
     },
-    "error": {
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n\n{\"error\": \"empty or invalid email address\"}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "resources/users.js",
+    "filename": "lib/resources/users.js",
     "groupTitle": "Users",
     "sampleRequest": [
       {
         "url": "http://localhost:9090/users/:email/keys/current"
       }
-    ]
+    ],
+    "error": {
+      "examples": [
+        {
+          "title": "Error 404:",
+          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": \"NotFoundError\",\n    \"message\": \"resource was not found\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 409:",
+          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"request data is missing\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data search failure\"\n}",
+          "type": "json"
+        }
+      ]
+    }
   }
 ] });
