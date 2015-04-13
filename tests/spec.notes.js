@@ -137,20 +137,9 @@ describe('Notes', function () {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
 			client.get('/notes/teapot', function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('invalid note id');
-				done();
-			});
-		});
-
-		it('should fail: userB note history of userA note', function ( done ) {
-			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
-
-			client.get('/notes/' + userA.noteA.id, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('invalid note id');
+				response.statusCode.should.equal(409);
+				data.code.should.equal('MissingParameter');
+				data.message.should.equal('empty note id');
 				done();
 			});
 		});
@@ -286,6 +275,17 @@ describe('Notes', function () {
 				data.should.have.keys('id');
 				data.id.should.not.equal(0).and.be.instanceOf(Number);
 				userA.noteA.id = data.id;
+				done();
+			});
+		});
+
+		it('should fail: userB note history of userA note', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+			console.log(userA.noteA.id);
+			client.get('/notes/' + userA.noteA.id, function ( error, request, response, data ) {
+				response.statusCode.should.equal(400);
+				data.code.should.equal('BadRequestError');
+				data.message.should.equal('invalid note id');
 				done();
 			});
 		});
