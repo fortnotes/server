@@ -59,6 +59,8 @@ Where the content of `config.json`:
 	"port": 9090,
 	"dataSize": 1048576,
     "hashSize": 128,
+    "dataLimit": 20,
+    "dataLimitMax": 200,
 	"restify": {
 		"name": "FortNotes API REST Server"
 	},
