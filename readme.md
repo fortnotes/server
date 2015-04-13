@@ -91,6 +91,8 @@ There are some config file examples for
  port                    | HTTP port serving REST API requests
  dataSize                | encrypted data size (notes, tags)
  hashSize                | notes/tags sha512 hash size
+ dataLimit               | default amount of returned records in lists of notes, sessions etc.
+ dataLimitMax            | maximum amount of returned records in lists
  restify                 | server creation options passed to [restify](http://mcavage.me/node-restify/#creating-a-server)
  session.tokenSize       | generated token size in bytes
  session.confirmCodeSize | generated token confirmation code size in bytes

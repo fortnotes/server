@@ -277,21 +277,11 @@ describe('Sessions', function () {
 		});
 
 		it('should pass: deactivate sessionA and set max attempts', function ( done ) {
-			db.transaction(function ( error, transaction ) {
+			db.models.sessions.get(userA.sessionA.id, function ( error, session ) {
 				should.not.exist(error);
-
-				db.models.sessions.get(userA.sessionA.id, function ( error, session ) {
+				session.save({confirmTime: 0, confirmAttempts: global.config.session.confirmAttempts}, function ( error ) {
 					should.not.exist(error);
-
-					session.save({confirmTime: 0, confirmAttempts: global.config.session.confirmAttempts}, function ( error ) {
-						should.not.exist(error);
-
-						transaction.commit(function ( error ) {
-							should.not.exist(error);
-
-							done();
-						});
-					});
+					done();
 				});
 			});
 		});
@@ -366,8 +356,32 @@ describe('Sessions', function () {
 				response.statusCode.should.equal(200);
 				data.should.be.instanceOf(Object);
 				data.length.should.equal(2);
+				data[0].id.should.equal(userA.sessionB.id);
+				data[1].id.should.equal(userA.sessionA.id);
+				done();
+			});
+		});
+
+		it('should pass: get userA sessions with limit', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userA.sessionB.token;
+
+			client.get('/sessions?limit=1', function ( error, request, response, data ) {
+				response.statusCode.should.equal(200);
+				data.should.be.instanceOf(Object);
+				data.length.should.equal(1);
+				data[0].id.should.equal(userA.sessionB.id);
+				done();
+			});
+		});
+
+		it('should pass: get userA sessions with offset', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userA.sessionB.token;
+
+			client.get('/sessions?offset=1', function ( error, request, response, data ) {
+				response.statusCode.should.equal(200);
+				data.should.be.instanceOf(Object);
+				data.length.should.equal(1);
 				data[0].id.should.equal(userA.sessionA.id);
-				data[1].id.should.equal(userA.sessionB.id);
 				done();
 			});
 		});

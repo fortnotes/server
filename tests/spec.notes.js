@@ -255,6 +255,32 @@ describe('Notes', function () {
 			});
 		});
 
+		it('should pass: userB note history with limit', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.get('/notes/' + userB.noteA.id + '?limit=1', function ( error, request, response, data ) {
+				response.statusCode.should.equal(200);
+				data.should.be.instanceOf(Array);
+				data.should.have.length(1);
+				data[0].should.have.keys('data', 'hash', 'time');
+				data[0].data.should.equal('userB note #1 updated');
+				done();
+			});
+		});
+
+		it('should pass: userB note history with offset', function ( done ) {
+			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
+
+			client.get('/notes/' + userB.noteA.id + '?offset=1', function ( error, request, response, data ) {
+				response.statusCode.should.equal(200);
+				data.should.be.instanceOf(Array);
+				data.should.have.length(1);
+				data[0].should.have.keys('data', 'hash', 'time');
+				data[0].data.should.equal('userB note #1');
+				done();
+			});
+		});
+
 		it('should pass: reactivate userA sessionB', function ( done ) {
 			db.models.sessions.get(userA.sessionB.id, function ( error, session ) {
 				should.not.exist(error);
@@ -281,7 +307,6 @@ describe('Notes', function () {
 
 		it('should fail: userB note history of userA note', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
-			console.log(userA.noteA.id);
 			client.get('/notes/' + userA.noteA.id, function ( error, request, response, data ) {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('BadRequestError');
@@ -318,8 +343,6 @@ describe('Notes', function () {
 		});
 
 		it('should pass: userB note list', function ( done ) {
-			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
-
 			client.get('/notes', function ( error, request, response, data ) {
 				response.statusCode.should.equal(200);
 				data.should.be.instanceOf(Array);
@@ -327,6 +350,28 @@ describe('Notes', function () {
 				data[0].should.have.keys('id', 'data', 'hash', 'createTime', 'updateTime', 'readTime');
 				data[0].data.should.equal('userB note #2');
 				data[0].updateTime.should.be.greaterThan(data[1].updateTime);
+				done();
+			});
+		});
+
+		it('should pass: userB note list with limit', function ( done ) {
+			client.get('/notes?limit=1', function ( error, request, response, data ) {
+				response.statusCode.should.equal(200);
+				data.should.be.instanceOf(Array);
+				data.should.have.length(1);
+				data[0].should.have.keys('id', 'data', 'hash', 'createTime', 'updateTime', 'readTime');
+				data[0].id.should.equal(userB.noteB.id);
+				done();
+			});
+		});
+
+		it('should pass: userB note list with offset', function ( done ) {
+			client.get('/notes?offset=1', function ( error, request, response, data ) {
+				response.statusCode.should.equal(200);
+				data.should.be.instanceOf(Array);
+				data.should.have.length(1);
+				data[0].should.have.keys('id', 'data', 'hash', 'createTime', 'updateTime', 'readTime');
+				data[0].id.should.equal(userB.noteA.id);
 				done();
 			});
 		});

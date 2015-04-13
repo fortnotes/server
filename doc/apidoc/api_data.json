@@ -1,7 +1,7 @@
 [
   {
     "type": "get",
-    "url": "/notes/:id",
+    "url": "/notes/:id?limit=:limit&offset=:offset",
     "title": "Get a note old values list.",
     "version": "1.0.0",
     "name": "getNote",
@@ -35,6 +35,21 @@
             "optional": false,
             "field": "id",
             "description": "<p>Note id.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "params.limit",
+            "description": "<p>Maximum number of records to return.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "params.offset",
+            "defaultValue": "0",
+            "description": "<p>Offset of the first record to return.</p> "
           }
         ]
       }
@@ -84,7 +99,7 @@
     "groupTitle": "Note",
     "sampleRequest": [
       {
-        "url": "http://localhost:9090/notes/:id"
+        "url": "http://localhost:9090/notes/:id?limit=:limit&offset=:offset"
       }
     ],
     "error": {
@@ -256,7 +271,7 @@
   },
   {
     "type": "get",
-    "url": "/notes",
+    "url": "/notes?limit=:limit&offset=:offset",
     "title": "Receive a list of user notes.",
     "version": "1.0.0",
     "name": "getNotes",
@@ -277,6 +292,27 @@
             "optional": false,
             "field": "Authorization",
             "description": "<p>Bearer token for the user session.</p> "
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "params.limit",
+            "description": "<p>Maximum number of records to return.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "params.offset",
+            "defaultValue": "0",
+            "description": "<p>Offset of the first record to return.</p> "
           }
         ]
       }
@@ -347,7 +383,7 @@
     "groupTitle": "Notes",
     "sampleRequest": [
       {
-        "url": "http://localhost:9090/notes"
+        "url": "http://localhost:9090/notes?limit=:limit&offset=:offset"
       }
     ],
     "error": {
@@ -865,7 +901,7 @@
   },
   {
     "type": "get",
-    "url": "/sessions",
+    "url": "/sessions?limit=:limit&offset=:offset",
     "title": "Receive a list of a user sessions.",
     "version": "1.0.0",
     "name": "getSessions",
@@ -886,6 +922,27 @@
             "optional": false,
             "field": "Authorization",
             "description": "<p>Bearer token for the user session.</p> "
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "params.limit",
+            "description": "<p>Maximum number of records to return.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "params.offset",
+            "defaultValue": "0",
+            "description": "<p>Offset of the first record to return.</p> "
           }
         ]
       }
@@ -942,7 +999,7 @@
     "groupTitle": "Sessions",
     "sampleRequest": [
       {
-        "url": "http://localhost:9090/sessions"
+        "url": "http://localhost:9090/sessions?limit=:limit&offset=:offset"
       }
     ],
     "error": {
