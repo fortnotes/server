@@ -14,16 +14,16 @@ The current stable version can be found on the [Bitbucket](https://bitbucket.org
 [Node.js](http://nodejs.org/) and [NPM](https://www.npmjs.com/) should be installed beforehand.
 Please follow the official [instruction](http://nodejs.org/download/).
 
-FortNotes Server is available as an [npm package](https://www.npmjs.org/package/fortnotes-server) and should be installed globally:
+FortNotes Server is available as an [npm package](https://www.npmjs.org/package/fortnotes) and should be installed globally:
 
 ```bash
-npm install -g fortnotes-server
+npm install -g fortnotes
 ```
 
 In Linux this can be done as a root:
 
 ```bash
-sudo npm install -g fortnotes-server
+sudo npm install -g fortnotes
 ```
 
 Then to start a server with default options:
@@ -114,7 +114,7 @@ cd server
 Install global dependencies:
 
 ```bash
-sudo npm install -g node-dev
+sudo npm install -g gulp node-dev
 ```
 
 Then install local dependencies:
