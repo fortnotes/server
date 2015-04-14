@@ -902,7 +902,7 @@
   {
     "type": "get",
     "url": "/sessions?limit=:limit&offset=:offset",
-    "title": "Receive a list of a user sessions.",
+    "title": "Receive a list of user sessions.",
     "version": "1.0.0",
     "name": "getSessions",
     "group": "Sessions",
