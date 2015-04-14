@@ -367,7 +367,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n[\n    {\"id\": 512, \"data\":\"some data\", \"hash\":\"some hash\", \"createTime\": 1427190024722, \"updateTime\": 0, \"readTime\": 0},\n    {\"id\": 513, \"data\":\"some data\", \"hash\":\"some hash\", \"createTime\": 1427190838740, \"updateTime\": 1427201953944, \"readTime\": 0},\n    {\"id\": 513, \"data\":\"some data\", \"hash\":\"some hash\", \"createTime\": 1427190838740, \"updateTime\": 1427201953944, \"readTime\": 1427201959845}\n]",
+          "content": "HTTP/1.1 200 OK\n[\n    {\"id\": 512, \"data\":\"some data\", \"hash\":\"some hash\", \"createTime\": 1427190835555, \"updateTime\": 0, \"readTime\": 0},\n    {\"id\": 513, \"data\":\"some data\", \"hash\":\"some hash\", \"createTime\": 1427190833333, \"updateTime\": 1427201953944, \"readTime\": 0},\n    {\"id\": 513, \"data\":\"some data\", \"hash\":\"some hash\", \"createTime\": 1427190831111, \"updateTime\": 1427201953944, \"readTime\": 1427201959845}\n]",
           "type": "json"
         }
       ]
@@ -983,7 +983,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n[\n    {\"id\": 128, \"createTime\": 1427190024722, \"confirmTime\": 0, \"deleteTime\": 0},\n    {\"id\": 129, \"createTime\": 1427190838740, \"confirmTime\": 1427201953944, \"deleteTime\": 0},\n    {\"id\": 129, \"createTime\": 1427190838740, \"confirmTime\": 1427201953944, \"deleteTime\": 1427201959845}\n]",
+          "content": "HTTP/1.1 200 OK\n[\n    {\"id\": 128, \"createTime\": 1427190835555, \"confirmTime\": 0, \"deleteTime\": 0},\n    {\"id\": 129, \"createTime\": 1427190833333, \"confirmTime\": 1427201953944, \"deleteTime\": 0},\n    {\"id\": 129, \"createTime\": 1427190831111, \"confirmTime\": 1427201953944, \"deleteTime\": 1427201959845}\n]",
           "type": "json"
         }
       ]
@@ -1330,74 +1330,6 @@
         {
           "title": "Error 500:",
           "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data saving failure\"\n}",
-          "type": "json"
-        }
-      ]
-    }
-  },
-  {
-    "type": "get",
-    "url": "/users/:email/keys/current",
-    "title": "Get user public key by email.",
-    "version": "1.0.0",
-    "name": "getUserKey",
-    "group": "Users",
-    "permission": [
-      {
-        "name": "none"
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "email",
-            "description": "<p>User email address.</p> "
-          }
-        ]
-      }
-    },
-    "examples": [
-      {
-        "title": "Example usage:",
-        "content": "curl --include http://localhost:9090/users/test@gmail.com/keys/current",
-        "type": "curl"
-      }
-    ],
-    "success": {
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n\n{\"key\": \"[key data]\"}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "lib/resources/users.js",
-    "groupTitle": "Users",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:9090/users/:email/keys/current"
-      }
-    ],
-    "error": {
-      "examples": [
-        {
-          "title": "Error 404:",
-          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": \"NotFoundError\",\n    \"message\": \"resource was not found\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error 409:",
-          "content": "HTTP/1.1 409 Conflict\n{\n    \"code\": \"MissingParameterError\",\n    \"message\": \"request data is missing\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error 500:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"data search failure\"\n}",
           "type": "json"
         }
       ]
