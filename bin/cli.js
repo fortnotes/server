@@ -16,7 +16,7 @@ program
 	.option('-t, --test', 'run tests and exit')
 	//.option('-t, --api-token-size <number>', 'HTTP port to listen [96]', 96)
 	//.option('-c, --config <file>', 'path to the configuration options file [~/.fortnotes/config.json]', path.join(process.env.HOME || process.env.USERPROFILE, '.fortnotes', 'config.json'))
-	.option('-c, --config <file>', 'path to the configuration options JSON file', path.join(__dirname, '..', 'config.json'))
+	.option('-c, --config <file>', 'path to the configuration options JSON file', path.join(__dirname, '..', 'config', 'sqlite.json'))
 	//.option('-p, --port <number>', 'HTTP port to listen [9090]', 9090)
 	//.option('-d, --db-uri <uri>', 'database connection URI', 'sqlite://' + path.join(process.env.HOME || process.env.USERPROFILE, '.fortnotes', 'data.sqlite'))
 ;
