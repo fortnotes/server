@@ -1,5 +1,5 @@
 {
-	"name": "FortNotes REST API",
+	"name": "FortNotes REST API Documentation",
 	"version": "1.0.0",
 	"description": "FortNotes client-server communication protocol.",
 	"header": {
@@ -14,7 +14,8 @@
 		"Notes",
 		"Note",
 		"Tags",
-		"Users"
+		"Users",
+		"Profile"
 	],
 	"template": {
 		"withCompare": true,
