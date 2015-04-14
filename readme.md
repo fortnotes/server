@@ -9,7 +9,7 @@ This repo is for a new fully redesigned and reworked version.
 The current stable version can be found on the [Bitbucket](https://bitbucket.org/DarkPark/fortnotes).
 
 
-## Getting Started
+## Getting Started ##
 
 [Node.js](http://nodejs.org/) and [NPM](https://www.npmjs.com/) should be installed beforehand.
 Please follow the official [instruction](http://nodejs.org/download/).
@@ -32,7 +32,7 @@ Then to start a server with default options:
 fortnotes
 ```
 
-## Usage
+## Usage ##
 
 General way of usage:
 
@@ -129,6 +129,11 @@ Now you can start it like this:
 node-dev ./bin/cli.js --config ../config/sqlite.json --debug
 ```
 
+Full REST API documentation is built from source files and available [online](https://fortnotes.github.io/server/).
+
+
+## Testing ##
+
 It's possible to run all tests locally with given config:
 
 ```bash
@@ -138,6 +143,6 @@ fortnotes --config ~/.fortnotes/config.json --test
 Tests are also run on [Travis CI](https://travis-ci.org/fortnotes/server) for node versions `0.10.x`, `0.12.x` and `iojs`.
 
 
-## License
+## License ##
 
 FortNotes Server is released under the [GPL-3.0 License](http://opensource.org/licenses/GPL-3.0).
