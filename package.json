@@ -27,10 +27,10 @@
 		"test": "node ./bin/cli.js --test --config ../config/memory.json"
 	},
 	"dependencies": {
-		"commander": "^2.7.0",
+		"commander": "^2.8.0",
 		"isemail": "^1.1.1",
 		"ip": "^0.3.2",
-		"mysql": "^2.6.1",
+		"mysql": "^2.6.2",
 		"mocha": "^2.2.1",
 		"orm": "^2.1.24",
 		"orm-transaction": "^0.0.2",
