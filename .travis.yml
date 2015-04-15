@@ -7,7 +7,7 @@ sudo: false
 services:
     - mysql
 install:
-    - npm install
+    - npm install -g fortnotes
 cache:
     directories:
         - node_modules
@@ -15,7 +15,7 @@ before_script:
     - mysql -e "create database fortnotes;"
     - psql -c "create database fortnotes;" -U postgres
 script:
-    - node ./bin/cli.js --test --config ../config/mysql.json
-    - node ./bin/cli.js --test --config ../config/postgres.json
-    - node ./bin/cli.js --test --config ../config/sqlite.json
-    - node ./bin/cli.js --test --config ../config/memory.json
+    - fortnotes --test
+    - fortnotes --test --config ../config/mysql.json
+    - fortnotes --test --config ../config/postgres.json
+    - fortnotes --test --config ../config/memory.json
