@@ -12,6 +12,7 @@
 
 var should  = require('should'),
 	restify = require('restify'),
+	config  = require('../config'),
 	db      = require('../lib/db'),
 	data    = require('./data'),
 	userA   = data.userA,
@@ -20,9 +21,9 @@ var should  = require('should'),
 
 describe('Tags', function () {
 	var client = restify.createJsonClient({
-		url: 'http://localhost:9090',
-		version: '*'
-	});
+			url: 'http://localhost:' + config.port,
+			version: '*'
+		});
 
 	after(function () {
 		// need to close all connections manually
@@ -158,7 +159,7 @@ describe('Tags', function () {
 		it('should fail: too big data', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
-			client.put('/tags', {data: new Array(global.config.dataSize + 2).join('*'), hash: 'qwe', amount: 10}, function ( error, request, response, data ) {
+			client.put('/tags', {data: new Array(config.dataSize + 2).join('*'), hash: 'qwe', amount: 10}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('InvalidContent');
 				data.message.should.equal('content data is too big');
@@ -169,7 +170,7 @@ describe('Tags', function () {
 		it('should fail: too big hash', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
-			client.put('/tags', {data: 'tagsData', hash: new Array(global.config.hashSize + 2).join('*'), amount: 10}, function ( error, request, response, data ) {
+			client.put('/tags', {data: 'tagsData', hash: new Array(config.hashSize + 2).join('*'), amount: 10}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('InvalidContent');
 				data.message.should.equal('content data is too big');
@@ -180,7 +181,7 @@ describe('Tags', function () {
 		it('should fail: too big hash and data', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
-			client.put('/tags', {data: new Array(global.config.dataSize + 2).join('*'), hash: new Array(global.config.hashSize + 2).join('*'), amount: 10}, function ( error, request, response, data ) {
+			client.put('/tags', {data: new Array(config.dataSize + 2).join('*'), hash: new Array(config.hashSize + 2).join('*'), amount: 10}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('InvalidContent');
 				data.message.should.equal('content data is too big');

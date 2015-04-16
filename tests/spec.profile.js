@@ -12,6 +12,7 @@
 
 var should  = require('should'),
 	restify = require('restify'),
+	config  = require('../config'),
 	db      = require('../lib/db'),
 	data    = require('./data'),
 	userA   = data.userA,
@@ -20,9 +21,9 @@ var should  = require('should'),
 
 describe('Profile', function () {
 	var client = restify.createJsonClient({
-		url: 'http://localhost:9090',
-		version: '*'
-	});
+			url: 'http://localhost:' + config.port,
+			version: '*'
+		});
 
 	after(function () {
 		// need to close all connections manually
@@ -98,7 +99,7 @@ describe('Profile', function () {
 		it('should fail: too big salt', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
-			client.put('/profile/pass', {salt: new Array(global.config.hashSize + 2).join('*'), hash: 'qwe'}, function ( error, request, response, data ) {
+			client.put('/profile/pass', {salt: new Array(config.hashSize + 2).join('*'), hash: 'qwe'}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('InvalidContent');
 				data.message.should.equal('content data is too big');
@@ -109,7 +110,7 @@ describe('Profile', function () {
 		it('should fail: too big hash', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
-			client.put('/profile/pass', {salt: 'qwe', hash: new Array(global.config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
+			client.put('/profile/pass', {salt: 'qwe', hash: new Array(config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('InvalidContent');
 				data.message.should.equal('content data is too big');
@@ -120,7 +121,7 @@ describe('Profile', function () {
 		it('should fail: too big salt and hash', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
-			client.put('/profile/pass', {salt: new Array(global.config.hashSize + 2).join('*'), hash: new Array(global.config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
+			client.put('/profile/pass', {salt: new Array(config.hashSize + 2).join('*'), hash: new Array(config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('InvalidContent');
 				data.message.should.equal('content data is too big');

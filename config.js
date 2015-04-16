@@ -18,13 +18,13 @@ module.exports = {
 	// HTTP port serving REST API requests
 	port: 9090,
 
-	// encrypted data size (notes, tags)
+	// maximum encrypted data size (notes, tags, etc.)
 	dataSize: 1048576,
 
 	// notes/tags sha512 hash size
 	hashSize: 128,
 
-	// default amount of returned records in lists of notes, sessions etc.
+	// default amount of returned records in lists of notes, sessions, etc.
 	dataLimit: 20,
 
 	// maximum amount of returned records in lists

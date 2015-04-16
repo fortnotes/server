@@ -12,6 +12,7 @@
 
 var should  = require('should'),
 	restify = require('restify'),
+	config  = require('../config'),
 	db      = require('../lib/db'),
 	data    = require('./data'),
 	userA   = data.userA,
@@ -20,9 +21,9 @@ var should  = require('should'),
 
 describe('Notes', function () {
 	var client = restify.createJsonClient({
-		url: 'http://localhost:9090',
-		version: '*'
-	});
+			url: 'http://localhost:' + config.port,
+			version: '*'
+		});
 
 	after(function () {
 		// need to close all connections manually
@@ -191,7 +192,7 @@ describe('Notes', function () {
 		it('should fail: add userB new note data with too big data', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
-			client.put('/notes/' + userB.noteA.id, {data: new Array(global.config.dataSize + 2).join('*'), hash: 'zxc'}, function ( error, request, response, data ) {
+			client.put('/notes/' + userB.noteA.id, {data: new Array(config.dataSize + 2).join('*'), hash: 'zxc'}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('InvalidContent');
 				data.message.should.equal('content data is too big');
@@ -202,7 +203,7 @@ describe('Notes', function () {
 		it('should fail: add userB new note data with too big hash', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
-			client.put('/notes/' + userB.noteA.id, {data: 'some data', hash: new Array(global.config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
+			client.put('/notes/' + userB.noteA.id, {data: 'some data', hash: new Array(config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('InvalidContent');
 				data.message.should.equal('content data is too big');
@@ -213,7 +214,7 @@ describe('Notes', function () {
 		it('should fail: add userB new note data with too big data and hash', function ( done ) {
 			client.headers.authorization = 'Bearer ' + userB.sessionB.token;
 
-			client.put('/notes/' + userB.noteA.id, {data: new Array(global.config.dataSize + 2).join('*'), hash: new Array(global.config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
+			client.put('/notes/' + userB.noteA.id, {data: new Array(config.dataSize + 2).join('*'), hash: new Array(config.hashSize + 2).join('*')}, function ( error, request, response, data ) {
 				response.statusCode.should.equal(400);
 				data.code.should.equal('InvalidContent');
 				data.message.should.equal('content data is too big');

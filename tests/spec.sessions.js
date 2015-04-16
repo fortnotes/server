@@ -12,6 +12,7 @@
 
 var should  = require('should'),
 	restify = require('restify'),
+	config  = require('../config'),
 	db      = require('../lib/db'),
 	data    = require('./data'),
 	userA   = data.userA,
@@ -20,7 +21,7 @@ var should  = require('should'),
 
 describe('Sessions', function () {
 	var client = restify.createJsonClient({
-			url: 'http://localhost:9090',
+			url: 'http://localhost:' + config.port,
 			version: '*'
 		});
 
@@ -267,19 +268,10 @@ describe('Sessions', function () {
 			});
 		});
 
-		it('should fail: already active sessionA', function ( done ) {
-			client.put('/sessions/' + userA.sessionA.id, {code: userA.sessionA.code}, function ( error, request, response, data ) {
-				response.statusCode.should.equal(400);
-				data.code.should.equal('BadRequestError');
-				data.message.should.equal('invalid session or confirmation code');
-				done();
-			});
-		});
-
 		it('should pass: deactivate sessionA and set max attempts', function ( done ) {
 			db.models.sessions.get(userA.sessionA.id, function ( error, session ) {
 				should.not.exist(error);
-				session.save({confirmTime: 0, confirmAttempts: global.config.session.confirmAttempts}, function ( error ) {
+				session.save({confirmTime: 0, confirmAttempts: config.sessionConfirmAttempts}, function ( error ) {
 					should.not.exist(error);
 					done();
 				});

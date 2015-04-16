@@ -17,7 +17,7 @@ gulp.task('lint', function () {
 	return gulp
 		.src([
 			'./bin/**/*.js',
-			'./config/**/*.js',
+			'./configs/**/*.js',
 			'./lib/**/*.js',
 			'./tests/**/*.js'
 		])

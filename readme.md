@@ -81,26 +81,32 @@ Where the content of `config.json`:
 - SQLite
 
 There are some config file examples for
-[mysql](config/mysql.json),
-[postgres](config/postgres.json),
-[sqlite](config/sqlite.json) and
-[sqlite in memory](config/memory.json).
+[mysql](tests/configs/mysql.json),
+[postgres](tests/configs/postgres.json),
+[sqlite in memory](tests/configs/sqlite.json) and
+[other options](tests/configs/options.json).
 
 #### Config file options
 
  Name                    | Description
 -------------------------|-------------
+ debug                   | enable verbose debug mode
+ test                    | run tests and exit
  port                    | HTTP port serving REST API requests
- dataSize                | encrypted data size (notes, tags)
+ dataSize                | maximum encrypted data size (notes, tags)
  hashSize                | notes/tags sha512 hash size
  dataLimit               | default amount of returned records in lists of notes, sessions etc.
  dataLimitMax            | maximum amount of returned records in lists
- restify                 | server creation options passed to [restify](http://mcavage.me/node-restify/#creating-a-server)
- session.tokenSize       | generated token size in bytes
- session.confirmCodeSize | generated token confirmation code size in bytes
- session.confirmAttempts | allowed amount of attempts to activate sessions
- database                | database connection options passed to [node-orm2](https://github.com/dresende/node-orm2/wiki/Connecting-to-Database)
+ sessionTokenSize        | generated token size in bytes
+ sessionConfirmCodeSize  | generated token confirmation code size in bytes
+ sessionConfirmAttempts  | allowed amount of attempts to activate sessions
+ mailTransportType       | nodemailer transport [type](http://adilapapaya.com/docs/nodemailer/#possibletransportmethods)
+ mailTransportConfig     | nodemailer transport [configuration](http://adilapapaya.com/docs/nodemailer/#globaltransportoptions)
+ mailOptions             | nodemailer e-mail message [fields](http://adilapapaya.com/docs/nodemailer/#emailmessagefields)
+ restify                 | server creation options passed to [restify package](http://mcavage.me/node-restify/#creating-a-server)
+ database                | database connection options passed to [node-orm2 package](https://github.com/dresende/node-orm2/wiki/Connecting-to-Database)
 
+Default config options are listed in the [config.js](config.js).
 
 ## Development ##
 

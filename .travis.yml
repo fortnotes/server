@@ -16,6 +16,7 @@ before_script:
     - psql -c "create database fortnotes;" -U postgres
 script:
     - node ./bin/cli.js --test
-    - node ./bin/cli.js --test --config ../config/mysql.json
-    - node ./bin/cli.js --test --config ../config/postgres.json
-    - node ./bin/cli.js --test --config ../config/memory.json
+    - node ./bin/cli.js --test --config ./tests/configs/mysql.json
+    - node ./bin/cli.js --test --config ./tests/configs/sqlite.json
+    - node ./bin/cli.js --test --config ./tests/configs/options.json
+    - node ./bin/cli.js --test --config ./tests/configs/postgres.json
