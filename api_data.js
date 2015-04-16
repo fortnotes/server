@@ -1089,6 +1089,11 @@ define({ "api": [
           "type": "json"
         },
         {
+          "title": "Error 500:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"code\": \"InternalServerError\",\n    \"message\": \"mail sending error\"\n}",
+          "type": "json"
+        },
+        {
           "title": "Error 404:",
           "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": \"NotFoundError\",\n    \"message\": \"resource was not found\"\n}",
           "type": "json"
