@@ -56,18 +56,16 @@ Where the content of `config.json`:
 
 ```json
 {
-	"port": 9090,
-	"dataSize": 1048576,
-    "hashSize": 128,
-    "dataLimit": 20,
-    "dataLimitMax": 200,
-	"restify": {
-		"name": "FortNotes API REST Server"
-	},
-	"session": {
-		"tokenSize":       96,
-		"confirmCodeSize": 12,
-		"confirmAttempts": 3
+	"port": 8080,
+	"dataLimit": 50,
+	"sessionTokenSize": 128,
+	"sessionConfirmAttempts": 5,
+	"smtpTransport": {
+		"service": "gmail",
+		"auth": {
+			"user": "gmail.user@gmail.com",
+			"pass": "userpass"
+		}
 	},
 	"database": "sqlite://./data.sqlite"
 }
@@ -100,9 +98,8 @@ There are some config file examples for
  sessionTokenSize        | generated token size in bytes
  sessionConfirmCodeSize  | generated token confirmation code size in bytes
  sessionConfirmAttempts  | allowed amount of attempts to activate sessions
- mailTransportType       | nodemailer transport [type](http://adilapapaya.com/docs/nodemailer/#possibletransportmethods)
- mailTransportConfig     | nodemailer transport [configuration](http://adilapapaya.com/docs/nodemailer/#globaltransportoptions)
- mailOptions             | nodemailer e-mail message [fields](http://adilapapaya.com/docs/nodemailer/#emailmessagefields)
+ smtpTransport           | nodemailer SMTP transport [configuration](https://github.com/andris9/nodemailer-smtp-transport) (use direct if not set)
+ mailOptions             | nodemailer e-mail message [fields](https://github.com/andris9/Nodemailer#e-mail-message-fields)
  restify                 | server creation options passed to [restify package](http://mcavage.me/node-restify/#creating-a-server)
  database                | database connection options passed to [node-orm2 package](https://github.com/dresende/node-orm2/wiki/Connecting-to-Database)
 

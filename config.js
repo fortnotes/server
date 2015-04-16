@@ -39,17 +39,12 @@ module.exports = {
 	// allowed amount of attempts to activate sessions
 	sessionConfirmAttempts: 3,
 
-	// nodemailer transport type
-	// possible values: smtp, ses, sendmail, pickup, direct
-	// http://adilapapaya.com/docs/nodemailer/#possibletransportmethods
-	mailTransportType: 'direct',
-
-	// nodemailer transport configuration
-	// http://adilapapaya.com/docs/nodemailer/#globaltransportoptions
-	mailTransportConfig: {},
+	// nodemailer SMTP transport configuration (use direct if not set)
+	// https://github.com/andris9/nodemailer-smtp-transport
+	smtpTransport: null,
 
 	// nodemailer e-mail message fields
-	// http://adilapapaya.com/docs/nodemailer/#emailmessagefields
+	// https://github.com/andris9/Nodemailer#e-mail-message-fields
 	mailOptions: {
 		from: 'admin@fortnotes.com',
 		subject: 'FortNotes Server notification'
