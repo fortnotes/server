@@ -129,7 +129,13 @@ npm install
 Now you can start it like this:
 
 ```bash
-node-dev ./bin/cli.js --config ../config/sqlite.json --debug
+node-dev ./bin/cli.js --config ./tests/configs/sqlite.json --debug
+```
+
+To see sub-system log details:
+
+```bash
+DEBUG=* node ./bin/cli.js --config ./tests/configs/sqlite.json
 ```
 
 Full REST API documentation is built from source files and available [online](https://fortnotes.github.io/server/).

@@ -5,6 +5,7 @@
 var fs      = require('fs'),
 	path    = require('path'),
 	program = require('commander'),
+	debug   = require('debug')('app'),
 	pkgInfo = require('../package.json'),
 	config  = require('../config'),
 	userConfig;
@@ -44,7 +45,7 @@ if ( program.config ) {
 		userConfig = require(program.config);
 		// config content is valid
 		if ( userConfig && typeof userConfig === 'object' ) {
-			console.log('Config: %s', path.resolve(program.config));
+			debug('config file: %s', path.resolve(program.config));
 			// redefine only top level
 			Object.keys(userConfig).forEach(function (name) {
 				config[name] = userConfig[name];
@@ -56,6 +57,8 @@ if ( program.config ) {
 // redefine some options
 config.debug = !!program.debug;
 config.test  = !!program.test;
+
+debug('config data: %o', config);
 
 // start app
 require('../lib/main');
