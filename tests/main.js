@@ -26,6 +26,8 @@ mocha.addFile('./tests/spec.profile');
 mocha.run(function ( failures ) {
 	// close db connection
 	require('../lib/db').close();
+
+	/* eslint-disable no-process-exit */
 	// return exit code
 	process.exit(failures);
 });
