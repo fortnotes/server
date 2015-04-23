@@ -4,7 +4,7 @@ FortNotes Server
 [![Build Status](https://img.shields.io/travis/fortnotes/server.svg?style=flat-square)](https://travis-ci.org/fortnotes/server)
 [![NPM version](https://img.shields.io/npm/v/fortnotes.svg?style=flat-square)](https://www.npmjs.com/package/fortnotes)
 [![Dependencies Status](https://img.shields.io/david/fortnotes/server.svg?style=flat-square)](https://david-dm.org/fortnotes/server)
-[![Gitter](https://img.shields.io/badge/gitter-join%20chat-blue.svg?style=flat-square)](https://gitter.im/fortnotes/server)
+[![Gitter](https://img.shields.io/badge/gitter-join%20chat-blue.svg?style=flat-square)](https://gitter.im/DarkPark/FortNotes)
 
 [FortNotes](https://fortnotes.com/) is a highly secure online private information manager based on the AES encryption in the browser.
 This repo is for a new fully redesigned and reworked version.
