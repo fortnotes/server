@@ -27,7 +27,7 @@
 		"test": "node ./bin/cli.js --test --config ../config/memory.json"
 	},
 	"dependencies": {
-		"commander": "^2.8.0",
+		"commander": "^2.8.1",
 		"debug": "^2.2.0",
 		"isemail": "^1.1.1",
 		"ip": "^0.3.3",
