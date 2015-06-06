@@ -1,6 +1,6 @@
 {
 	"name": "fortnotes",
-	"version": "2.0.2",
+	"version": "2.0.3",
 	"description": "FortNotes Server application to process client REST API requests.",
 	"main": "./bin/cli.js",
 	"bin": "./bin/cli.js",
