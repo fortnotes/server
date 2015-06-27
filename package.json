@@ -38,13 +38,13 @@
 		"orm-transaction": "^0.0.2",
 		"pg": "^4.3.0",
 		"restify": "^3.0.3",
-		"should": "^6.0.3",
+		"should": "^7.0.1",
 		"sqlite3": "^3.0.8"
 	},
 	"devDependencies": {
 		"gulp": "^3.9.0",
 		"gulp-apidoc": "^0.1.4",
-		"gulp-eslint": "^0.13.2",
+		"gulp-eslint": "^0.14.0",
 		"gulp-plumber": "^1.0.1"
 	}
 }
