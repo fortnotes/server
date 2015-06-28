@@ -5,7 +5,7 @@
 	"main": "./bin/cli.js",
 	"bin": "./bin/cli.js",
 	"author": "DarkPark",
-	"license": "GPLv3",
+	"license": "GPL-3.0",
 	"homepage": "https://fortnotes.com/",
 	"keywords": [
 		"aes",
