@@ -27,24 +27,24 @@
 		"test": "node ./bin/cli.js --test --config ../config/memory.json"
 	},
 	"dependencies": {
-		"commander": "^2.8.1",
-		"debug": "^2.2.0",
-		"isemail": "^1.1.1",
-		"ip": "^0.3.3",
-		"mysql": "^2.8.0",
-		"mocha": "^2.2.5",
-		"nodemailer": "^1.4.0",
-		"orm": "^2.1.26",
-		"orm-transaction": "^0.0.2",
-		"pg": "^4.3.0",
-		"restify": "^3.0.3",
-		"should": "^7.0.2",
-		"sqlite3": "^3.0.9"
+		"commander": "2.*.*",
+		"debug": "2.*.*",
+		"isemail": "1.*.*",
+		"ip": "1.*.*",
+		"mysql": "2.*.*",
+		"mocha": "2.*.*",
+		"nodemailer": "1.*.*",
+		"orm": "2.*.*",
+		"orm-transaction": "0.*.*",
+		"pg": "4.*.*",
+		"restify": "4.*.*",
+		"should": "7.*.*",
+		"sqlite3": "3.*.*"
 	},
 	"devDependencies": {
-		"gulp": "^3.9.0",
-		"gulp-apidoc": "^0.1.4",
-		"gulp-eslint": "^0.15.0",
-		"gulp-plumber": "^1.0.1"
+		"gulp": "3.*.*",
+		"gulp-apidoc": "0.*.*",
+		"gulp-eslint": "1.*.*",
+		"gulp-plumber": "1.*.*"
 	}
 }
