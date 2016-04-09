@@ -1,0 +1,9 @@
+.editorconfig
+.eslintrc
+.github
+.gitattributes
+.idea
+.travis.yml
+apidoc.json
+header.md
+tests

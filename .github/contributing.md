@@ -1,4 +1,5 @@
-# Contributing #
+Contributing
+============
 
 ## Issues ##
 
