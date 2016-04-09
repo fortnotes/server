@@ -1,13 +1,13 @@
 {
-	"port": 8080,
+    "port": 8080,
 
-	"dataSize": 2048,
-	"hashSize": 128,
+    "dataSize": 2048,
+    "hashSize": 128,
 
-	"dataLimit": 10,
-	"dataLimitMax": 20,
+    "dataLimit": 10,
+    "dataLimitMax": 20,
 
-	"sessionTokenSize": 20,
-	"sessionConfirmCodeSize": 5,
-	"sessionConfirmAttempts": 5
+    "sessionTokenSize": 20,
+    "sessionConfirmCodeSize": 5,
+    "sessionConfirmAttempts": 5
 }

@@ -8,9 +8,9 @@
 'use strict';
 
 var Mocha = require('mocha'),
-	mocha = new Mocha({
-		reporter: 'spec'
-	});
+    mocha = new Mocha({
+        reporter: 'spec'
+    });
 
 
 // extend Object.prototype
@@ -24,10 +24,10 @@ mocha.addFile('./tests/spec.profile');
 
 // exec
 mocha.run(function ( failures ) {
-	// close db connection
-	require('../lib/db').close();
+    // close db connection
+    require('../lib/db').close();
 
-	/* eslint-disable no-process-exit */
-	// return exit code
-	process.exit(failures);
+    /* eslint-disable no-process-exit */
+    // return exit code
+    process.exit(failures);
 });
