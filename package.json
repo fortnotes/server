@@ -32,13 +32,11 @@
         "isemail": "^2.1.0",
         "ip": "^1.1.2",
         "mysql": "^2.7.0",
-        "mocha": "^2.2.5",
         "nodemailer": "^2.3.1",
         "orm": "^2.1.26",
         "orm-transaction": "^0.0.2",
         "pg": "^4.3.0",
         "restify": "^4.0.4",
-        "should": "^8.3.0",
         "sqlite3": "^3.0.8"
     },
     "devDependencies": {
@@ -46,6 +44,8 @@
         "gulp": "^3.9.0",
         "gulp-apidoc": "^0.2.3",
         "gulp-eslint": "^2.0.0",
-        "gulp-plumber": "^1.0.1"
+        "gulp-plumber": "^1.0.1",
+        "mocha": "^2.2.5",
+        "should": "^8.3.0"
     }
 }
