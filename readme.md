@@ -58,18 +58,18 @@ Where the content of `config.json`:
 
 ```json
 {
-	"port": 8080,
-	"dataLimit": 50,
-	"sessionTokenSize": 128,
-	"sessionConfirmAttempts": 5,
-	"smtpTransport": {
-		"service": "gmail",
-		"auth": {
-			"user": "gmail.user@gmail.com",
-			"pass": "userpass"
-		}
-	},
-	"database": "sqlite://./data.sqlite"
+    "port": 8080,
+    "dataLimit": 50,
+    "sessionTokenSize": 128,
+    "sessionConfirmAttempts": 5,
+    "smtpTransport": {
+        "service": "gmail",
+        "auth": {
+            "user": "gmail.user@gmail.com",
+            "pass": "userpass"
+        }
+    },
+    "database": "sqlite://./data.sqlite"
 }
 ```
 
@@ -156,4 +156,4 @@ Tests are also run on [Travis CI](https://travis-ci.org/fortnotes/server) for no
 
 ## License ##
 
-FortNotes Server is released under the [GPL-3.0 License](http://opensource.org/licenses/GPL-3.0).
+`fortnotes` is released under the [GPL-3.0 License](http://opensource.org/licenses/GPL-3.0).
