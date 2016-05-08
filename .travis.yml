@@ -1,15 +1,15 @@
+sudo: false
 language: node_js
 node_js:
-    - "4.1"
-    - "0.12"
-sudo: false
+    - "5"
+    - "4"
+cache:
+    directories:
+        - node_modules
 services:
     - mysql
 install:
     - npm install
-cache:
-    directories:
-        - node_modules
 before_script:
     - mysql -e "create database fortnotes;"
     - psql -c "create database fortnotes;" -U postgres
