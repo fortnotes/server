@@ -19,9 +19,8 @@
     ],
     "repository": {
         "type": "git",
-        "url": "git@github.com:fortnotes/server.git"
+        "url": "https://github.com/fortnotes/server.git"
     },
-    "bugs": "https://github.com/fortnotes/server/issues",
     "scripts": {
         "start": "node ./bin/cli.js",
         "test": "node ./bin/cli.js --test --config ../config/memory.json"

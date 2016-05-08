@@ -12,9 +12,9 @@
 
 var should  = require('should'),
     restify = require('restify'),
-    config  = require('../config'),
-    db      = require('../lib/db'),
-    data    = require('./data'),
+    config  = require('../../config'),
+    db      = require('../../lib/db'),
+    data    = require('../data'),
     userA   = data.userA,
     userB   = data.userB;
 

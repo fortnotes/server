@@ -9,18 +9,18 @@
 
 var Mocha = require('mocha'),
     mocha = new Mocha({
-        reporter: 'spec'
+        reporter: 'spec',
+        timeout: 1000,
+        bail: true,
+        fullTrace: true
     });
 
 
-// extend Object.prototype
-require('should');
-
 // add specs
-mocha.addFile('./tests/spec.sessions');
-mocha.addFile('./tests/spec.tags');
-mocha.addFile('./tests/spec.notes');
-mocha.addFile('./tests/spec.profile');
+mocha.addFile('./tests/specs/sessions');
+mocha.addFile('./tests/specs/tags');
+mocha.addFile('./tests/specs/notes');
+mocha.addFile('./tests/specs/profile');
 
 // exec
 mocha.run(function ( failures ) {

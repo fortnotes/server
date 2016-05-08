@@ -12,18 +12,18 @@
 
 var should  = require('should'),
     restify = require('restify'),
-    config  = require('../config'),
-    db      = require('../lib/db'),
-    data    = require('./data'),
+    config  = require('../../config'),
+    db      = require('../../lib/db'),
+    data    = require('../data'),
     userA   = data.userA,
     userB   = data.userB;
 
 
 describe('Sessions', function () {
     var client = restify.createJsonClient({
-            url: 'http://localhost:' + config.port,
-            version: '*'
-        });
+        url: 'http://localhost:' + config.port,
+        version: '*'
+    });
 
     after(function () {
         // need to close http connection manually
