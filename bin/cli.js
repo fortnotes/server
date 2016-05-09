@@ -24,7 +24,7 @@ program.on('--help', function () {
     console.log('  Examples:');
     console.log('');
     console.log('    $ fortnotes --config /etc/fortnotes/config.json --test');
-    console.log('    $ fortnotes --config ~/.fortnotes/config.json --debug');
+    console.log('    $ fortnotes --config ~/.config/fortnotes/config.json --debug');
     console.log('');
 });
 

@@ -51,7 +51,7 @@ fortnotes --help
 To run FortNotes Server with the specific configuration:
 
 ```bash
-fortnotes --config ~/.fortnotes/config.json
+fortnotes --config ~/.config/fortnotes/config.json
 ```
 
 Where the content of `config.json`:
@@ -140,6 +140,19 @@ To see sub-system log details:
 DEBUG=* node ./bin/cli.js --config ./tests/configs/sqlite.json
 ```
 
+To make this setup global with npm:
+
+```bash
+sudo npm link
+```
+
+Or manually:
+
+```bash
+sudo ln -sr . /usr/lib/node_modules/fortnotes
+sudo ln -s /usr/lib/node_modules/fortnotes/bin/cli.js /usr/bin/fortnotes
+```
+
 Full REST API documentation is built from source files and available [online](https://fortnotes.github.io/server/).
 
 
@@ -148,7 +161,7 @@ Full REST API documentation is built from source files and available [online](ht
 It's possible to run all tests locally with given config:
 
 ```bash
-fortnotes --config ~/.fortnotes/config.json --test
+fortnotes --config ~/.config/fortnotes/config.json --test
 ```
 
 Tests are also run on [Travis CI](https://travis-ci.org/fortnotes/server) for node versions `0.10.x`, `0.12.x` and `iojs`.
