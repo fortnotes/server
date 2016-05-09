@@ -1,12 +1,39 @@
 {
     "name": "fortnotes",
     "version": "2.0.3",
-    "description": "FortNotes Server application to process client REST API requests.",
-    "main": "./bin/cli.js",
-    "bin": "./bin/cli.js",
-    "author": "DarkPark",
-    "license": "GPL-3.0",
+    "description": "FortNotes server application to process client REST API requests.",
     "homepage": "https://fortnotes.com/",
+    "author": {
+        "name": "Stanislav Kalashnik",
+        "email": "darkpark.main@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/fortnotes/server.git"
+    },
+    "bin": "./bin/cli.js",
+    "scripts": {
+        "start": "node --nowarn_template_set ./bin/cli.js",
+        "test": "node ./bin/cli.js --test --config ../config/memory.json"
+    },
+    "dependencies": {
+        "commander": "2.*.*",
+        "debug": "2.*.*",
+        "isemail": "2.1.*",
+        "ip": "1.*.*",
+        "mysql": "2.*.*",
+        "nodemailer": "2.3.*",
+        "orm": "3.*.*",
+        "orm-transaction": "0.*.*",
+        "pg": "4.*.*",
+        "restify": "4.*.*",
+        "sqlite3": "3.*.*"
+    },
+    "devDependencies": {
+        "cjs-eslint-config": "cjssdk/eslint-config",
+        "mocha": "2.*.*",
+        "should": "8.3.*"
+    },
     "keywords": [
         "aes",
         "encryption",
@@ -17,34 +44,5 @@
         "rest",
         "api"
     ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/fortnotes/server.git"
-    },
-    "scripts": {
-        "start": "node ./bin/cli.js",
-        "test": "node ./bin/cli.js --test --config ../config/memory.json"
-    },
-    "dependencies": {
-        "commander": "2.*.*",
-        "debug": "2.*.*",
-        "isemail": "2.1.*",
-        "ip": "1.*.*",
-        "mysql": "2.*.*",
-        "mocha": "2.*.*",
-        "nodemailer": "2.3.*",
-        "orm": "3.*.*",
-        "orm-transaction": "0.*.*",
-        "pg": "4.*.*",
-        "restify": "4.*.*",
-        "should": "8.3.*",
-        "sqlite3": "3.*.*"
-    },
-    "devDependencies": {
-        "cjs-eslint-config": "cjssdk/eslint-config",
-        "gulp": "3.*.*",
-        "gulp-apidoc": "0.*.*",
-        "gulp-eslint": "2.*.*",
-        "gulp-plumber": "1.*.*"
-    }
+    "license": "GPL-3.0"
 }

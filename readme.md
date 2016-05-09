@@ -119,7 +119,7 @@ cd server
 Install global dependencies:
 
 ```bash
-sudo npm install -g gulp node-dev
+sudo npm install -g apidoc eslint node-dev
 ```
 
 Then install local dependencies:
