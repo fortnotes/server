@@ -10,15 +10,16 @@
 
 module.exports = {
     // enable verbose debug mode
-    debug: false,
+    //debug: false,
 
     // run tests and exit
-    test: false,
+    //test: false,
 
     // HTTP port serving REST API requests
     port: 9090,
 
     // maximum encrypted data size (notes, tags, etc.)
+    // 1Mb
     dataSize: 1048576,
 
     // notes/tags sha512 hash size
