@@ -10,7 +10,7 @@
       {
         "name": "authUser",
         "title": "Authorized user access only.",
-        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p>"
       }
     ],
     "header": {
@@ -21,7 +21,7 @@
             "type": "string",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Bearer token for the user session.</p> "
+            "description": "<p>Bearer token for the user session.</p>"
           }
         ]
       }
@@ -34,14 +34,14 @@
             "type": "number",
             "optional": false,
             "field": "id",
-            "description": "<p>Note id.</p> "
+            "description": "<p>Note id.</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
             "optional": true,
             "field": "params.limit",
-            "description": "<p>Maximum number of records to return.</p> "
+            "description": "<p>Maximum number of records to return.</p>"
           },
           {
             "group": "Parameter",
@@ -49,7 +49,7 @@
             "optional": true,
             "field": "params.offset",
             "defaultValue": "0",
-            "description": "<p>Offset of the first record to return.</p> "
+            "description": "<p>Offset of the first record to return.</p>"
           }
         ]
       }
@@ -62,21 +62,21 @@
             "type": "string",
             "optional": false,
             "field": "data",
-            "description": "<p>Note encrypted data.</p> "
+            "description": "<p>Note encrypted data.</p>"
           },
           {
             "group": "Success 200",
             "type": "string",
             "optional": false,
             "field": "hash",
-            "description": "<p>Hash of note data before encryption.</p> "
+            "description": "<p>Hash of note data before encryption.</p>"
           },
           {
             "group": "Success 200",
             "type": "number",
             "optional": false,
             "field": "time",
-            "description": "<p>Note history record creation time.</p> "
+            "description": "<p>Note history record creation time.</p>"
           }
         ]
       },
@@ -143,7 +143,7 @@
       {
         "name": "authUser",
         "title": "Authorized user access only.",
-        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p>"
       }
     ],
     "header": {
@@ -154,7 +154,7 @@
             "type": "string",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Bearer token for the user session.</p> "
+            "description": "<p>Bearer token for the user session.</p>"
           }
         ]
       }
@@ -167,21 +167,21 @@
             "type": "number",
             "optional": false,
             "field": "id",
-            "description": "<p>Note ID.</p> "
+            "description": "<p>Note ID.</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
             "optional": false,
             "field": "data",
-            "description": "<p>Note encrypted data.</p> "
+            "description": "<p>Note encrypted data.</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
             "optional": false,
             "field": "hash",
-            "description": "<p>Hash of note data before encryption.</p> "
+            "description": "<p>Hash of note data before encryption.</p>"
           }
         ]
       }
@@ -280,7 +280,7 @@
       {
         "name": "authUser",
         "title": "Authorized user access only.",
-        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p>"
       }
     ],
     "header": {
@@ -291,7 +291,7 @@
             "type": "string",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Bearer token for the user session.</p> "
+            "description": "<p>Bearer token for the user session.</p>"
           }
         ]
       }
@@ -304,7 +304,7 @@
             "type": "number",
             "optional": true,
             "field": "params.limit",
-            "description": "<p>Maximum number of records to return.</p> "
+            "description": "<p>Maximum number of records to return.</p>"
           },
           {
             "group": "Parameter",
@@ -312,7 +312,7 @@
             "optional": true,
             "field": "params.offset",
             "defaultValue": "0",
-            "description": "<p>Offset of the first record to return.</p> "
+            "description": "<p>Offset of the first record to return.</p>"
           }
         ]
       }
@@ -325,42 +325,42 @@
             "type": "number",
             "optional": false,
             "field": "id",
-            "description": "<p>User note ID.</p> "
+            "description": "<p>User note ID.</p>"
           },
           {
             "group": "Success 200",
             "type": "string",
             "optional": false,
             "field": "data",
-            "description": "<p>Note encrypted data.</p> "
+            "description": "<p>Note encrypted data.</p>"
           },
           {
             "group": "Success 200",
             "type": "string",
             "optional": false,
             "field": "hash",
-            "description": "<p>Hash of note data before encryption.</p> "
+            "description": "<p>Hash of note data before encryption.</p>"
           },
           {
             "group": "Success 200",
             "type": "number",
             "optional": false,
             "field": "createTime",
-            "description": "<p>Note creation time.</p> "
+            "description": "<p>Note creation time.</p>"
           },
           {
             "group": "Success 200",
             "type": "number",
             "optional": false,
             "field": "updateTime",
-            "description": "<p>Note modification time.</p> "
+            "description": "<p>Note modification time.</p>"
           },
           {
             "group": "Success 200",
             "type": "number",
             "optional": false,
             "field": "readTime",
-            "description": "<p>Note last access time.</p> "
+            "description": "<p>Note last access time.</p>"
           }
         ]
       },
@@ -417,7 +417,7 @@
       {
         "name": "authUser",
         "title": "Authorized user access only.",
-        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p>"
       }
     ],
     "header": {
@@ -428,7 +428,7 @@
             "type": "string",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Bearer token for the user session.</p> "
+            "description": "<p>Bearer token for the user session.</p>"
           }
         ]
       }
@@ -441,14 +441,14 @@
             "type": "string",
             "optional": false,
             "field": "data",
-            "description": "<p>Note encrypted data.</p> "
+            "description": "<p>Note encrypted data.</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
             "optional": false,
             "field": "hash",
-            "description": "<p>Hash of note data before encryption.</p> "
+            "description": "<p>Hash of note data before encryption.</p>"
           }
         ]
       }
@@ -517,7 +517,7 @@
       {
         "name": "authUser",
         "title": "Authorized user access only.",
-        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p>"
       }
     ],
     "header": {
@@ -528,7 +528,7 @@
             "type": "string",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Bearer token for the user session.</p> "
+            "description": "<p>Bearer token for the user session.</p>"
           }
         ]
       }
@@ -541,21 +541,21 @@
             "type": "string",
             "optional": false,
             "field": "salt",
-            "description": "<p>User master password salt.</p> "
+            "description": "<p>User master password salt.</p>"
           },
           {
             "group": "Success 200",
             "type": "string",
             "optional": false,
             "field": "hash",
-            "description": "<p>User master password sha512 hash.</p> "
+            "description": "<p>User master password sha512 hash.</p>"
           },
           {
             "group": "Success 200",
             "type": "number",
             "optional": false,
             "field": "time",
-            "description": "<p>User master password modification time.</p> "
+            "description": "<p>User master password modification time.</p>"
           }
         ]
       },
@@ -612,7 +612,7 @@
       {
         "name": "authUser",
         "title": "Authorized user access only.",
-        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p>"
       }
     ],
     "header": {
@@ -623,7 +623,7 @@
             "type": "string",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Bearer token for the user session.</p> "
+            "description": "<p>Bearer token for the user session.</p>"
           }
         ]
       }
@@ -636,14 +636,14 @@
             "type": "string",
             "optional": false,
             "field": "salt",
-            "description": "<p>User master password salt.</p> "
+            "description": "<p>User master password salt.</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
             "optional": false,
             "field": "hash",
-            "description": "<p>User master password sha512 hash.</p> "
+            "description": "<p>User master password sha512 hash.</p>"
           }
         ]
       }
@@ -722,7 +722,7 @@
       {
         "name": "authUser",
         "title": "Authorized user access only.",
-        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p>"
       }
     ],
     "header": {
@@ -733,7 +733,7 @@
             "type": "string",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Bearer token for the user session.</p> "
+            "description": "<p>Bearer token for the user session.</p>"
           }
         ]
       }
@@ -746,7 +746,7 @@
             "type": "number",
             "optional": false,
             "field": "id",
-            "description": "<p>User session ID.</p> "
+            "description": "<p>User session ID.</p>"
           }
         ]
       }
@@ -834,14 +834,14 @@
             "type": "number",
             "optional": false,
             "field": "id",
-            "description": "<p>User session ID.</p> "
+            "description": "<p>User session ID.</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
             "optional": false,
             "field": "code",
-            "description": "<p>Session activation code.</p> "
+            "description": "<p>Session activation code.</p>"
           }
         ]
       }
@@ -910,7 +910,7 @@
       {
         "name": "authUser",
         "title": "Authorized user access only.",
-        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p>"
       }
     ],
     "header": {
@@ -921,7 +921,7 @@
             "type": "string",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Bearer token for the user session.</p> "
+            "description": "<p>Bearer token for the user session.</p>"
           }
         ]
       }
@@ -934,7 +934,7 @@
             "type": "number",
             "optional": true,
             "field": "params.limit",
-            "description": "<p>Maximum number of records to return.</p> "
+            "description": "<p>Maximum number of records to return.</p>"
           },
           {
             "group": "Parameter",
@@ -942,7 +942,7 @@
             "optional": true,
             "field": "params.offset",
             "defaultValue": "0",
-            "description": "<p>Offset of the first record to return.</p> "
+            "description": "<p>Offset of the first record to return.</p>"
           }
         ]
       }
@@ -955,28 +955,28 @@
             "type": "number",
             "optional": false,
             "field": "id",
-            "description": "<p>User session ID.</p> "
+            "description": "<p>User session ID.</p>"
           },
           {
             "group": "Success 200",
             "type": "number",
             "optional": false,
             "field": "createTime",
-            "description": "<p>Session creation time.</p> "
+            "description": "<p>Session creation time.</p>"
           },
           {
             "group": "Success 200",
             "type": "number",
             "optional": false,
             "field": "confirmTime",
-            "description": "<p>Session activation time.</p> "
+            "description": "<p>Session activation time.</p>"
           },
           {
             "group": "Success 200",
             "type": "number",
             "optional": false,
             "field": "deleteTime",
-            "description": "<p>Session termination time.</p> "
+            "description": "<p>Session termination time.</p>"
           }
         ]
       },
@@ -1042,7 +1042,7 @@
             "type": "string",
             "optional": false,
             "field": "email",
-            "description": "<p>User email address.</p> "
+            "description": "<p>User email address.</p>"
           }
         ]
       }
@@ -1055,14 +1055,14 @@
             "type": "number",
             "optional": false,
             "field": "id",
-            "description": "<p>Generated user session ID.</p> "
+            "description": "<p>Generated user session ID.</p>"
           },
           {
             "group": "Success 200",
             "type": "string",
             "optional": false,
             "field": "token",
-            "description": "<p>Generated user session bearer token.</p> "
+            "description": "<p>Generated user session bearer token.</p>"
           }
         ]
       },
@@ -1134,7 +1134,7 @@
       {
         "name": "authUser",
         "title": "Authorized user access only.",
-        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p>"
       }
     ],
     "header": {
@@ -1145,7 +1145,7 @@
             "type": "string",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Bearer token for the user session.</p> "
+            "description": "<p>Bearer token for the user session.</p>"
           }
         ]
       }
@@ -1158,21 +1158,21 @@
             "type": "string",
             "optional": false,
             "field": "data",
-            "description": "<p>User tags encrypted data.</p> "
+            "description": "<p>User tags encrypted data.</p>"
           },
           {
             "group": "Success 200",
             "type": "string",
             "optional": false,
             "field": "hash",
-            "description": "<p>Hash of tags data before encryption.</p> "
+            "description": "<p>Hash of tags data before encryption.</p>"
           },
           {
             "group": "Success 200",
             "type": "number",
             "optional": false,
             "field": "time",
-            "description": "<p>Tags modification time.</p> "
+            "description": "<p>Tags modification time.</p>"
           }
         ]
       },
@@ -1234,7 +1234,7 @@
       {
         "name": "authUser",
         "title": "Authorized user access only.",
-        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p> "
+        "description": "<p>Requests are valid only in case the user is authorized and have a valid active session.</p>"
       }
     ],
     "header": {
@@ -1245,7 +1245,7 @@
             "type": "string",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Bearer token for the user session.</p> "
+            "description": "<p>Bearer token for the user session.</p>"
           }
         ]
       }
@@ -1258,21 +1258,21 @@
             "type": "string",
             "optional": false,
             "field": "data",
-            "description": "<p>User tags encrypted data.</p> "
+            "description": "<p>User tags encrypted data.</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
             "optional": false,
             "field": "hash",
-            "description": "<p>Hash of tags data before encryption.</p> "
+            "description": "<p>Hash of tags data before encryption.</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
             "optional": false,
             "field": "amount",
-            "description": "<p>Amount of user tags in tags encrypted data.</p> "
+            "description": "<p>Amount of user tags in tags encrypted data.</p>"
           }
         ]
       }
