@@ -7,6 +7,7 @@
         "name": "Stanislav Kalashnik",
         "email": "darkpark.main@gmail.com"
     },
+    "main": "./lib/app.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/fortnotes/server.git"
@@ -14,6 +15,8 @@
     "bin": "./bin/cli.js",
     "scripts": {
         "start": "node --nowarn_template_set ./bin/cli.js",
+        "lint": "eslint ./bin ./lib ./tests",
+        "apidoc": "apidoc --input ./lib/resources/ --output ../server-pages/",
         "test": "node ./bin/cli.js --test --config ../config/memory.json"
     },
     "dependencies": {
