@@ -1,9 +1,5 @@
 /**
- * Default server configuration.
- * Can be redefined by user config file options.
- *
- * @author DarkPark
- * @license GNU GENERAL PUBLIC LICENSE Version 3
+ * API server configuration.
  */
 
 'use strict';
@@ -16,7 +12,7 @@ module.exports = {
     //test: false,
 
     // HTTP port serving REST API requests
-    port: 9090,
+    port: 8080,
 
     // maximum encrypted data size (notes, tags, etc.)
     // 1Mb

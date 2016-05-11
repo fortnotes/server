@@ -6,9 +6,7 @@ var fs      = require('fs'),
     path    = require('path'),
     program = require('commander'),
     debug   = require('debug')('app:cli'),
-    pkgInfo = require('../package.json'),
-    config  = require('../config'),
-    userConfig;
+    pkgInfo = require('../package.json');
 
 
 // init
@@ -32,43 +30,46 @@ program.on('--help', function () {
 // parse and invoke commands when defined
 program.parse(process.argv);
 
-//console.log(program);
-
 // main path
 program.profile = program.profile ||
     path.join(process.env.XDG_CONFIG_HOME || path.join(process.env.HOME, '.config'), pkgInfo.name);
 
 
-// overwrite default options with user configuration
-// if ( program.config ) {
-//     // todo: replace with !path.isAbsolute(program.config) in node 0.12.*
-//     if ( path.resolve(program.config) !== path.normalize(program.config) ) {
-//         // correct relative path
-//         program.config = path.join(__dirname, '..', program.config);
-//     }
-//
-//     // valid file is given
-//     if ( fs.existsSync(program.config) ) {
-//         // get content
-//         userConfig = require(program.config);
-//         // config content is valid
-//         if ( userConfig && typeof userConfig === 'object' ) {
-//             debug('config file: %s', path.resolve(program.config));
-//             // redefine only top level
-//             Object.keys(userConfig).forEach(function (name) {
-//                 config[name] = userConfig[name];
-//             });
-//         }
-//     }
-// }
+// init/load profile and application
+fs.mkdir(program.profile, function ( error ) {
+    var App        = require('../lib/app'),
+        configFile = path.join(program.profile, 'config.js'),
+        configData, app;
 
-// redefine some options
-// config.debug = !!program.debug;
-// config.test  = !!program.test;
+    // make sure directory is present
+    if ( error && error.code !== 'EEXIST') {
+        console.log(error);
+    }
+    debug('profile directory: ' + program.profile);
 
-//debug('config data: %o', config);
+    // config
+    try {
+        configData = require(configFile);
+    } catch ( error ) {
+        if ( error.code === 'MODULE_NOT_FOUND' ) {
+            // copy the default config
+            fs.writeFileSync(configFile, fs.readFileSync(path.join(process.cwd(), '.profile', 'config.js')));
+            // load it
+            configData = require(configFile);
+        } else {
+            console.log(error);
+        }
+    }
+    debug(configData);
+    
+    // init
+    app = new App(configData);
 
-// public
-module.exports = new (require('../lib/app'))({
-    profile: program.profile
+    // handle Ctrl+C in terminal
+    process.on('SIGINT', function () {
+        app.close();
+
+        /* eslint-disable no-process-exit */
+        process.exit();
+    });
 });
