@@ -14,7 +14,8 @@ module.exports = {
     // run tests and exit
     //test: false,
 
-    // HTTP port serving REST API requests
+    // HTTP server options
+    host: '0.0.0.0',
     port: 8080,
 
     // maximum encrypted data size (notes, tags, etc.)
@@ -51,7 +52,7 @@ module.exports = {
     },
 
     // server creation options passed to restify package
-    // http://mcavage.me/node-restify/#creating-a-server
+    // http://restify.com/#creating-a-server
     restify: {
         name: 'FortNotes REST API Server'
     },
