@@ -1,5 +1,8 @@
 /**
  * API server configuration.
+ *
+ * Use http://esprima.org/demo/validate.html
+ * to check for mistakes and errors.
  */
 
 'use strict';
