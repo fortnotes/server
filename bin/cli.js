@@ -61,7 +61,9 @@ fs.mkdir(program.profile, function ( error ) {
         }
     }
     debug(configData);
-    
+
+    global.DEVELOP = true;
+
     // init
     app = new App(configData);
 
