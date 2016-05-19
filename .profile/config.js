@@ -1,8 +1,8 @@
 /**
- * API server configuration.
+ * Server configuration.
  *
  * Use http://esprima.org/demo/validate.html
- * to check for mistakes and errors.
+ * to check for typos and errors.
  */
 
 'use strict';
@@ -59,5 +59,9 @@ module.exports = {
 
     // database connection options passed to node-orm2 package
     // https://github.com/dresende/node-orm2/wiki/Connecting-to-Database
-    database: 'sqlite://./data.sqlite'
+    // database: 'sqlite://./data.sqlite'
+    database: {
+        protocol: 'sqlite',
+        database: './data.sqlite'
+    }
 };
