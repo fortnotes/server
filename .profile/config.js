@@ -7,6 +7,10 @@
 
 'use strict';
 
+var path = require('path');
+
+
+// public
 module.exports = {
     // enable verbose debug mode
     //debug: false,
@@ -59,9 +63,8 @@ module.exports = {
 
     // database connection options passed to node-orm2 package
     // https://github.com/dresende/node-orm2/wiki/Connecting-to-Database
-    // database: 'sqlite://./data.sqlite'
     database: {
         protocol: 'sqlite',
-        database: './data.sqlite'
+        pathname: path.join(__dirname, 'data.sqlite')
     }
 };
