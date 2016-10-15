@@ -60,6 +60,10 @@ fs.mkdir(program.profile, function ( error ) {
             console.log(error);
         }
     }
+
+    // redefine some options
+    configData.debug = !!program.debug;
+    
     debug(configData);
 
     global.DEVELOP = true;
