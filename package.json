@@ -23,29 +23,22 @@
         "cjs-emitter": "cjssdk/emitter",
         "commander": "2.*.*",
         "debug": "2.*.*",
-        "isemail": "2.*.*",
         "ip": "1.*.*",
-        "mysql": "2.*.*",
-        "nodemailer": "2.*.*",
-        "orm": "3.*.*",
-        "orm-transaction": "0.*.*",
-        "pg": "4.*.*",
-        "restify": "4.*.*",
-        "sqlite3": "3.*.*"
+        "ws": "1.*.*"
     },
     "devDependencies": {
         "cjs-eslint-config": "cjssdk/eslint-config",
-        "mocha": "2.*.*",
-        "should": "8.3.*"
+        "eslint": "3.*.*",
+        "mocha": "3.*.*",
+        "should": "11.*.*"
     },
     "keywords": [
-        "aes",
+        "fortnotes",
         "encryption",
         "private",
         "notes",
         "storage",
         "server",
-        "rest",
         "api"
     ],
     "license": "GPL-3.0"

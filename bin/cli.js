@@ -57,13 +57,14 @@ fs.mkdir(program.profile, function ( error ) {
             // load it
             configData = require(configFile);
         } else {
+            // probably parsing error
             console.log(error);
         }
     }
 
     // redefine some options
     configData.debug = !!program.debug;
-    
+
     debug(configData);
 
     global.DEVELOP = true;
@@ -73,9 +74,6 @@ fs.mkdir(program.profile, function ( error ) {
 
     // handle Ctrl+C in terminal
     process.on('SIGINT', function () {
-        app.close();
-
-        /* eslint-disable no-process-exit */
-        process.exit();
+        app.exit();
     });
 });
