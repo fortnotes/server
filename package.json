@@ -1,45 +1,46 @@
 {
-    "name": "fortnotes",
-    "version": "2.0.3",
-    "description": "FortNotes server application to process client REST API requests.",
-    "homepage": "https://fortnotes.com/",
-    "author": {
-        "name": "Stanislav Kalashnik",
-        "email": "darkpark.main@gmail.com"
-    },
-    "main": "./lib/app.js",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/fortnotes/server.git"
-    },
-    "bin": "./bin/cli.js",
-    "scripts": {
-        "start": "node --nowarn_template_set ./bin/cli.js",
-        "lint": "eslint ./bin ./lib ./tests",
-        "apidoc": "apidoc --input ./lib/resources/ --output ../server-pages/",
-        "test": "node ./bin/cli.js --test --config ../config/memory.json"
-    },
-    "dependencies": {
-        "cjs-emitter": "cjssdk/emitter",
-        "commander": "2.*.*",
-        "debug": "2.*.*",
-        "ip": "1.*.*",
-        "ws": "1.*.*"
-    },
-    "devDependencies": {
-        "cjs-eslint-config": "cjssdk/eslint-config",
-        "eslint": "3.*.*",
-        "mocha": "3.*.*",
-        "should": "11.*.*"
-    },
-    "keywords": [
-        "fortnotes",
-        "encryption",
-        "private",
-        "notes",
-        "storage",
-        "server",
-        "api"
-    ],
-    "license": "GPL-3.0"
+  "name": "fortnotes",
+  "version": "2.0.3",
+  "description": "FortNotes server application to process client REST API requests.",
+  "homepage": "https://fortnotes.com/",
+  "author": {
+    "name": "Stanislav Kalashnik",
+    "email": "darkpark.main@gmail.com"
+  },
+  "main": "./lib/app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fortnotes/server.git"
+  },
+  "bin": "./bin/cli.js",
+  "scripts": {
+    "start": "node --nowarn_template_set ./bin/cli.js",
+    "lint": "eslint ./bin ./lib ./tests",
+    "apidoc": "apidoc --input ./lib/resources/ --output ../server-pages/",
+    "test": "node ./bin/cli.js --test --config ../config/memory.json"
+  },
+  "dependencies": {
+    "cjs-emitter": "cjssdk/emitter",
+    "cjs-wamp": "^1.3.0",
+    "commander": "2.*.*",
+    "debug": "2.*.*",
+    "ip": "1.*.*",
+    "ws": "1.*.*"
+  },
+  "devDependencies": {
+    "cjs-eslint-config": "cjssdk/eslint-config",
+    "eslint": "3.*.*",
+    "mocha": "3.*.*",
+    "should": "11.*.*"
+  },
+  "keywords": [
+    "fortnotes",
+    "encryption",
+    "private",
+    "notes",
+    "storage",
+    "server",
+    "api"
+  ],
+  "license": "GPL-3.0"
 }
