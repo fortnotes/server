@@ -20,17 +20,17 @@
         "test": "node ./bin/cli.js --test --config ../config/memory.json"
     },
     "dependencies": {
-        "cjs-emitter": "cjssdk/emitter",
-        "commander": "2.*.*",
-        "debug": "2.*.*",
-        "ip": "1.*.*",
-        "ws": "1.*.*"
+        "@cjssdk/emitter": "^1.5.2",
+        "commander": "^2.15.1",
+        "debug": "^3.1.0",
+        "ip": "^1.1.5",
+        "ws": "^5.1.1"
     },
     "devDependencies": {
-        "cjs-eslint-config": "cjssdk/eslint-config",
-        "eslint": "3.*.*",
-        "mocha": "3.*.*",
-        "should": "11.*.*"
+        "@cjssdk/eslint-config": "^1.1.2",
+        "eslint": "^4.19.1",
+        "mocha": "^5.1.1",
+        "should": "^13.2.1"
     },
     "keywords": [
         "fortnotes",
