@@ -14,32 +14,34 @@
     },
     "bin": "./bin/cli.js",
     "scripts": {
-        "start": "node --nowarn_template_set ./bin/cli.js",
+        "start": "node ./bin/cli.js",
         "lint": "eslint ./bin ./lib ./tests",
         "apidoc": "apidoc --input ./lib/resources/ --output ../server-pages/",
         "test": "node ./bin/cli.js --test --config ../config/memory.json"
     },
     "dependencies": {
         "cjs-emitter": "cjssdk/emitter",
-        "commander": "2.*.*",
-        "debug": "2.*.*",
-        "isemail": "2.*.*",
-        "ip": "1.*.*",
-        "mysql": "2.*.*",
+        "commander": "^2.15.1",
+        "debug": "^3.1.0",
+        "ip": "^1.1.5",
+        "isemail": "^3.1.2",
+        "mysql": "^2.15.0",
         "nodemailer": "2.*.*",
-        "orm": "3.*.*",
-        "orm-transaction": "0.*.*",
-        "pg": "4.*.*",
-        "restify": "4.*.*",
-        "sqlite3": "3.*.*"
+        "orm": "^4.0.2",
+        "orm-transaction": "^0.0.2",
+        "pg": "^7.4.3",
+        "restify": "^7.2.0",
+        "restify-cors-middleware": "^1.1.0",
+        "sqlite3": "^4.0.0"
     },
     "devDependencies": {
         "cjs-eslint-config": "cjssdk/eslint-config",
-        "mocha": "2.*.*",
-        "should": "8.3.*"
+        "eslint": "^4.19.1",
+        "mocha": "^5.2.0",
+        "should": "^13.2.1"
     },
     "keywords": [
-        "aes",
+        "fortnotes",
         "encryption",
         "private",
         "notes",
